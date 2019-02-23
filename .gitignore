@@ -1,3 +1,6 @@
+*.swp
+secret.json
+
 # Logs
 logs
 *.log
