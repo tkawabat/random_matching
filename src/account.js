@@ -29,7 +29,7 @@ passport.use(new TwitterStrategy({
 
 // セッションに保存
 passport.serializeUser(function(user, done) {
-    done(null, user);
+    done(null, user.id);
 });
 
 // セッションから復元 routerのreq.userから利用可能
@@ -47,6 +47,9 @@ function isAuthenticated(req, res, next){
     }
 }
 
-exports.session = session;
-exports.passport = passport;
-exports.isAuthenticated = isAuthenticated;
+
+module.exports = {
+    session: session,
+    passport: passport,
+    isAuthenticated: isAuthenticated
+}
