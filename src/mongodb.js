@@ -12,6 +12,7 @@ let hosts = [
 ];
 let db_name = "random_matching";
 let uri = "mongodb://"+hosts.join(",")+"/"+db_name;
+
 mongoose.connect(uri, {
     useNewUrlParser: true
     ,user: secret.mongodb.user
@@ -29,6 +30,4 @@ db.once("open", () =>  {
     console.log("connected mongodb: "+db_name)
 });
 
-module.exports = {
-    db: db
-}
+module.exports = db;

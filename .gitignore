@@ -1,5 +1,6 @@
 *.swp
 secret.json
+work/*
 
 # Logs
 logs

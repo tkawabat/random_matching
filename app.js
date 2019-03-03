@@ -1,52 +1,53 @@
 "use strict";
 
-let rootDir = require("app-root-path");
-let createError = require("http-errors");
-let path = require("path");
-let logger = require("morgan");
-let cookieParser = require("cookie-parser");
+const express = require("express");
+const rootDir = require("app-root-path");
+const createError = require("http-errors");
+const helmet = require('helmet')
+const path = require("path");
+const logger = require("morgan");
+const cookieParser = require("cookie-parser");
+const mongoose = require("mongoose");
+const moment = require("moment-timezone");
 
-let mongoose = require("mongoose");
-let connectMongo = require("connect-mongo");
+const account = require(rootDir + "/src/account");
+const db = require(rootDir + "/src/mongodb");
 
-let express = require("express");
-let app = express();
-
-let indexRouter = require("./routes/index");
-let usersRouter = require("./routes/users");
-let twitterRouter = require("./routes/twitter");
-
-let account = require(rootDir + "/src/account");
+const indexRouter = require("./routes/index");
+const usersRouter = require("./routes/users");
+const twitterRouter = require("./routes/twitter");
 
 
+const app = express();
+
+// security
+app.use(logger("dev"));
+app.use(helmet())
+app.set('trust proxy', 1)
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, "public")));
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
+
+// auth
 app.use(account.session({
     secret: "secret-key",
-    name: "sessionId",
+    name: "session_id",
     resave: false,
     saveUninitialized: true,
     cookie:{
+        httpOnly: true,
         secure: true,
-        maxage: 1000 * 60 * 30 // ミリ秒
+        maxAge: 1000 * 60 * 60 * 24 * 90 // ミリ秒
     }
 }));
 app.use(account.passport.initialize());
 app.use(account.passport.session());
 
-// security
-let helmet = require('helmet')
-app.use(helmet())
-app.set('trust proxy', 1)
 
-// view engine setup
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "ejs");
-
-app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
-
+// router
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 //app.use("/twitter", twitterRouter);
