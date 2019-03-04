@@ -22,19 +22,19 @@ router.get("/twitter/callback",
     }));
 
 router.get("/user", account.isAuthenticated, function(req, res) {
-    console.log(account.passport.session.id);
-    res.send("respond with a resource");
+    console.log(req.user);
+    res.render("user", { title: "らんだむまっちんぐ", user: req.user });
 });
 
 router.get("/socket", function (req, res, next) {
-    console.log(req.user);
+    console.log(req);
     // 認証保護
-    if (account.session && account.session.id){
-        //
+    if (req.user) {
+    //if (account.session && account.session.id){
+        res.render("socket", { title: "Express" });
     } else {
         res.redirect("/");
     }
-    res.render("socket", { title: "Express" });
 });
 
 module.exports = router;

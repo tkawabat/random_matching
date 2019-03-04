@@ -32,7 +32,7 @@ passport.use(new TwitterStrategy({
         console.log("auth user "+profile.id+", "+profile.username);
         User.findOneAndUpdate({ "_id" : profile.id }, user, { upsert: true }, function(err, res) {
             console.log(err);
-            console.log(res);
+            //console.log(res);
         });
 
         // tokenとtoken_secretをセット
@@ -47,12 +47,15 @@ passport.use(new TwitterStrategy({
 
 // セッションに保存
 passport.serializeUser(function(user, done) {
+    console.log(user);
     done(null, user.id);
 });
 
 // セッションから復元 routerのreq.userから利用可能
 passport.deserializeUser(function(id, done) {
+    console.log("deserialize id: "+id);
     User.findById(id, (error, user) => {
+        console.log(user);
         if (error) {
             return done(error);
         }
@@ -60,7 +63,6 @@ passport.deserializeUser(function(id, done) {
     });
 });
 
-// 認証済みか判定
 function isAuthenticated(req, res, next){
     if (req.isAuthenticated()) { // 認証済
         return next();

@@ -7,11 +7,11 @@ const helmet = require('helmet')
 const path = require("path");
 const logger = require("morgan");
 const cookieParser = require("cookie-parser");
-const mongoose = require("mongoose");
+const connect_mongo = require('connect-mongo');
 const moment = require("moment-timezone");
 
-const account = require(rootDir + "/src/account");
 const db = require(rootDir + "/src/mongodb");
+const account = require(rootDir + "/src/account");
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
@@ -20,7 +20,6 @@ const twitterRouter = require("./routes/twitter");
 
 const app = express();
 
-// security
 app.use(logger("dev"));
 app.use(helmet())
 app.set('trust proxy', 1)
@@ -32,15 +31,17 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 // auth
+const mongoStore = connect_mongo(account.session);
 app.use(account.session({
-    secret: "secret-key",
+    secret: "phee5aiWahpeekaej3lad2xaigh8sid7",
     name: "session_id",
     resave: false,
     saveUninitialized: true,
+    store: new mongoStore({ mongooseConnection: db }),
     cookie:{
         httpOnly: true,
         secure: true,
-        maxAge: 1000 * 60 * 60 * 24 * 90 // ミリ秒
+        maxAge: 1000 * 60 * 60 * 24 * 180 // ミリ秒
     }
 }));
 app.use(account.passport.initialize());
