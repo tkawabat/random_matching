@@ -2,6 +2,9 @@
 
 const rootDir = require("app-root-path");
 const express = require("express");
+const React = require("react");
+const ReactDOMServer = require("react-dom/server");
+
 const router = express.Router();
 const account = require(rootDir + "/src/account");
 
@@ -34,5 +37,14 @@ router.get("/user", account.isAuthenticated, function(req, res) {
     console.log(req.user);
     res.render("user", { title: "らんだむまっちんぐ", user: req.user });
 });
+
+
+router.get("/react", function(req, res) {
+    ReactDOMServer.renderToNodeStream(
+        <Html>
+        <App />
+        </Html>
+    ).pipe(res);
+}
 
 module.exports = router;
