@@ -15,7 +15,6 @@ const account = require(rootDir + "/src/account");
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
-const twitterRouter = require("./routes/twitter");
 
 
 const app = express();
@@ -51,8 +50,6 @@ app.use(account.passport.session());
 // router
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
-//app.use("/twitter", twitterRouter);
-app.use("/twitter", twitterRouter.configRoutes(app, account.passport));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

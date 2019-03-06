@@ -25,14 +25,13 @@ passport.use(new TwitterStrategy({
         // db save
         const user = new User({
             _id: profile.id
-            ,name: profile._json.screen_name
+            ,name: profile._json.name
             ,twitter_created_at: profile._json.created_at
             ,image_url_https: profile._json.profile_image_url_https
         });
         console.log("auth user "+profile.id+", "+profile.username);
         User.findOneAndUpdate({ "_id" : profile.id }, user, { upsert: true }, function(err, res) {
             console.log(err);
-            //console.log(res);
         });
 
         // tokenとtoken_secretをセット
@@ -47,15 +46,12 @@ passport.use(new TwitterStrategy({
 
 // セッションに保存
 passport.serializeUser(function(user, done) {
-    console.log(user);
     done(null, user.id);
 });
 
 // セッションから復元 routerのreq.userから利用可能
 passport.deserializeUser(function(id, done) {
-    console.log("deserialize id: "+id);
     User.findById(id, (error, user) => {
-        console.log(user);
         if (error) {
             return done(error);
         }

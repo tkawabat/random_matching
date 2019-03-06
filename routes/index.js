@@ -8,7 +8,7 @@ const account = require(rootDir + "/src/account");
 
 router.get("/", function(req, res, next) {
     if (req.isAuthenticated()) {
-        res.redirect('/user');
+        res.redirect("/user");
     } else {
         res.render("index", { title: "Express" });
     }
@@ -24,6 +24,11 @@ router.get("/twitter/callback",
         successRedirect: "/user",
         failureRedirect: "/?auth_failed"
     }));
+
+router.get("/logout", function(req, res){
+      req.logout();
+      res.redirect("/");
+});
 
 router.get("/user", account.isAuthenticated, function(req, res) {
     console.log(req.user);
