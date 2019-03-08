@@ -6,10 +6,12 @@ const SSL_DIR = "/etc/letsencrypt/live/random-matching.tokyo";
  * Module dependencies.
  */
 
-let fs = require("fs");
-let app = require("../app");
-let debug = require("debug")("random-matching:server");
-let https = require("https");
+const fs = require("fs");
+const debug = require("debug")("random-matching:server");
+const https = require("https");
+
+const app = require("../app");
+const socket = require("../src/socket")
 
 /**
  * Get port from environment and store in Express.
@@ -29,10 +31,7 @@ let sslOption = {
     "log level":1
 }
 let server = https.createServer(sslOption, app);
-let io = require("socket.io").listen(server);
-io.on('connection', (socket) => {
-      console.log('a user connected');
-});
+socket(server);
 
 /**
  * Listen on provided port, on all network interfaces.

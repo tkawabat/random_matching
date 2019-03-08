@@ -1,15 +1,56 @@
-'use strict';
+"use strict";
 
-let rootDir = require('app-root-path');
-let logger = require("morgan");
-let session = require('express-session');
-let passport = require('passport');
-let TwitterStrategy = require('passport-twitter').Strategy;
+const rootDir = require("app-root-path");
+const logger = require("morgan");
+const expressSession = require("express-session");
+const cookieParser = require("cookie-parser");
+const passportSocketIo = require("passport.socketio");
+const passport = require("passport");
+const TwitterStrategy = require("passport-twitter").Strategy;
+const connectMongo = require("connect-mongo");
 
-let secret = require(rootDir + '/secret.json');
-let User = require(rootDir + "/src/model/user");
-let db = require(rootDir + "/src/mongodb");
+const secret = require(rootDir + "/secret.json");
+const User = require(rootDir + "/src/model/user");
+const db = require(rootDir + "/src/mongodb");
 
+const COOKIE_SESSION_KEY = "session_id";
+const SECRET = "phee5aiWahpeekaej3lad2xaigh8sid7";
+
+
+let mongoStore = connectMongo(expressSession);
+let sessionStore = new mongoStore({ mongooseConnection: db.connection });
+
+let session = expressSession({
+    secret: SECRET,
+    name: COOKIE_SESSION_KEY,
+    resave: false,
+    saveUninitialized: true,
+    store: sessionStore,
+    cookie:{
+        httpOnly: true,
+        secure: true,
+        maxAge: 1000 * 60 * 60 * 24 * 180 // ミリ秒
+    }
+});
+
+let socketSession = passportSocketIo.authorize({
+    passport : passport
+    ,cookieParser: cookieParser
+    ,key: COOKIE_SESSION_KEY
+    ,secret: SECRET
+    ,store: sessionStore
+    ,success: function(data, accept) {
+        console.log(data.user.name+"@"+data.user.id+" connected socket.");
+        accept(null, true);
+    }
+    ,fail: function(data, message, error, accept){
+        if(error) {
+            throw new Error(message);
+        }
+        console.log("failed connection to socket.io:", message);
+        accept(null, false);
+    }
+});
 
 // passport-twitterの設定
 passport.use(new TwitterStrategy({
@@ -64,13 +105,14 @@ function isAuthenticated(req, res, next){
         return next();
     }
     else { // 認証されていない
-        res.redirect('/');  // ログイン画面に遷移
+        res.redirect("/");  // ログイン画面に遷移
     }
 }
 
 
 module.exports = {
     session: session,
+    socketSession: socketSession,
     passport: passport,
     isAuthenticated: isAuthenticated
 }

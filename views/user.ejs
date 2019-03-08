@@ -1,12 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title><%= title %></title>
-  <link rel='stylesheet' href='/stylesheets/style.css' />
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
-  <h1><%= title %></h1>
-  <p><img src="<%= user.image_url_https %>"> <%= user.name %></p>
+    <h1><%= title %></h1>
+    <p><img src="<%= user.image_url_https %>"> <%= user.name %></p>
+    
+    <div>
+    <input type="text" name="skype" value="<%= user.skyepe %>">
+    </div>
 
-  <a href="/logout">ログアウト</a>
+    <div>
+    <a href="/logout">ログアウト</a>
+    </div>
+    
+<script>
+(function() {
+    var socket = io();
+})();
+</script>
 </body>
+</html>

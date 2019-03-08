@@ -1,10 +1,12 @@
 "use strict";
 
-let mongoose = require("mongoose");
+//let mongoose = require("mongoose");
 let moment = require("moment-timezone");
 moment.tz.setDefault("Asia/Tokyo");
 
-const userSchema = mongoose.Schema({
+let db = require("../mongodb");
+
+const userSchema = db.Schema({
     _id: { type: String }
     ,name: { type: String }
     ,skype: { type: String }
@@ -15,4 +17,4 @@ const userSchema = mongoose.Schema({
     { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );
 
-module.exports = mongoose.model("user", userSchema);
+module.exports = db.model("user", userSchema);

@@ -13,6 +13,7 @@ let hosts = [
 let db_name = "random_matching";
 let uri = "mongodb://"+hosts.join(",")+"/"+db_name;
 
+mongoose.Promise = global.Promise;
 mongoose.connect(uri, {
     useNewUrlParser: true
     ,user: secret.mongodb.user
@@ -23,11 +24,10 @@ mongoose.connect(uri, {
     ,connectTimeoutMS: 1000
     ,bufferCommands: false
 });
-const db = mongoose.connection;
 
-db.on("error", console.error.bind(console, "fail to connected to mongodb: "+db_name));
-db.once("open", () =>  {
-    console.log("connected mongodb: "+db_name)
+mongoose.connection.on("error", console.error.bind(console, "fail to connected to mongodb: "+db_name));
+mongoose.connection.once("open", () =>  {
+    console.log("connected mongodb: "+db_name);
 });
 
-module.exports = db;
+module.exports = mongoose;

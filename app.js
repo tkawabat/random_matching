@@ -7,14 +7,12 @@ const helmet = require('helmet')
 const path = require("path");
 const logger = require("morgan");
 const cookieParser = require("cookie-parser");
-const connect_mongo = require('connect-mongo');
 const moment = require("moment-timezone");
 
-const db = require(rootDir + "/src/mongodb");
 const account = require(rootDir + "/src/account");
 
 const indexRouter = require("./routes/index");
-const usersRouter = require("./routes/users");
+const usersRouter = require("./routes/user");
 
 
 const app = express();
@@ -30,26 +28,14 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 // auth
-const mongoStore = connect_mongo(account.session);
-app.use(account.session({
-    secret: "phee5aiWahpeekaej3lad2xaigh8sid7",
-    name: "session_id",
-    resave: false,
-    saveUninitialized: true,
-    store: new mongoStore({ mongooseConnection: db }),
-    cookie:{
-        httpOnly: true,
-        secure: true,
-        maxAge: 1000 * 60 * 60 * 24 * 180 // ミリ秒
-    }
-}));
+app.use(account.session);
 app.use(account.passport.initialize());
 app.use(account.passport.session());
 
 
 // router
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
+app.use("/user", usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
