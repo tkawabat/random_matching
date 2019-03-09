@@ -11,7 +11,6 @@ const debug = require("debug")("random-matching:server");
 const https = require("https");
 
 const app = require("../app");
-const socket = require("../src/socket")
 
 /**
  * Get port from environment and store in Express.
@@ -31,7 +30,6 @@ let sslOption = {
     "log level":1
 }
 let server = https.createServer(sslOption, app);
-socket(server);
 
 /**
  * Listen on provided port, on all network interfaces.

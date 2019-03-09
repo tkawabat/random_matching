@@ -8,8 +8,6 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="/stylesheets/style.css" />
-
-    <script src="/socket.io/socket.io.js"></script>
 </head>
 
 <body>
@@ -52,21 +50,6 @@
     
 <script>
 (function() {
-    let socket = io();
-
-    let modalOpen = function() { $("#modal").modal({show: true}); };
-    let modalClose = function() { $("#modal").modal({show: false}); };
-
-    socket.on("error", function(msg) {
-        document.getElementById("modal_body").innerHTML = msg.error;
-        modalOpen();
-    });
-    document.form_user.addEventListener("submit", function() {
-        let data = {};
-        data.skype_id = this.skype_id.value;
-        data.sex = this.sex.value;
-        socket.emit("user save", data);
-    });
 
 })();
 </script>
