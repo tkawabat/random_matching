@@ -15,15 +15,15 @@
 <h1><%= title %></h1>
 <p><img src="<%= user.image_url_https %>"> <%= user.name %></p>
 
-<form name="form_user" onSubmit="return false;">
+<form method="POST" action="/user/">
 <div class="form-group">
     性別：
-    男&nbsp;<input type="radio" name="sex" value="m" required>&nbsp;
-    女&nbsp;<input type="radio" name="sex" value="f" required>
+    男&nbsp;<input type="radio" name="sex" value="m" required checked="<% user.sex === 'm' ? 'true' : 'false'; %>" disabled="<% user.sex == null ? 'false' : 'true'; %>">&nbsp;
+    女&nbsp;<input type="radio" name="sex" value="f" required checked="<% user.sex === 'f' ? 'true' : 'false'; %>" disabled="<% user.sex == null ? 'false' : 'true'; %>">
 </div>
 <div class="form-group">
     Skype：
-    <input type="text" class="form-control" name="skype_id" placeholder="skype id" required value="<%= user.skyepe %>">
+    <input type="text" class="form-control" name="skype_id" placeholder="skype id" required value="<%= user.skyepe_id %>">
 </div>
 <button type="submit" class="btn btn-primary">Save</button>
 </form>

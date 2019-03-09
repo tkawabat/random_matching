@@ -3,7 +3,8 @@
 const twitter = require("twitter");
 const fs = require("fs");
 
-const client = new twitter(JSON.parse(fs.readFileSync("secret.json","utf-8")));
+let json = JSON.parse(fs.readFileSync("secret.json","utf-8")).twitter;
+const client = new twitter(json);
 
 client.get("account/settings", {}, function(error, tweet, response){
     if (!error) {

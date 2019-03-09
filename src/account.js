@@ -54,8 +54,8 @@ let socketSession = passportSocketIo.authorize({
 
 // passport-twitterの設定
 passport.use(new TwitterStrategy({
-    consumerKey: secret.twitter.app_key,
-    consumerSecret: secret.twitter.secret_key,
+    consumerKey: secret.twitter.consumer_key,
+    consumerSecret: secret.twitter.consumer_secret,
     callbackURL: "https://random-matching.tokyo:3000/twitter/callback"
 },
     // 認証後の処理
@@ -66,12 +66,15 @@ passport.use(new TwitterStrategy({
         // db save
         const user = new User({
             _id: profile.id
-            ,name: profile._json.name
+            ,twitter_token: token
+            ,twitter_token_secret: tokenSecret
+            ,twitter_id: profile.username
+            ,twitter_name: profile.displayName
             ,twitter_created_at: profile._json.created_at
-            ,image_url_https: profile._json.profile_image_url_https
+            ,image_url_https: profile.photos[0].value
         });
-        console.log("auth user "+profile.id+", "+profile.username);
-        User.findOneAndUpdate({ "_id" : profile.id }, user, { upsert: true }, function(err, res) {
+        console.log("auth user "+user._id+", "+user.twitter_id);
+        user.save(function(err, res) {
             console.log(err);
         });
 
