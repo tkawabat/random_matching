@@ -4,6 +4,7 @@ const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
 const rootDir = require("app-root-path");
 const helmet = require("helmet")
+const compression = require("compression")
 const cookieParser = require("cookie-parser");
 const schedule = require("node-schedule");
 const moment = require("moment-timezone");
@@ -18,6 +19,7 @@ const app = express();
 
 app.use(require(rootDir + "/src/morgan"));
 app.use(helmet())
+app.use(compression())
 app.set("trust proxy", 1)
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
