@@ -9,7 +9,7 @@ log4js.configure({
         console: { type: "console" }
         ,app: {
             type: "file"
-            ,filename: rootDir+"/app.log"
+            ,filename: rootDir+"/log/app.log"
             ,maxLogSize: 10 * 1024 * 1024 // 10MB
         }
     }

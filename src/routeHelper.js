@@ -1,5 +1,7 @@
 "use strict";
 
+const rootDir = require("app-root-path");
+const logger = require(rootDir + "/src/log4js");
 const createError = require("http-errors");
 
 
@@ -46,7 +48,7 @@ const Error500 = (err, req, res, next) => {
     // render the error page
     res.status(err.status || 500);
 
-    console.log(err);
+    logger.error(err);
 
     param.alert_warning = warning.error500;
     res.render("index", param);

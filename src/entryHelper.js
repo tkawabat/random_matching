@@ -16,6 +16,11 @@ const getMatch = (req, res, next) => {
             return;
         }
 
+        if (!match) {
+            next();
+            return;
+        }
+
         User.find({ _id: { $in: match.ids}}, (err, users) => {
             if (err) {
                 logger.error(err);
