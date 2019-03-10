@@ -4,6 +4,7 @@ const rootDir = require("app-root-path");
 const express = require("express");
 
 const router = express.Router();
+const logger = require(rootDir + "/src/log4js");
 const account = require(rootDir + "/src/account");
 const validator = require(rootDir + "/src/validator");
 const routeHelper = require(rootDir + "/src/routeHelper");
@@ -13,6 +14,7 @@ const ActEntry = require(rootDir + "/src/model/actEntry");
 router.get("/", account.isAuthenticated, routeHelper.check, (req, res) => {
     ActEntry.findOne({ _id: req.user.id }, (err, entry) => {
         if (err) {
+            logger.error(err);
             throw err;
             return;
         }
@@ -33,7 +35,7 @@ router.post("/", account.isAuthenticated, validator.actEntry, (req, res) => {
     });
     ActEntry.findOneAndUpdate({_id: entry.id}, entry, {upsert: true}, (err, entry) => {
         if (err) {
-            console.log(err);
+            logger.error(err);
             res.redirect("/entry/?warning=entry_save");
             return;
         }
@@ -54,7 +56,7 @@ router.post("/cancel", account.isAuthenticated, validator.actEntry, (req, res) =
     });
     entry.remove((err, entry) => {
         if (err) {
-            console.log(err);
+            logger.error(err);
             res.redirect("/entry/?warning=entry_delete");
             return;
         }

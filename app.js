@@ -4,25 +4,23 @@ const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
 const rootDir = require("app-root-path");
 const helmet = require("helmet")
-const path = require("path");
 const cookieParser = require("cookie-parser");
 
-const logger = require(rootDir + "/src/logger");
 const account = require(rootDir + "/src/account");
 const routeHelper = require(rootDir + "/src/routeHelper");
 
 
 const app = express();
 
-app.use(logger);
+app.use(require(rootDir + "/src/morgan"));
 app.use(helmet())
 app.set("trust proxy", 1)
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(rootDir +"/public"));
 app.use(expressLayouts);
-app.set("views", path.join(__dirname, "views"));
+app.set("views", rootDir+"/views");
 app.set("view engine", "ejs");
 
 // auth

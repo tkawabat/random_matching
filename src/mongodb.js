@@ -1,8 +1,10 @@
 "use strict";
 
 let rootDir = require("app-root-path");
-let secret = require(rootDir + "/secret.json");
 let mongoose = require("mongoose");
+
+let secret = require(rootDir + "/secret.json");
+let logger = require(rootDir + "/src/log4js");
 
 
 let hosts = [
@@ -25,9 +27,12 @@ mongoose.connect(uri, {
     ,bufferCommands: false
 });
 
-mongoose.connection.on("error", console.error.bind(console, "fail to connected to mongodb: "+db_name));
+mongoose.connection.on("error", (err) => {
+    logger.err(err);
+    throw err;
+}
 mongoose.connection.once("open", () =>  {
-    console.log("connected mongodb: "+db_name);
+    logger.info("connected mongodb: "+db_name);
 });
 
 module.exports = mongoose;
