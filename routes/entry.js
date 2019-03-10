@@ -20,7 +20,7 @@ router.get("/",
     (req, res) => {
         res.viewParam.user = req.user;
         let status = "null";
-        if (res.viewParam.match) {
+        if (res.viewParam.matched) {
             status = "matched";
         } else if (res.viewParam.entry) {
             status = "entried";
