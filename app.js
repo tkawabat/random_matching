@@ -5,17 +5,16 @@ const expressLayouts = require("express-ejs-layouts");
 const rootDir = require("app-root-path");
 const helmet = require("helmet")
 const path = require("path");
-const logger = require("morgan");
 const cookieParser = require("cookie-parser");
-const moment = require("moment-timezone");
 
+const logger = require(rootDir + "/src/logger");
 const account = require(rootDir + "/src/account");
 const routeHelper = require(rootDir + "/src/routeHelper");
 
 
 const app = express();
 
-app.use(logger("dev"));
+app.use(logger);
 app.use(helmet())
 app.set("trust proxy", 1)
 app.use(express.json());

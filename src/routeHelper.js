@@ -5,6 +5,7 @@ const createError = require("http-errors");
 
 const warning = {
     twitter_auth_failed: "Twitter認証で失敗しました"
+    ,user_save: "ユーザー情報の更新に失敗しました"
     ,error500: "予期せぬエラーが発生しました。時間を置いてアクセスしてください"
 }
 const info = {

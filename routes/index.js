@@ -26,9 +26,9 @@ router.get("/twitter/callback", account.passport.authenticate("twitter", {
     failureRedirect: "/?warning=twitter_auth_failed"
 }));
 
-router.get("/logout", function(req, res){
-      req.logout();
-      res.redirect("/");
+router.get("/logout", (req, res) => {
+    req.logout();
+    res.redirect("/");
 });
 
 

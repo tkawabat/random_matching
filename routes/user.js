@@ -6,13 +6,15 @@ const express = require("express");
 const router = express.Router();
 const account = require(rootDir + "/src/account");
 const validator = require(rootDir + "/src/validator");
+const routeHelper = require(rootDir + "/src/routeHelper");
 
 
-router.get("/", account.isAuthenticated, function(req, res) {
-    res.render("user", { title: "らんだむまっちんぐ", user: req.user });
+router.get("/", account.isAuthenticated, routeHelper.check, function(req, res) {
+    res.viewParam.user = req.user;
+    res.render("user", res.viewParam);
 });
 
-router.post("/", account.isAuthenticated, validator.user, function(req, res) {
+router.post("/", account.isAuthenticated, validator.user, routeHelper.check, (req, res) => {
     if (validator.isError(req)) {
         res.redirect("/user/?err=validate");
         return;
@@ -21,12 +23,13 @@ router.post("/", account.isAuthenticated, validator.user, function(req, res) {
     let user = req.user;
     user.sex = req.body.sex;
     user.skype_id = req.body.skype_id;
-    user.save(function(err, user) {
+    user.save((err, user) => {
         if (err) {
-            res.redirect("/user/?err=save");
+            res.redirect("/user/?warning=user_save");
             return;
         }
-        res.render("user", { title: "らんだむまっちんぐ", user: user });
+        res.viewParam.user = user;
+        res.render("user", res.viewParam);
     });
 
 });
