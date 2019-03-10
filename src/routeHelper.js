@@ -23,7 +23,6 @@ const param = {
 }
 
 const check = ( req, res, next) => {
-
     if (req.query.warning && warning[req.query.warning]) {
         param.alert_warning = warning[req.query.warning];
     }

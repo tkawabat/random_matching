@@ -29,6 +29,16 @@ app.use(expressLayouts);
 app.set("views", rootDir+"/views");
 app.set("view engine", "ejs");
 
+app.use(function (req, res, next) {
+    res.removeHeader('X-Powered-By');
+    res.removeHeader('ETag');
+    res.header('Cache-Control', ['private', 'no-store', 'no-cache', 'must-revalidate', 'proxy-revalidate'].join(','));
+    res.header('no-cache', 'Set-Cookie');
+    res.header("Pragma", "no-cache");
+    res.header("Expires", -1);
+    next();
+});
+
 // auth
 app.use(account.session);
 app.use(account.passport.initialize());

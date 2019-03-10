@@ -11,7 +11,7 @@ const schema = db.Schema({
     ,expire_at: {
         type: Date,
         default: new Date(),
-        expires: 60 * 60 * 3 // 3hour
+        expires: 1000 * 60 * 60 * 3 // 3hour
     }
 },
     { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
