@@ -6,8 +6,11 @@ const rootDir = require("app-root-path");
 const helmet = require("helmet")
 const cookieParser = require("cookie-parser");
 const schedule = require("node-schedule");
+const moment = require("moment-timezone");
+moment.tz.setDefault("Asia/Tokyo");
 
 const account = require(rootDir + "/src/account");
+const matcher = require(rootDir + "/src/matcher");
 const routeHelper = require(rootDir + "/src/routeHelper");
 
 
@@ -37,7 +40,7 @@ app.use("/entry", require("./routes/entry"));
 
 
 // schedule
-
+schedule.scheduleJob(moment("2019-03-10 17:35:00").toDate(), matcher.matchAct);
 
 // catch 404 and forward to error handler
 app.use(routeHelper.Error404);

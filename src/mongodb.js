@@ -30,7 +30,7 @@ mongoose.connect(uri, {
 mongoose.connection.on("error", (err) => {
     logger.err(err);
     throw err;
-}
+});
 mongoose.connection.once("open", () =>  {
     logger.info("connected mongodb: "+db_name);
 });

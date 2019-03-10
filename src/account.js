@@ -8,8 +8,8 @@ const passport = require("passport");
 const TwitterStrategy = require("passport-twitter").Strategy;
 const connectMongo = require("connect-mongo");
 
-const logger = require(rootDir+"/log4js");
 const secret = require(rootDir+"/secret.json");
+const logger = require(rootDir+"/src/log4js");
 const User = require(rootDir+"/src/model/user");
 const db = require(rootDir+"/src/mongodb");
 
@@ -33,24 +33,24 @@ let session = expressSession({
     }
 });
 
-//let socketSession = passportSocketIo.authorize({
-//    passport : passport
-//    ,cookieParser: cookieParser
-//    ,key: COOKIE_SESSION_KEY
-//    ,secret: SECRET
-//    ,store: sessionStore
-//    ,success: function(data, accept) {
-//        console.log(data.user.name+"@"+data.user.id+" connected socket.");
-//        accept(null, true);
-//    }
-//    ,fail: function(data, message, error, accept){
-//        if(error) {
-//            throw new Error(message);
-//        }
-//        console.log("failed connection to socket.io:", message);
-//        accept(null, false);
-//    }
-//});
+let socketSession = passportSocketIo.authorize({
+    passport : passport
+    ,cookieParser: cookieParser
+    ,key: COOKIE_SESSION_KEY
+    ,secret: SECRET
+    ,store: sessionStore
+    ,success: function(data, accept) {
+        console.log(data.user.name+"@"+data.user.id+" connected socket.");
+        accept(null, true);
+    }
+    ,fail: function(data, message, error, accept){
+        if(error) {
+            throw new Error(message);
+        }
+        console.log("failed connection to socket.io:", message);
+        accept(null, false);
+    }
+});
 
 passport.use(new TwitterStrategy({
     consumerKey: secret.twitter.consumer_key

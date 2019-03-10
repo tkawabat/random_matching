@@ -8,21 +8,26 @@ const logger = require(rootDir + "/src/log4js");
 const account = require(rootDir + "/src/account");
 const validator = require(rootDir + "/src/validator");
 const routeHelper = require(rootDir + "/src/routeHelper");
+const entryHelper = require(rootDir + "/src/entryHelper");
 const ActEntry = require(rootDir + "/src/model/actEntry");
 
 
-router.get("/", account.isAuthenticated, routeHelper.check, (req, res) => {
-    ActEntry.findOne({ _id: req.user.id }, (err, entry) => {
-        if (err) {
-            logger.error(err);
-            throw err;
-            return;
-        }
+router.get("/",
+    account.isAuthenticated,
+    routeHelper.check,
+    entryHelper.getMatch,
+    entryHelper.getEntry,
+    (req, res) => {
         res.viewParam.user = req.user;
-        res.viewParam.entry_status = entry ? "entried" : "null";
+        let status = "null";
+        if (res.viewParam.match) {
+            status = "matched";
+        } else if (res.viewParam.entry) {
+            status = "entried";
+        }
+        res.viewParam.entry_status = status;
         res.render("entry", res.viewParam);
     });
-});
 
 router.post("/", account.isAuthenticated, validator.actEntry, (req, res) => {
     if (validator.isError(req)) {
