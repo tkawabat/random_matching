@@ -74,7 +74,7 @@ passport.use(new TwitterStrategy({
             ,image_url_https: profile.photos[0].value
         });
         console.log("auth user "+user._id+", "+user.twitter_id);
-        user.save(function(err, res) {
+        User.findOneAndUpdate({ "_id" : profile.id }, user, { upsert: true }, function(err, res) {
             console.log(err);
         });
 

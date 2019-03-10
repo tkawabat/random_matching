@@ -5,24 +5,26 @@ const express = require("express");
 
 const router = express.Router();
 const account = require(rootDir + "/src/account");
+const routeHelper = require(rootDir + "/src/routeHelper");
 
 
-router.get("/", function(req, res, next) {
+router.get("/", routeHelper.check, (req, res) => {
+    console.log(res.viewParam);
     if (req.isAuthenticated()) {
         res.redirect("/user/");
     } else {
-        res.render("index", { title: "Express" });
+        res.render("index", res.viewParam);
     }
 });
 
 router.get("/twitter/login", account.passport.authenticate("twitter"), (req, res) => {
-        res.json({ user: req.user });
-    });
+    res.json({ user: req.user });
+});
 
 router.get("/twitter/callback", account.passport.authenticate("twitter", {
-        successRedirect: "/user/",
-        failureRedirect: "/?auth_failed"
-    }));
+    successRedirect: "/user/",
+    failureRedirect: "/?warning=twitter_auth_failed"
+}));
 
 router.get("/logout", function(req, res){
       req.logout();
