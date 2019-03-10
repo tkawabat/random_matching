@@ -5,6 +5,7 @@ const expressLayouts = require("express-ejs-layouts");
 const rootDir = require("app-root-path");
 const helmet = require("helmet")
 const cookieParser = require("cookie-parser");
+const schedule = require("node-schedule");
 
 const account = require(rootDir + "/src/account");
 const routeHelper = require(rootDir + "/src/routeHelper");
@@ -33,6 +34,9 @@ app.use(account.passport.session());
 app.use("/", require("./routes/index"));
 app.use("/user", require("./routes/user"));
 app.use("/entry", require("./routes/entry"));
+
+
+// schedule
 
 
 // catch 404 and forward to error handler
