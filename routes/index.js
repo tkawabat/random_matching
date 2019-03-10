@@ -9,7 +9,6 @@ const routeHelper = require(rootDir + "/src/routeHelper");
 
 
 router.get("/", routeHelper.check, (req, res) => {
-    console.log(res.viewParam);
     if (req.isAuthenticated()) {
         res.redirect("/user/");
     } else {

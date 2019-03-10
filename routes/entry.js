@@ -7,27 +7,58 @@ const router = express.Router();
 const account = require(rootDir + "/src/account");
 const validator = require(rootDir + "/src/validator");
 const routeHelper = require(rootDir + "/src/routeHelper");
+const ActEntry = require(rootDir + "/src/model/actEntry");
 
 
 router.get("/", account.isAuthenticated, routeHelper.check, (req, res) => {
-    res.render("user", { user: req.user });
+    ActEntry.findOne({ _id: req.user.id }, (err, entry) => {
+        if (err) {
+            throw err;
+            return;
+        }
+        res.viewParam.user = req.user;
+        res.viewParam.entry_status = entry ? "entried" : "null";
+        res.render("entry", res.viewParam);
+    });
 });
 
-router.post("/", account.isAuthenticated, validator.user, routeHelper.check, (req, res) => {
+router.post("/", account.isAuthenticated, validator.actEntry, (req, res) => {
     if (validator.isError(req)) {
-        res.redirect("/user/?err=validate");
+        res.redirect("/entry/?warning=validate");
         return;
     }
 
-    let user = req.user;
-    user.sex = req.body.sex;
-    user.skype_id = req.body.skype_id;
-    user.save((err, user) => {
+    const entry = new ActEntry({
+        _id: req.user._id
+    });
+    ActEntry.findOneAndUpdate({_id: entry.id}, entry, {upsert: true}, (err, entry) => {
         if (err) {
-            res.redirect("/user/?err=save");
+            console.log(err);
+            res.redirect("/entry/?warning=entry_save");
             return;
         }
-        res.render("user", { user: user });
+        res.redirect("/entry/");
+    });
+
+});
+
+
+router.post("/cancel", account.isAuthenticated, validator.actEntry, (req, res) => {
+    if (validator.isError(req)) {
+        res.redirect("/entry/?warning=validate");
+        return;
+    }
+
+    const entry = new ActEntry({
+        _id: req.user._id
+    });
+    entry.remove((err, entry) => {
+        if (err) {
+            console.log(err);
+            res.redirect("/entry/?warning=entry_delete");
+            return;
+        }
+        res.redirect("/entry/");
     });
 
 });

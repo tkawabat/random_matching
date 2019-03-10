@@ -1,20 +1,15 @@
-<%
-let sex_disabled = user.sex == null ? "" : "disabled"; 
-let sex_m = user.sex === 'm' ? "checked" : "";
-let sex_f = user.sex === 'f' ? "checked" : "";
-%>
+<% if (entry_status === "entried") { %>
 
+マッチング中
 
-<form method="POST" action="/user/">
-    <div class="form-group">
-        性別：
-        男&nbsp;<input type="radio" name="sex" value="m" required <%= sex_m %> <%= sex_disabled %>>&nbsp;
-        女&nbsp;<input type="radio" name="sex" value="f" required <%= sex_f %> <%= sex_disabled %>>
-    </div>
-    <div class="form-group form-inline">
-        Skype：
-        <input type="text" class="form-control" name="skype_id" placeholder="skype id" required value="<%= user.skype_id %>">
-    </div>
-    <p class="text-right"><button type="submit" class="btn btn-success">更新</button></p>
+<form method="POST" action="/entry/cancel">
+    <p class="text-center"><button type="submit" class="btn btn-danger">キャンセル</button></p>
 </form>
 
+<% } else { %>
+
+<form method="POST" action="/entry/">
+   <p class="text-center"><button type="submit" class="btn btn-success">マッチング開始</button></p>
+</form>
+
+<% } %>

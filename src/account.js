@@ -52,41 +52,36 @@ let socketSession = passportSocketIo.authorize({
     }
 });
 
-// passport-twitterの設定
 passport.use(new TwitterStrategy({
-    consumerKey: secret.twitter.consumer_key,
-    consumerSecret: secret.twitter.consumer_secret,
-    callbackURL: "https://random-matching.tokyo:3000/twitter/callback"
-},
-    // 認証後の処理
-    function(token, tokenSecret, profile, done) {
-        passport.session.id = profile.id;
-        //console.log(profile);
+    consumerKey: secret.twitter.consumer_key
+    ,consumerSecret: secret.twitter.consumer_secret
+    ,callbackURL: "https://random-matching.tokyo:3000/twitter/callback"
+}, (token, tokenSecret, profile, done) => {
+    passport.session.id = profile.id;
+    //console.log(profile);
 
-        // db save
-        const user = new User({
-            _id: profile.id
-            ,twitter_token: token
-            ,twitter_token_secret: tokenSecret
-            ,twitter_id: profile.username
-            ,twitter_name: profile.displayName
-            ,twitter_created_at: profile._json.created_at
-            ,image_url_https: profile.photos[0].value
-        });
-        console.log("auth user "+user._id+", "+user.twitter_id);
-        User.findOneAndUpdate({ "_id" : profile.id }, user, { upsert: true }, function(err, res) {
-            console.log(err);
-        });
+    // db save
+    const user = new User({
+        _id: profile.id
+        ,twitter_token: token
+        ,twitter_token_secret: tokenSecret
+        ,twitter_id: profile.username
+        ,twitter_name: profile.displayName
+        ,twitter_created_at: profile._json.created_at
+        ,image_url_https: profile.photos[0].value
+    });
+    User.findOneAndUpdate({ "_id" : profile.id }, user, { upsert: true }, (err, res) => {
+        if (err) throw err; // TODO
+    });
 
-        // tokenとtoken_secretをセット
-        profile.twitter_token = token;
-        profile.twitter_token_secret = tokenSecret;
+    // tokenとtoken_secretをセット
+    profile.twitter_token = token;
+    profile.twitter_token_secret = tokenSecret;
 
-        process.nextTick(function () {
-            return done(null, profile);
-        });
-    }
-));
+    process.nextTick(function () {
+        return done(null, profile);
+    });
+}));
 
 // セッションに保存
 passport.serializeUser(function(user, done) {
@@ -95,9 +90,9 @@ passport.serializeUser(function(user, done) {
 
 // セッションから復元 routerのreq.userから利用可能
 passport.deserializeUser(function(id, done) {
-    User.findById(id, (error, user) => {
-        if (error) {
-            return done(error);
+    User.findById(id, (err, user) => {
+        if (err) {
+            return done(err);
         }
         done(null, user);
     });

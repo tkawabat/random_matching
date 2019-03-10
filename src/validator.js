@@ -10,11 +10,15 @@ const isError = function(req) {
 
 const user = [
   check("skype_id").isLength({ min: 3 })
-  , check("sex").custom((v, { req}) => v === "m" || v === "f")
+  , check("sex").custom((v, { req}) => !v || v === "m" || v === "f")
+];
+
+const actEntry = [
 ];
 
 
 module.exports = {
     isError: isError
     ,user: user
+    ,actEntry: actEntry
 }

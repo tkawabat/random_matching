@@ -5,12 +5,14 @@ const createError = require("http-errors");
 
 const warning = {
     twitter_auth_failed: "Twitter認証で失敗しました"
+    ,validate: "入力値に問題があります"
     ,user_save: "ユーザー情報の更新に失敗しました"
+    ,entry_save: "マッチング開始に失敗しました"
+    ,entry_delete: "マッチングキャンセルに失敗しました"
     ,error500: "予期せぬエラーが発生しました。時間を置いてアクセスしてください"
 }
 const info = {
-    user_save_success: "ユーザー情報を更新しました"
-    ,error500: "予期せぬエラーが発生しました。時間を置いてアクセスしてください。"
+    user_save: "ユーザー情報を更新しました"
 }
 const param = {
     title: "気まぐれ日和"
