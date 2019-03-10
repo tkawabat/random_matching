@@ -3,7 +3,6 @@
 const rootDir = require("app-root-path");
 const expressSession = require("express-session");
 const cookieParser = require("cookie-parser");
-const passportSocketIo = require("passport.socketio");
 const passport = require("passport");
 const TwitterStrategy = require("passport-twitter").Strategy;
 const connectMongo = require("connect-mongo");
@@ -30,25 +29,6 @@ let session = expressSession({
         httpOnly: true,
         secure: true,
         maxAge: 1000 * 60 * 60 * 24 * 180 // ミリ秒
-    }
-});
-
-let socketSession = passportSocketIo.authorize({
-    passport : passport
-    ,cookieParser: cookieParser
-    ,key: COOKIE_SESSION_KEY
-    ,secret: SECRET
-    ,store: sessionStore
-    ,success: function(data, accept) {
-        console.log(data.user.name+"@"+data.user.id+" connected socket.");
-        accept(null, true);
-    }
-    ,fail: function(data, message, error, accept){
-        if(error) {
-            throw new Error(message);
-        }
-        console.log("failed connection to socket.io:", message);
-        accept(null, false);
     }
 });
 
@@ -110,7 +90,6 @@ function isAuthenticated(req, res, next){
 
 module.exports = {
     session: session,
-    socketSession: socketSession,
     passport: passport,
     isAuthenticated: isAuthenticated
 }
