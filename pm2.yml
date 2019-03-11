@@ -1,5 +1,0 @@
-name: random
-script: bin/www
-exec_mode: "cluster"
-instances: 0 # コア数分インスタンスを立てる
-log-date-format: "YYYY-MM-DD HH:mm Z" # ログに日付を追加
