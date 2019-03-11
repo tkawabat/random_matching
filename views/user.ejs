@@ -4,9 +4,10 @@ let sex_m = user.sex === 'm' ? "checked" : "";
 let sex_f = user.sex === 'f' ? "checked" : "";
 %>
 
+<%- include("./module/user", {user:user, link:true}) %>
 
-<%= user.twitter_name %>
 
+<div class="mt-5">
 <form method="POST" action="/user/">
     <div class="form-group">
         性別：
@@ -19,7 +20,9 @@ let sex_f = user.sex === 'f' ? "checked" : "";
     </div>
     <p class="text-right"><button type="submit" class="btn btn-success">更新</button></p>
 </form>
+</div>
 
-<div>
+<div class="mt-5">
     <a href="/logout"><button type="button" class="btn btn-secondary">ログアウト</button></a>
 </div>
+

@@ -1,0 +1,15 @@
+<% if (link) { %>
+<a href="/user">
+<% } %>
+
+<div class="user_module mt-3">
+    <img class="user_twitter_img" src="<%= user.image_url_https %>">
+    <span>
+        <div><%= user.twitter_name %></div>
+        <div><%= user.skype_id %></div>
+    </span>
+</div>
+
+<% if (link) { %>
+</a>
+<% } %>

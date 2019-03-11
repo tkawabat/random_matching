@@ -34,3 +34,16 @@
     }
 }
 
+.user_module {
+    font-size: 18px;
+    background: #E7F1ED;
+    padding: 10px;
+    height: 95px;
+}
+.user_twitter_img {
+    border-radius: 50%;
+    width:  75px;
+    height: 75px;
+    margin-right: 2px;
+    float: left;
+}
