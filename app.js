@@ -30,10 +30,11 @@ app.set("views", rootDir+"/views");
 app.set("view engine", "ejs");
 
 app.use(function (req, res, next) {
-    res.removeHeader('X-Powered-By');
-    res.removeHeader('ETag');
-    res.header('Cache-Control', ['private', 'no-store', 'no-cache', 'must-revalidate', 'proxy-revalidate'].join(','));
-    res.header('no-cache', 'Set-Cookie');
+    res.removeHeader("X-Powered-By");
+    res.removeHeader("ETag");
+    res.header("Strict-Transport-Security", "max-age=15552000");
+    res.header("Cache-Control", ["private", "no-store", "no-cache", "must-revalidate", "proxy-revalidate"].join(","));
+    res.header("no-cache", "Set-Cookie");
     res.header("Pragma", "no-cache");
     res.header("Expires", -1);
     next();
