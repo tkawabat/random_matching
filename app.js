@@ -38,6 +38,12 @@ app.use(function (req, res, next) {
     res.header("no-cache", "Set-Cookie");
     res.header("Pragma", "no-cache");
     res.header("Expires", -1);
+
+    res.viewParam = {
+        title: "気まぐれ日和"
+        ,alert_warning: ""
+        ,alert_info: ""
+    };
     next();
 });
 

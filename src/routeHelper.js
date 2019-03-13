@@ -16,26 +16,19 @@ const warning = {
 const info = {
     user_save: "ユーザー情報を更新しました"
 }
-const param = {
-    title: "気まぐれ日和"
-    ,alert_warning: ""
-    ,alert_info: ""
-}
 
 const check = ( req, res, next) => {
     if (req.query.warning && warning[req.query.warning]) {
-        param.alert_warning = warning[req.query.warning];
+        res.viewParam.alert_warning = warning[req.query.warning];
     }
     if (req.query.info && info[req.query.info]) {
-        param.alert_info = info[req.query.info];
+        res.viewParam.alert_info = info[req.query.info];
     }
 
-    res.viewParam = param;
     next();
 };
 
 const Error404 = (req, res, next) => {
-    res.viewParam = param;
     next(createError(404));
 }
 
@@ -49,8 +42,8 @@ const Error500 = (err, req, res, next) => {
 
     logger.error(err);
 
-    param.alert_warning = warning.error500;
-    res.render("index", param);
+    res.viewParam.alert_warning = warning.error500;
+    res.render("index", res.viewParam);
 }
 
 
