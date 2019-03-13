@@ -9,8 +9,11 @@ const isError = function(req) {
 }
 
 const user = [
-  check("skype_id").isLength({ min: 3 })
-  , check("sex").custom((v, { req}) => !v || v === "m" || v === "f")
+  check("skype_id")
+    .isLength({ min: 3 })
+    .matches(/^[a-zA-Z0-9_\.\-:]*$/)
+  , check("sex")
+    .custom((v, { req}) => !v || v === "m" || v === "f")
 ];
 
 const actEntry = [
