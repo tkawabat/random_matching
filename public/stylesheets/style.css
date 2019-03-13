@@ -1,37 +1,31 @@
-.bs-component + .bs-component {
-    margin-top: 1rem;
+html {
+    height: 100%
 }
+
+@media (max-width: 767.98px) {
+    body {
+        width: auto; 
+        height: 100%;
+    }
+}
+
 @media (min-width: 768px) {
-    .bs-docs-section {
-        margin-top: 8em;
+    body { 
+        width: 768px;
+        height: 100%;
+        margin: auto;
     }
-    .bs-component {
-        position: relative;
-    }
-    .bs-component .modal {
-        position: relative;
-        top: auto;
-        right: auto;
-        bottom: auto;
-        left: auto;
-        z-index: 1;
-        display: block;
-    }
-    .bs-component .modal-dialog {
-        width: 90%;
-    }
-    .bs-component .popover {
-        position: relative;
-        display: inline-block;
-        width: 220px;
-        margin: 20px;
-    }
-    .nav-tabs {
-        margin-bottom: 15px;
-    }
-    .progress {
-        margin-bottom: 10px;
-    }
+}
+
+.content {
+    background: #FFEBCD;
+    height: 100%; 
+}
+
+.site_title {
+    font-color: #696969;
+    font-family: 'cursivea',sans-serif;
+    text-shadow: 1px 1px 1px silver;
 }
 
 .header .question {
@@ -47,9 +41,14 @@
     float: right;
 }
 
+.main {
+    width: 90%;
+    margin: auto;
+}
+
 .user_module {
     font-size: 18px;
-    background: #E7F1ED;
+    background: #FFFFEE;
     padding: 10px;
     height: 95px;
 }
@@ -61,7 +60,7 @@
     float: left;
 }
 .user_module .twitter_name {
-    font-weight: bold;
+    color: #555555;
     margin-top: 5px;
 }
 .user_module .twitter_id {
@@ -73,6 +72,28 @@
     opacity: 0.5;
     margin-top: 5px;
 }
-.user_module .user_logout {
-    margin-top: 30px;
+
+/* index */
+.intro {
+    color: #555555;
+}
+.intro p {
+    line-height: 0.75em;
+}
+.login_btn {
+    background-color: #FFFFFF;
+}
+
+.loading {
+    margin: auto;
+    width: 60px;
+    height: 60px;
+    border: 5px solid rgba(0,0,0,0.4);
+    border-top-color: rgba(0,0,0,0.9);
+    border-radius: 50%;
+    animation: spin 1.2s linear 0s infinite;
+}
+@keyframes spin {
+    0% {transform: rotate(0deg);}
+    100% {transform: rotate(360deg);}
 }

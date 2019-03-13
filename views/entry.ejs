@@ -1,25 +1,55 @@
-<%- include("./module/user", {user:user, link:true}) %>
+<% if (entry_status === "match_miss") { %>
+<div class="mt-4">
+    <h5>ごめんなさい！</h5>
+    <h5>マッチングできませんでした！</h5>
+    <h5>次のマッチングを楽しみにしてください！</h5>
+</div>
 
+<% } else if (entry_status === "matched") { %>
 
-<% if (entry_status === "matched") { %>
-マッチングしました
+<div class="mt-4">
+    <h5>マッチングしました！</h5>
+</div>
 
+<div class="alert alert-info" role="alert">
+    <%= matched[0].twitter_name %>さんがSkypeで会議を作ってください
+</div>
+
+<div class="matched_list mt-5">
+<h5>マッチング結果</h5>
 <% for (let i = 0; i < matched.length; i++) { %>
-<div><%= matched[i].twitter_name %>さん</div>
+<%- include("./module/user", {user:matched[i]}) %>
 <% } %>
 
 <% } else if (entry_status === "entried") { %>
 
-マッチング中
+<div class="alert alert-info" role="alert">
+    2019/03/15 (金) 21:00:00 に初回のマッチングを行います。
+</div>
 
+<div class="mt-4">
+    <h5>マッチング中</h5>
+</div>
+
+<div class="mt-4 loading"></div>
+
+<div class="mt-5">
 <form method="POST" action="/entry/cancel">
     <p class="text-center"><button type="submit" class="btn btn-danger">キャンセル</button></p>
 </form>
+</div>
 
 <% } else { %>
 
+<div class="alert alert-info" role="alert">
+    2019/03/15 (金) 21:00:00 に初回のマッチングを行います。
+</div>
+
+<div class="mt-5">
 <form method="POST" action="/entry/">
    <p class="text-center"><button type="submit" class="btn btn-success">マッチング開始</button></p>
 </form>
+</div>
 
 <% } %>
+</div>

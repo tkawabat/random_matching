@@ -13,9 +13,9 @@
 </head>
 
 <body>
-    
-<div class="container">
 
+<div class="content">
+    
 <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -27,9 +27,9 @@
     </div>
 </div>
 
-<header class="header">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/entry"><%= title %></a>
+<header class="header border-bottom w-100 mb-4">
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="site_title navbar-brand" href="/entry"><%= title %></a>
         <%# <i class="question fas fa-question"></i> %>
         <% if (typeof(user) != "undefined") { %><a href="/user"><img class="user_img" src="<%=user.image_url_https%>"></a><% } %>
     </nav>
@@ -42,9 +42,11 @@
 <div class="alert alert-info" role="alert"><%= alert_info %></div>
 <% } %>
 
+<div class="main">
+
 <%- body %>
 
-</div><%# container %>
+</div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
