@@ -30,7 +30,7 @@
 <header class="header">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="/entry"><%= title %></a>
-        <i class="question fas fa-question"></i>
+        <%# <i class="question fas fa-question"></i> %>
         <% if (typeof(user) != "undefined") { %><a href="/user"><img class="user_img" src="<%=user.image_url_https%>"></a><% } %>
     </nav>
 </header>
