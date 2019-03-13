@@ -21,6 +21,7 @@ router.get("/",
         res.viewParam.user = req.user;
         let status = "null";
         if (res.viewParam.matched && res.viewParam.matched.length === 1) {
+            status = "match_miss";
         } else if (res.viewParam.matched) {
             status = "matched";
         } else if (res.viewParam.entry) {

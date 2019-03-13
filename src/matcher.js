@@ -67,11 +67,12 @@ const matchAct = () => {
             if (failCount === 0) break;
         }
 
-        for (let i = 0; i < entries; i++) {
+        for (let i = 0; i < entries.length; i++) {
             match([entries[i]]); // 一人
         }
 
     });
+    logger.info("match end");
 }
 
 
