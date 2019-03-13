@@ -34,16 +34,45 @@
     }
 }
 
+.header .question {
+    border-radius: 50%;
+    width:  40px;
+    margin-right: 2px;
+    float: right;
+}
+.header .user_img {
+    border-radius: 50%;
+    width:  40px;
+    height: 40px;
+    float: right;
+}
+
 .user_module {
     font-size: 18px;
     background: #E7F1ED;
     padding: 10px;
     height: 95px;
 }
-.user_twitter_img {
+.user_module .twitter_img {
     border-radius: 50%;
-    width:  75px;
-    height: 75px;
-    margin-right: 2px;
+    width:  70px;
+    height: 70px;
+    margin-right: 10px;
     float: left;
+}
+.user_module .twitter_name {
+    font-weight: bold;
+    margin-top: 5px;
+}
+.user_module .twitter_id {
+    margin-left: 5px;
+    font-size: 12px;
+    opacity: 0.5;
+}
+.user_module .skype {
+    opacity: 0.5;
+    margin-top: 5px;
+}
+.user_module .user_logout {
+    margin-top: 30px;
 }

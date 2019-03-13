@@ -1,15 +1,10 @@
-<% if (link) { %>
-<a href="/user">
-<% } %>
-
 <div class="user_module mt-3">
-    <img class="user_twitter_img" src="<%= user.image_url_https %>">
+    <img class="twitter_img" src="<%= user.image_url_https %>">
     <span>
-        <div><%= user.twitter_name %></div>
-        <div><%= user.skype_id %></div>
+        <div class="utwitter_name">
+            <%= user.twitter_name %>
+            <span class="twitter_id"><a href="https://twitter.com/@<%= user.twitter_id %>">@<%= user.twitter_id %></a></span>
+        </div>
+        <div class="skype">Skype: <a class="copylink" href="<%= user.skype_id %>"><%= user.skype_id %></a></div>
     </span>
 </div>
-
-<% if (link) { %>
-</a>
-<% } %>
