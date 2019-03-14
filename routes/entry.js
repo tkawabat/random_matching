@@ -19,8 +19,9 @@ router.get("/",
     entryHelper.getEntry,
     (req, res) => {
         res.viewParam.user = req.user;
-        res.viewParam.registered = !req.user.sex || !req.user.skype_id;
-        res.viewParam.twitter_unsafe = !entryHelper.isSafeTwitter(req.user);
+        res.viewParam.registered = req.user.sex && req.user.skype_id;
+        res.viewParam.twitter_safe = entryHelper.isSafeTwitter(req.user);
+        res.viewParam.isReady = res.viewParam.registered && res.viewParam.twitter_safe;
         let status = "null";
         if (res.viewParam.matched && res.viewParam.matched.length === 1) {
             status = "match_miss";

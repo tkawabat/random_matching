@@ -17,6 +17,10 @@ html {
     }
 }
 
+p {
+    line-height: 0.75em;
+}
+
 .content {
     background: #FFEBCD;
     height: 100%; 
@@ -77,13 +81,11 @@ html {
 .intro {
     color: #555555;
 }
-.intro p {
-    line-height: 0.75em;
-}
 .login_btn {
     background-color: #FFFFFF;
 }
 
+/* module */
 .loading {
     margin: auto;
     width: 60px;
@@ -97,3 +99,10 @@ html {
     0% {transform: rotate(0deg);}
     100% {transform: rotate(360deg);}
 }
+.fa-check {
+    color: green;
+}
+.fa-times {
+    color: red;
+}
+

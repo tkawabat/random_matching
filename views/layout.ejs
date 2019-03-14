@@ -35,6 +35,8 @@
     </nav>
 </header>
 
+<div class="main">
+
 <% if (alert_warning !== "") { %>
 <div class="alert alert-danger" role="alert"><%= alert_warning %></div>
 <% } %>
@@ -42,7 +44,6 @@
 <div class="alert alert-info" role="alert"><%= alert_info %></div>
 <% } %>
 
-<div class="main">
 
 <%- body %>
 

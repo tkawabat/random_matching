@@ -50,29 +50,29 @@ for (let i = 0; i < matched.length; i++) {
 
 <% } else { %>
 
-<div class="alert alert-info" role="alert">
+<div class="alert alert-secondary" role="alert">
     2019/03/15 (金) 21:00:00 に初回のマッチングを行います。
 </div>
 
-<div>
-<% if (registered) { %>
-ng
-<% } else { %>
-ok
-<% } %>
-性別、Skype IDが登録されている
-
-<% if (twitter_unsafe) { %>
-ng
-<% } else { %>
-ok
-<% } %>
-Twitterの登録日が半年以上前
+<div class="mt-3">
+    <h5>参加条件</h5>
+    <div class="ml-5">
+        <p>
+        <%- include("./module/ok_ng", {"bool":registered}) %>
+        性別、Skype IDが登録されている
+        </p>
+        
+        <p>
+        <%- include("./module/ok_ng", {"bool":twitter_safe}) %>
+        Twitterの登録日が半年以上前
+        </p>
+    </div>
 </div>
 
+<% let disabled = isReady ? "" : "disabled" %>
 <div class="mt-5">
 <form method="POST" action="/entry/">
-   <p class="text-center"><button type="submit" class="btn btn-success">マッチング開始</button></p>
+   <p class="text-center"><button type="submit" class="btn btn-success" <%= disabled %>>マッチング開始</button></p>
 </form>
 </div>
 
