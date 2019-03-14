@@ -19,6 +19,8 @@ router.get("/",
     entryHelper.getEntry,
     (req, res) => {
         res.viewParam.user = req.user;
+        res.viewParam.registered = !req.user.sex || !req.user.skype_id;
+        res.viewParam.twitter_unsafe = !entryHelper.isSafeTwitter(req.user);
         let status = "null";
         if (res.viewParam.matched && res.viewParam.matched.length === 1) {
             status = "match_miss";
@@ -34,6 +36,15 @@ router.get("/",
 router.post("/", account.isAuthenticated, validator.actEntry, (req, res) => {
     if (validator.isError(req)) {
         res.redirect("/entry/?warning=validate");
+        return;
+    }
+
+    if (!req.user.sex || !req.user.skype_id) {
+        res.redirect("/entry/?warning=not_registered");
+        return;
+    }
+    if (!entryHelper.isSafeTwitter(req.user)) {
+        res.redirect("/entry/?warning=twitter_unsafe");
         return;
     }
 

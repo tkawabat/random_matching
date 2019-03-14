@@ -54,6 +54,22 @@ for (let i = 0; i < matched.length; i++) {
     2019/03/15 (金) 21:00:00 に初回のマッチングを行います。
 </div>
 
+<div>
+<% if (registered) { %>
+ng
+<% } else { %>
+ok
+<% } %>
+性別、Skype IDが登録されている
+
+<% if (twitter_unsafe) { %>
+ng
+<% } else { %>
+ok
+<% } %>
+Twitterの登録日が半年以上前
+</div>
+
 <div class="mt-5">
 <form method="POST" action="/entry/">
    <p class="text-center"><button type="submit" class="btn btn-success">マッチング開始</button></p>

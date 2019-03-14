@@ -47,8 +47,23 @@ const getEntry = (req, res, next) => {
     });
 }
 
+const isSafeTwitter = (user) => {
+    if (!user.twitter_created_at) {
+        return false;
+    }
+    console.log(user.twitter_created_at);
+    console.log(user.twitter_created_at.getTime());
+    let diff = new Date().getTime() - user.twitter_created_at.getTime();
+    if (diff / 1000 < 60 * 60 * 24 * 180) {
+        return false;
+    }
+
+    return true;
+}
+
 
 module.exports = {
     getMatch: getMatch
     ,getEntry: getEntry
+    ,isSafeTwitter: isSafeTwitter
 };
