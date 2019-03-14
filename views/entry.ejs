@@ -16,9 +16,15 @@
 
 <div class="matched_list mt-5">
 <h5>マッチング結果</h5>
-<% for (let i = 0; i < matched.length; i++) { %>
+<%
+let text = "遊び仲間とマッチングしました！\n";
+for (let i = 0; i < matched.length; i++) {
+    text += " "+matched[i].twitter_name+"@"+matched[i].twitter_id+"\n";
+%>
 <%- include("./module/user", {user:matched[i]}) %>
 <% } %>
+
+<div class="mt-3 float-right"><%- include("./module/tweet", {text:text+"\n"}) %></div>
 
 <% } else if (entry_status === "entried") { %>
 
@@ -28,6 +34,10 @@
 
 <div class="mt-4">
     <h5>マッチング中</h5>
+</div>
+
+<div class="float-right">
+    <%- include("./module/tweet", {text:"ただいまマッチング中..."}) %>
 </div>
 
 <div class="mt-4 loading"></div>
