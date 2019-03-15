@@ -60,7 +60,7 @@ app.use("/entry", require("./routes/entry"));
 
 
 // schedule
-schedule.scheduleJob(moment("2019-03-10 22:17:00").toDate(), matcher.matchAct);
+schedule.scheduleJob(moment("2019-03-16 21:00:00").toDate(), matcher.matchAct);
 
 // catch 404 and forward to error handler
 //app.use(routeHelper.Error404); // mapファイルが404を起こすのでコメントアウト

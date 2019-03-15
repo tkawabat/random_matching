@@ -29,14 +29,14 @@ for (let i = 0; i < matched.length; i++) {
 <% } else if (entry_status === "entried") { %>
 
 <div class="alert alert-info" role="alert">
-    2019/03/15 (金) 21:00:00 に初回のマッチングを行います。
+    2019/03/16 (土) 21:00:00 に初回のマッチングを行います。
 </div>
 
 <div class="mt-4">
-    <h5>マッチング中</h5>
+    <h5>マッチング中...</h5>
 </div>
 
-<div class="mt-5 loading"></div>
+<%# <div class="mt-5 loading"></div> %>
 
 <div class="mt-5 text-right">
     <%- include("./module/tweet", {text:"ただいまマッチング中..."}) %>
@@ -51,7 +51,7 @@ for (let i = 0; i < matched.length; i++) {
 <% } else { %>
 
 <div class="alert alert-secondary" role="alert">
-    2019/03/15 (金) 21:00:00 に初回のマッチングを行います。
+    2019/03/16 (土) 21:00:00 に初回のマッチングを行います。
 </div>
 
 <div class="mt-3">

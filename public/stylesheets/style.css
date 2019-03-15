@@ -28,7 +28,6 @@ p {
 
 .site_title {
     font-color: #696969;
-    font-family: 'cursivea',sans-serif;
     text-shadow: 1px 1px 1px silver;
 }
 
@@ -54,7 +53,6 @@ p {
     font-size: 18px;
     background: #FFFFEE;
     padding: 10px;
-    height: 95px;
 }
 .user_module .twitter_img {
     border-radius: 50%;
@@ -66,6 +64,8 @@ p {
 .user_module .twitter_name {
     color: #555555;
     margin-top: 5px;
+    width: 600px;
+    word-wrap: break-word;
 }
 .user_module .twitter_id {
     margin-left: 5px;
