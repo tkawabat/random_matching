@@ -4,12 +4,12 @@
     { // GA
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'UA-136115470-1');
+        gtag("js", new Date());
+        gtag("config", "UA-136115470-1");
     }
     let modal = (txt) => {
         document.getElementById("modal_body").innerHTML = txt;
-        $('#modal').modal('show');
+        $("#modal").modal("show");
     }
 
     let links = document.querySelectorAll("a.copylink");

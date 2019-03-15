@@ -9,11 +9,17 @@ const cookieParser = require("cookie-parser");
 const schedule = require("node-schedule");
 const moment = require("moment-timezone");
 moment.tz.setDefault("Asia/Tokyo");
+moment.locale("ja", {
+    weekdays: ["日曜日","月曜日","火曜日","水曜日","木曜日","金曜日","土曜日"],
+    weekdaysShort: ["日","月","火","水","木","金","土"]
+});
 
 const morgan = require(rootDir + "/src/morgan");
 const account = require(rootDir + "/src/account");
 const matcher = require(rootDir + "/src/matcher");
 const routeHelper = require(rootDir + "/src/routeHelper");
+
+const THE_DATE = "2019-03-17 21:00:00";
 
 
 const app = express();
@@ -43,6 +49,7 @@ app.use(function (req, res, next) {
         title: "気まぐれ日和"
         ,alert_warning: ""
         ,alert_info: ""
+        ,the_date: moment(THE_DATE).format("M/D (ddd) k:mm")
     };
     next();
 });
@@ -60,7 +67,7 @@ app.use("/entry", require("./routes/entry"));
 
 
 // schedule
-schedule.scheduleJob(moment("2019-03-16 21:00:00").toDate(), matcher.matchAct);
+schedule.scheduleJob(moment(THE_DATE).toDate(), matcher.matchAct);
 
 // catch 404 and forward to error handler
 //app.use(routeHelper.Error404); // mapファイルが404を起こすのでコメントアウト

@@ -16,7 +16,7 @@ let sex_f = user.sex === 'f' ? "checked" : "";
     </div>
     <div class="form-group form-inline mt-4">
         Skype：
-        <input type="text" class="form-control" name="skype_id" placeholder="skype id" required value="<%= user.skype_id %>">
+        <input type="text" class="form-control" name="skype_id" placeholder="skype id" maxlength=64" required value="<%= user.skype_id %>">
     </div>
     <p class="text-right"><button type="submit" class="btn btn-success">更新</button></p>
 </form>
