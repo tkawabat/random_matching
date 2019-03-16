@@ -13,7 +13,7 @@
               "usePolling": true
           },
           "env" : {
-              "PORT": 3000,
+              "PORT": 3452,
               "NODE_ENV" : "development"
           }
       },
