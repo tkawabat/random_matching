@@ -1,0 +1,31 @@
+<h4 class="mb-4">マッチング</h4>
+
+<% if (!registered) { %>
+    <div class="alert alert-danger" role="alert">
+        右上のアイコンから性別、Skype IDを登録してください
+    </div>
+<% } %>
+
+<div class="ml-4">
+    <h6>参加条件</h6>
+    <div class="ml-4">
+        <p>
+        <%- include("./module/ok_ng", {"bool":registered}) %>
+        性別、Skype IDが登録済み
+        </p>
+
+        <p>
+        <%- include("./module/ok_ng", {"bool":twitter_safe}) %>
+        Twitterの登録日が半年以上前
+        </p>
+    </div>
+</div>
+
+<% let disabled = isReady ? "" : "disabled" %>
+<div class="mt-4">
+<form method="POST" action="/entry/">
+   <p class="text-center"><button type="submit" class="btn bg_red" <%= disabled %>>マッチング開始</button></p>
+</form>
+</div>
+
+<%- include("./module/entry_explain", {date: the_date}) %>

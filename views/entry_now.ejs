@@ -1,0 +1,20 @@
+<h4 class="mb-4">マッチング中</h4>
+
+<div class="ml-3">
+    <h6>ただいまマッチングしております。<h6>
+    <h6>しばらくお待ち下さい。<h6>
+    <div class="text-right">
+    <%- include("./module/tweet", {text:"ただいまマッチング中...\n", hash:title}) %>
+    </div>
+    </p>
+</div>
+
+<%# <div class="mt-5 loading"></div> %>
+
+<div class="mt-5">
+<form method="POST" action="/entry/cancel">
+    <p class="text-center"><button type="submit" class="btn bg_orange">キャンセル</button></p>
+</form>
+</div>
+
+<%- include("./module/entry_explain", {date: the_date}) %>

@@ -22,16 +22,15 @@ router.get("/",
         res.viewParam.registered = req.user.sex && req.user.skype_id;
         res.viewParam.twitter_safe = entryHelper.isSafeTwitter(req.user);
         res.viewParam.isReady = res.viewParam.registered && res.viewParam.twitter_safe;
-        let status = "null";
         if (res.viewParam.matched && res.viewParam.matched.length === 1) {
-            status = "match_miss";
+            res.render("entry_fail", res.viewParam);
         } else if (res.viewParam.matched) {
-            status = "matched";
+            res.render("entry_success", res.viewParam);
         } else if (res.viewParam.entry) {
-            status = "entried";
+            res.render("entry_now", res.viewParam);
+        } else {
+            res.render("entry_ready", res.viewParam);
         }
-        res.viewParam.entry_status = status;
-        res.render("entry", res.viewParam);
     });
 
 router.post("/", account.isAuthenticated, validator.actEntry, (req, res) => {

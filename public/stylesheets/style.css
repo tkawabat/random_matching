@@ -37,6 +37,9 @@ body > .content {
 p {
     line-height: 0.75em;
 }
+.bolder {
+    font-weight: bolder;
+}
 
 .bg_orange {
     background: #FFC679;

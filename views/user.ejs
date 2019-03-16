@@ -4,12 +4,11 @@ let sex_m = user.sex === 'm' ? "checked" : "";
 let sex_f = user.sex === 'f' ? "checked" : "";
 %>
 
-<h4 class="">ユーザー設定</h4>
+<h4 class="mb-4">ユーザー設定</h4>
 
 <%- include("./module/user", {user:user}) %>
 
-<div class="mt-5">
-<form method="POST" action="/user/">
+<form class="mt-5 mb-5" method="POST" action="/user/">
     <div class="form-group">
         性別：
         男&nbsp;<input type="radio" name="sex" value="m" required <%= sex_m %> <%= sex_disabled %>>&nbsp;
@@ -20,12 +19,11 @@ let sex_f = user.sex === 'f' ? "checked" : "";
         Skype：
         <input type="text" class="form-control" name="skype_id" placeholder="skype id" maxlength=64" required value="<%= user.skype_id %>">
     </div>
-    <div class="mt-3 w-50 mx-auto">
+    <div class="mt-3 text-center">
         <a href="/entry/"><button type="button" class="btn bg_orange mr-4">戻る</button></a>
         <button type="submit" class="btn bg_red">更新</button>
     </div>
 </form>
-</div>
 
 <div class="mt-5 mb-5 text-right">
     <a href="/logout"><button type="button" class="btn btn-secondary">ログアウト</button></a>

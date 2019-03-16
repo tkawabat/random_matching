@@ -1,0 +1,19 @@
+<h4 class="mb-4">マッチングしました！</h4>
+
+<div class="ml-3">
+    <span class="bolder"><%= matched[0].twitter_name %></span>さんがSkypeで会議を作ってください
+</div>
+
+<div class="matched_list mt-3">
+    <%
+    let text = "遊び仲間とマッチングしました！\n";
+    for (let i = 0; i < matched.length; i++) {
+        text += " "+matched[i].twitter_name+"@"+matched[i].twitter_id+"\n";
+    %>
+    <%- include("./module/user", {user:matched[i]}) %>
+    <% } %>
+
+    <div class="mt-3 text-right">
+        <%- include("./module/tweet", {text:text+"\n", hash:title}) %>
+    </div>
+</div>
