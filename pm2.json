@@ -7,7 +7,7 @@
           "instance_var": "INSTANCE_ID",
           "exec_mode" : "cluster",
           "watch": ["./"],
-          "ignore_watch" : ["node_modules", "log", "\.git", "public"],
+          "ignore_watch" : ["node_modules", "log", "\.git", "public", "view"],
           "watch_options": {
               "followSymlinks": false,
               "usePolling": true
