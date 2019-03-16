@@ -38,13 +38,6 @@ app.set("trust proxy", 1)
 app.set("views", rootDir+"/views");
 app.set("view engine", "ejs");
 
-// env
-const env = app.get("env");
-if (env === "production") {
-    logger.level = "info";
-}
-db.init(env);
-
 app.use(function (req, res, next) {
     res.removeHeader("X-Powered-By");
     res.removeHeader("ETag");
