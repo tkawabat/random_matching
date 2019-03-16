@@ -71,7 +71,7 @@ p {
 }
 .user_module .twitter_name {
     color: #555555;
-    margin-top: 5px;
+    margin-top: 4px;
     width: 100%;
     word-wrap: break-word;
 }
@@ -82,18 +82,9 @@ p {
 }
 .user_module .skype {
     opacity: 0.5;
-    margin-top: 5px;
+    margin: 2px 5px 8px 0;
 }
 
-/* index */
-.intro {
-    color: #555555;
-}
-.login_btn {
-    background-color: #FFFFFF;
-}
-
-/* module */
 .loading {
     margin: auto;
     width: 60px;
@@ -114,3 +105,10 @@ p {
     color: red;
 }
 
+/* index */
+.intro {
+    color: #555555;
+}
+.login_btn {
+    background-color: #FFFFFF;
+}
