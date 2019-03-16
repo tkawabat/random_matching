@@ -4,6 +4,8 @@ let sex_m = user.sex === 'm' ? "checked" : "";
 let sex_f = user.sex === 'f' ? "checked" : "";
 %>
 
+<h4 class="">ユーザー設定</h4>
+
 <%- include("./module/user", {user:user}) %>
 
 <div class="mt-5">
@@ -22,7 +24,7 @@ let sex_f = user.sex === 'f' ? "checked" : "";
 </form>
 </div>
 
-<div class="mt-5 user_logout">
+<div class="mt-5 mb-5 user_logout">
     <a href="/logout"><button type="button" class="btn btn-secondary">ログアウト</button></a>
 </div>
 

@@ -1,80 +1,86 @@
+<h4>マッチング</h4>
+
 <% if (entry_status === "match_miss") { %>
-<div class="mt-4">
-    <h5>ごめんなさい、マッチングできませんでした！</h5>
-    <h5>次のマッチングをお待ちください！</h5>
-</div>
-
+    <div class="mt-4">
+        <h5>ごめんなさい、マッチングできませんでした！</h5>
+        <h5>次のマッチングをお待ちください！</h5>
+    </div>
 <% } else if (entry_status === "matched") { %>
+    <div class="mt-4">
+        <h5>マッチングしました！</h5>
+    </div>
 
-<div class="mt-4">
-    <h5>マッチングしました！</h5>
-</div>
+    <div class="alert alert-info" role="alert">
+        <%= matched[0].twitter_name %>さんがSkypeで会議を作ってください
+    </div>
 
-<div class="alert alert-info" role="alert">
-    <%= matched[0].twitter_name %>さんがSkypeで会議を作ってください
-</div>
+    <h5>マッチング結果</h5>
+    <div class="matched_list mt-5">
+        <%
+        let text = "遊び仲間とマッチングしました！\n";
+        for (let i = 0; i < matched.length; i++) {
+            text += " "+matched[i].twitter_name+"@"+matched[i].twitter_id+"\n";
+        %>
+        <%- include("./module/user", {user:matched[i]}) %>
+        <% } %>
 
-<div class="matched_list mt-5">
-<h5>マッチング結果</h5>
-<%
-let text = "遊び仲間とマッチングしました！\n";
-for (let i = 0; i < matched.length; i++) {
-    text += " "+matched[i].twitter_name+"@"+matched[i].twitter_id+"\n";
-%>
-<%- include("./module/user", {user:matched[i]}) %>
-<% } %>
-
-<div class="mt-3 float-right"><%- include("./module/tweet", {text:text+"\n"}) %></div>
+        <div class="mt-3 float-right"><%- include("./module/tweet", {text:text+"\n", hash:title}) %></div>
+    </div>
 
 <% } else if (entry_status === "entried") { %>
 
-<div class="alert alert-info" role="alert">
-    <%= the_date %> に初回のマッチングを行います。
-</div>
+    <div class="alert alert-info" role="alert">
+        <%= the_date %> に初回のマッチングを行います。
+    </div>
 
-<div class="mt-5">
-    <h5>マッチング中...</h5>
-</div>
+    <div class="mt-5">
+        <h5>マッチング中...</h5>
+    </div>
 
-<%# <div class="mt-5 loading"></div> %>
+    <%# <div class="mt-5 loading"></div> %>
 
-<div class="mt-5 text-right">
-    <%- include("./module/tweet", {text:"ただいまマッチング中..."}) %>
-</div>
+    <div class="mt-5 text-right">
+        <%- include("./module/tweet", {text:"ただいまマッチング中...\n", hash:title}) %>
+    </div>
 
-<div class="mt-3">
-<form method="POST" action="/entry/cancel">
-    <p class="text-center"><button type="submit" class="btn btn-danger">キャンセル</button></p>
-</form>
-</div>
+    <div class="mt-3">
+    <form method="POST" action="/entry/cancel">
+        <p class="text-center"><button type="submit" class="btn btn-danger">キャンセル</button></p>
+    </form>
+    </div>
 
 <% } else { %>
 
-<div class="alert alert-secondary" role="alert">
-    <%= the_date %> に初回のマッチングを行います。
-</div>
+    <% if (!registered) { %>
+        <div class="alert alert-danger" role="alert">
+            右上のアイコンから性別、Skype IDを登録してください
+        </div>
+    <% } %>
 
-<div class="mt-3">
-    <h5>参加条件</h5>
-    <div class="ml-4">
-        <p>
-        <%- include("./module/ok_ng", {"bool":registered}) %>
-        性別、Skype IDが登録されている
-        </p>
-        
-        <p>
-        <%- include("./module/ok_ng", {"bool":twitter_safe}) %>
-        Twitterの登録日が半年以上前
-        </p>
+    <div class="mt-5">
+        <h5>参加条件</h5>
+        <div class="ml-4">
+            <p>
+            <%- include("./module/ok_ng", {"bool":registered}) %>
+            性別、Skype IDが登録されている
+            </p>
+
+            <p>
+            <%- include("./module/ok_ng", {"bool":twitter_safe}) %>
+            Twitterの登録日が半年以上前
+            </p>
+        </div>
     </div>
-</div>
 
-<% let disabled = isReady ? "" : "disabled" %>
-<div class="mt-5">
-<form method="POST" action="/entry/">
-   <p class="text-center"><button type="submit" class="btn btn-success" <%= disabled %>>マッチング開始</button></p>
-</form>
-</div>
+    <% let disabled = isReady ? "" : "disabled" %>
+    <div class="mt-4">
+    <form method="POST" action="/entry/">
+       <p class="text-center"><button type="submit" class="btn btn-success" <%= disabled %>>マッチング開始</button></p>
+    </form>
+    </div>
+
+    <div class="mt-5 alert alert-secondary" role="alert">
+        <%= the_date %> に初回のマッチングを行います。
+    </div>
 
 <% } %>
-</div>

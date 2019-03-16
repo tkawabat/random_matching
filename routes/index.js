@@ -10,7 +10,7 @@ const routeHelper = require(rootDir + "/src/routeHelper");
 
 router.get("/", routeHelper.check, (req, res) => {
     if (req.isAuthenticated()) {
-        res.redirect("/user/");
+        res.redirect("/entry/");
     } else {
         res.render("index", res.viewParam);
     }
@@ -21,7 +21,7 @@ router.get("/twitter/login", account.passport.authenticate("twitter"), (req, res
 });
 
 router.get("/twitter/callback", account.passport.authenticate("twitter", {
-    successRedirect: "/user/",
+    successRedirect: "/entry/",
     failureRedirect: "/?warning=twitter_auth_failed"
 }));
 

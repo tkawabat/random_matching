@@ -30,7 +30,7 @@ router.post("/", account.isAuthenticated, validator.user, routeHelper.check, (re
         }
         res.viewParam.user = user;
         res.viewParam.info = "user_save";
-        res.redirect("/entry/?info=user_save");
+        res.redirect("/user/?info=user_save");
     });
 
 });

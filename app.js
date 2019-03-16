@@ -46,7 +46,7 @@ app.use(function (req, res, next) {
     res.header("Expires", -1);
 
     res.viewParam = {
-        title: "気まぐれ日和"
+        title: "きまぐれ日和"
         ,alert_warning: ""
         ,alert_info: ""
         ,the_date: moment(THE_DATE).format("M/D (ddd) k:mm")
