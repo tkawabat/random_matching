@@ -32,10 +32,17 @@ let session = expressSession({
     }
 });
 
+let callback;
+if (process.env.NODE_ENV === "prod") {
+    callback = "https://random-matching.tokyo/twitter/callback";
+} else {
+    callback = "https://random-matching.tokyo:3452/twitter/callback";
+}
+
 passport.use(new TwitterStrategy({
     consumerKey: secret.twitter.consumer_key
     ,consumerSecret: secret.twitter.consumer_secret
-    ,callbackURL: "https://random-matching.tokyo:3000/twitter/callback"
+    ,callbackURL: callback
 }, (token, tokenSecret, profile, done) => {
     passport.session.id = profile.id;
     //console.log(profile);

@@ -38,6 +38,13 @@ app.set("trust proxy", 1)
 app.set("views", rootDir+"/views");
 app.set("view engine", "ejs");
 
+let title;
+if (process.env.NODE_ENV === "prod") {
+    title = "きまぐれ日和";
+} else {
+    title = "テストな日和";
+}
+
 app.use(function (req, res, next) {
     res.removeHeader("X-Powered-By");
     res.removeHeader("ETag");
@@ -48,7 +55,7 @@ app.use(function (req, res, next) {
     res.header("Expires", -1);
 
     res.viewParam = {
-        title: "きまぐれ日和"
+        title: title
         ,alert_warning: ""
         ,alert_info: ""
         ,the_date: moment(THE_DATE).format("M/D (ddd) k:mm")
