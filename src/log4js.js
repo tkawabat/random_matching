@@ -16,9 +16,10 @@ log4js.configure({
     ,categories: {
         default: { appenders: [ "app", "console" ], level: "debug" }
     }
+    ,pm2: true
+    ,pm2InstanceVar: "INSTANCE_ID"
 });
 
 const logger = log4js.getLogger("app");
-logger.level = "debug";
 
 module.exports = logger;

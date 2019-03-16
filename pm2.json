@@ -7,6 +7,7 @@
           "instance_var": "INSTANCE_ID",
           "exec_mode" : "cluster",
           "watch": ["./"],
+          "instance_var": "app",
           "ignore_watch" : ["node_modules", "log", "\.git", "public"],
           "watch_options": {
               "followSymlinks": false,

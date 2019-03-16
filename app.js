@@ -14,7 +14,9 @@ moment.locale("ja", {
     weekdaysShort: ["日","月","火","水","木","金","土"]
 });
 
+const logger = require(rootDir + "/src/log4js");
 const morgan = require(rootDir + "/src/morgan");
+const db = require(rootDir + "/src/mongodb");
 const account = require(rootDir + "/src/account");
 const matcher = require(rootDir + "/src/matcher");
 const routeHelper = require(rootDir + "/src/routeHelper");
@@ -35,6 +37,13 @@ app.use(expressLayouts);
 app.set("trust proxy", 1)
 app.set("views", rootDir+"/views");
 app.set("view engine", "ejs");
+
+// env
+const env = app.get("env");
+if (env === "production") {
+    logger.level = "info";
+}
+db.init(env);
 
 app.use(function (req, res, next) {
     res.removeHeader("X-Powered-By");
