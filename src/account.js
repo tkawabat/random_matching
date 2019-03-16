@@ -12,16 +12,25 @@ const logger = require(rootDir+"/src/log4js");
 const User = require(rootDir+"/src/model/user");
 const db = require(rootDir+"/src/mongodb");
 
-const COOKIE_SESSION_KEY = "session_id";
 const SECRET = "phee5aiWahpeekaej3lad2xaigh8sid7";
-
 
 let mongoStore = connectMongo(expressSession);
 let sessionStore = new mongoStore({ mongooseConnection: db.connection });
 
+
+let callback;
+let cookieName;
+if (process.env.NODE_ENV === "prod") {
+    callback = "https://random-matching.tokyo/twitter/callback";
+    cookieName = "session_id";
+} else {
+    callback = "https://random-matching.tokyo:3452/twitter/callback";
+    cookieName = "dev_session_id";
+}
+
 let session = expressSession({
     secret: SECRET,
-    name: COOKIE_SESSION_KEY,
+    name: cookieName,
     resave: false,
     saveUninitialized: true,
     store: sessionStore,
@@ -31,13 +40,6 @@ let session = expressSession({
         maxAge: 1000 * 60 * 60 * 24 * 180 // ミリ秒
     }
 });
-
-let callback;
-if (process.env.NODE_ENV === "prod") {
-    callback = "https://random-matching.tokyo/twitter/callback";
-} else {
-    callback = "https://random-matching.tokyo:3452/twitter/callback";
-}
 
 passport.use(new TwitterStrategy({
     consumerKey: secret.twitter.consumer_key
