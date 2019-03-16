@@ -22,13 +22,21 @@ p {
 }
 
 .content {
-    background: #FFEBCD;
+    background: #FFF4E0;
     height: 100%; 
 }
 
 .site_title {
     font-color: #696969;
     text-shadow: 1px 1px 1px silver;
+}
+
+.bg_orange {
+    background: #FFC679;
+}
+
+.bg_red {
+    background: #F99292;
 }
 
 .header .question {
@@ -51,7 +59,7 @@ p {
 
 .user_module {
     font-size: 18px;
-    background: #FFFFEE;
+    background: #FFFFCC;
     padding: 10px;
 }
 .user_module .twitter_img {
