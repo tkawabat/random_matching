@@ -31,5 +31,9 @@
     "socket.io": "^2.2.0",
     "twitter": "^1.7.1"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "expect": "^1.20.2",
+    "mocha": "^6.0.2",
+    "supertest": "^4.0.2"
+  }
 }

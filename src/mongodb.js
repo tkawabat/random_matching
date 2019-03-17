@@ -17,6 +17,8 @@ const hosts = [
 let db_name;
 if (process.env.NODE_ENV === "prod") {
     db_name = "random_matching";
+} else if (process.env.NODE_ENV === "test") {
+    db_name = "random_matching_test";
 } else {
     db_name = "random_matching_dev";
 }
