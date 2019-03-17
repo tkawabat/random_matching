@@ -10,5 +10,6 @@ const schema = db.Schema({
 },
     { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );
+schema.index("created_at", {expireAfterSeconds: 60 * 30});
 
 module.exports = db.model("actEntry", schema);

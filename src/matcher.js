@@ -54,7 +54,7 @@ const matchAct = () => {
         }
 
         while (1) {
-            let numbers = shuffle([2]); // 人数候補
+            let numbers = shuffle([3]); // 人数候補
             let failCount = numbers.length;
             while (numbers.length > 0) {
                 let n = numbers.pop();
