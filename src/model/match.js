@@ -6,8 +6,8 @@ moment.tz.setDefault("Asia/Tokyo");
 let db = require("../mongodb");
 
 const schema = db.Schema({
-    _id: { type: String}
-    ,ids: {type: [String]}
+    _id: { type: String, ref: "user"}
+    ,ids: [{type: String, ref: "user"}]
 },
     { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );
