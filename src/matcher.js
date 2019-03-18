@@ -53,6 +53,8 @@ const matchAct = () => {
             return;
         }
 
+        logger.info("matching num: "+entries.length);
+
         while (1) {
             let numbers = shuffle([3]); // 人数候補
             let failCount = numbers.length;
@@ -71,8 +73,8 @@ const matchAct = () => {
             match([entries[i]]); // 一人
         }
 
+        logger.info("match end");
     });
-    logger.info("match end");
 }
 
 
