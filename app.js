@@ -21,8 +21,6 @@ const account = require(rootDir + "/src/account");
 const matcher = require(rootDir + "/src/matcher");
 const routeHelper = require(rootDir + "/src/routeHelper");
 
-const THE_DATE = "2019-03-18 21:00:00";
-
 
 const app = express();
 
@@ -58,7 +56,6 @@ app.use(function (req, res, next) {
         title: title
         ,alert_warning: ""
         ,alert_info: ""
-        ,the_date: moment(THE_DATE).format("M/D (ddd) k:mm")
     };
     next();
 });
@@ -76,7 +73,7 @@ app.use("/entry", require("./routes/entry"));
 
 
 // schedule
-schedule.scheduleJob(moment(THE_DATE).toDate(), matcher.matchAct);
+schedule.scheduleJob("0 21 * * *", matcher.matchAct);
 
 // catch 404 and forward to error handler
 //app.use(routeHelper.Error404); // mapファイルが404を起こすのでコメントアウト
