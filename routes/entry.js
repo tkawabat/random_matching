@@ -9,7 +9,7 @@ const account = require(rootDir + "/src/account");
 const validator = require(rootDir + "/src/validator");
 const routeHelper = require(rootDir + "/src/routeHelper");
 const entryHelper = require(rootDir + "/src/entryHelper");
-const ActEntry = require(rootDir + "/src/model/actEntry");
+const Entry = require(rootDir + "/src/model/entry");
 
 
 router.get("/",
@@ -33,7 +33,7 @@ router.get("/",
         }
     });
 
-router.post("/", account.isAuthenticated, validator.actEntry, (req, res) => {
+router.post("/", account.isAuthenticated, validator.entry, (req, res) => {
     if (validator.isError(req)) {
         res.redirect("/entry/?warning=validate");
         return;
@@ -48,10 +48,10 @@ router.post("/", account.isAuthenticated, validator.actEntry, (req, res) => {
         return;
     }
 
-    const entry = new ActEntry({
+    const entry = new Entry({
         _id: req.user._id
     });
-    ActEntry.findOneAndUpdate({_id: entry.id}, entry, {upsert: true}, (err, entry) => {
+    Entry.findOneAndUpdate({_id: entry.id}, entry, {upsert: true}, (err, entry) => {
         if (err) {
             logger.error(err);
             res.redirect("/entry/?warning=entry_save");
@@ -63,13 +63,13 @@ router.post("/", account.isAuthenticated, validator.actEntry, (req, res) => {
 });
 
 
-router.post("/cancel", account.isAuthenticated, validator.actEntry, (req, res) => {
+router.post("/cancel", account.isAuthenticated, validator.entry, (req, res) => {
     if (validator.isError(req)) {
         res.redirect("/entry/?warning=validate");
         return;
     }
 
-    const entry = new ActEntry({
+    const entry = new Entry({
         _id: req.user._id
     });
     entry.remove((err, entry) => {
