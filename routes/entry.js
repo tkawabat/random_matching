@@ -15,8 +15,7 @@ const Entry = require(rootDir + "/src/model/entry");
 router.get("/",
     account.isAuthenticated,
     routeHelper.check,
-    entryHelper.getMatch,
-    entryHelper.getEntry,
+    entryHelper.get,
     (req, res) => {
         res.viewParam.user = req.user;
         res.viewParam.registered = req.user.sex && req.user.skype_id;

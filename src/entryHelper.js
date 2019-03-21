@@ -8,30 +8,39 @@ const Entry = require(rootDir + "/src/model/entry");
 const Match = require(rootDir + "/src/model/match");
 
 
-module.exports.getMatch = async (req, res, next) => {
-    try {
-        let match = await Match.findOne({ _id: req.user.id }).populate("ids").exec();
-        if (match) {
-            res.viewParam.matched = match.ids;
+module.exports.get = (req, res, next) => {
+    let n = 2;
+
+    Match.findOne({ _id: req.user.id }).populate("ids").exec((err, match) => {
+        if (err) {
+            logger.error(err);
+            throw err;
+        } else {
+            if (match) {
+                res.viewParam.matched = match.ids;
+            }
         }
-    } catch (err) {
-        logger.error(err);
-        throw err;
-    }
 
-    next();
-}
+        n--;
+        if (n === 0) {
+            next();
+        }
+    });
 
-module.exports.getEntry = async (req, res, next) => {
-    try {
-        let entry = await Entry.findOne({ _id: req.user.id }).populate("_id").exec();
-        res.viewParam.entry = entry;
-    } catch (err) {
-        logger.error(err);
-        throw err;
-    }
+    Entry.findOne({ _id: req.user.id }).populate("_id").exec((err, entry) => {
+        if (err) {
+            logger.error(err);
+            throw err;
+            next();
+        } else {
+            res.viewParam.entry = entry;
+        }
 
-    next();
+        n--;
+        if (n === 0) {
+            next();
+        }
+    });
 }
 
 module.exports.isSafeTwitter = (user) => {
