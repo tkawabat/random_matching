@@ -66,6 +66,9 @@ p {
 .btn {
     color: white;
 }
+.btn:disabled {
+    background: #ccc;
+}
 
 .site_title {
     font-color: #696969;

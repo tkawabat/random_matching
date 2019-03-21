@@ -1,6 +1,8 @@
 "use strict";
 
 const rootDir = require("app-root-path");
+const moment = require("moment-timezone");
+moment.tz.setDefault("Asia/Tokyo");
 
 const logger = require(rootDir + "/src/log4js");
 const User = require(rootDir + "/src/model/user");
@@ -53,4 +55,8 @@ module.exports.isSafeTwitter = (user) => {
     }
 
     return true;
+}
+
+module.exports.isEntryTime = () => {
+    return moment().hour() === 20 && moment().minutes() > 30;
 }
