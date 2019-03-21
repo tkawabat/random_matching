@@ -73,7 +73,7 @@ app.use("/entry", require("./routes/entry"));
 
 
 // schedule
-schedule.scheduleJob("0 21 * * *", () => {
+app.schedule = schedule.scheduleJob("0 21 * * *", () => {
     matcher.matchAct([3,4,5,6,7]);
 });
 
