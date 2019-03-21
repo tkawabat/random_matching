@@ -12,8 +12,6 @@ const logger = require(rootDir+"/src/log4js");
 const User = require(rootDir+"/src/model/user");
 const db = require(rootDir+"/src/mongodb");
 
-const SECRET = "phee5aiWahpeekaej3lad2xaigh8sid7";
-
 let mongoStore = connectMongo(expressSession);
 let sessionStore = new mongoStore({ mongooseConnection: db.connection });
 
@@ -29,7 +27,7 @@ if (process.env.NODE_ENV === "prod") {
 }
 
 let session = expressSession({
-    secret: SECRET,
+    secret: secret.session.secret,
     name: cookieName,
     resave: false,
     saveUninitialized: true,
