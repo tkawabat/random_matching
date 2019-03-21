@@ -3,12 +3,12 @@
 const { check, validationResult } = require("express-validator/check")
 
 
-const isError = function(req) {
+module.exports.isError = (req) => {
     let errors = validationResult(req);
     return !errors.isEmpty();
 }
 
-const user = [
+module.exports.user = [
   check("skype_id")
     .isLength({min: 3})
     .isLength({max: 64})
@@ -17,12 +17,5 @@ const user = [
     .custom((v, { req}) => !v || v === "m" || v === "f")
 ];
 
-const actEntry = [
+module.exports.entry = [
 ];
-
-
-module.exports = {
-    isError: isError
-    ,user: user
-    ,actEntry: actEntry
-}

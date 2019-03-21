@@ -24,7 +24,9 @@ if (process.env.NODE_ENV === "prod") {
 }
 const uri = "mongodb://"+hosts.join(",")+"/"+db_name;
 
-mongoose.connect(uri, {
+mongoose.Promise = Promise;
+
+mongoose.connection = mongoose.createConnection(uri, {
     useNewUrlParser: true
     ,user: secret.mongodb.user
     ,pass: secret.mongodb.password
@@ -33,6 +35,8 @@ mongoose.connect(uri, {
     ,authSource: "admin"
     ,connectTimeoutMS: 1000
     ,bufferCommands: false
+    ,keepAlive: true
+    ,keepAliveInitialDelay: 300000
 });
 
 mongoose.connection.on("error", (err) => {

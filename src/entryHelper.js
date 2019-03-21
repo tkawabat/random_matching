@@ -4,50 +4,46 @@ const rootDir = require("app-root-path");
 
 const logger = require(rootDir + "/src/log4js");
 const User = require(rootDir + "/src/model/user");
-const ActEntry = require(rootDir + "/src/model/actEntry");
+const Entry = require(rootDir + "/src/model/entry");
 const Match = require(rootDir + "/src/model/match");
 
 
-const getMatch = (req, res, next) => {
-    Match.findOne({ _id: req.user.id }, (err, match) => {
+module.exports.get = (req, res, next) => {
+    let n = 2;
+
+    Match.findOne({ _id: req.user.id }).populate("ids").exec((err, match) => {
         if (err) {
             logger.error(err);
             throw err;
-            return;
-        }
-
-        if (!match) {
-            next();
-            return;
-        }
-
-        User.find({ _id: { $in: match.ids}}, (err, users) => {
-            if (err) {
-                logger.error(err);
-                throw err;
-                return;
+        } else {
+            if (match) {
+                res.viewParam.matched = match.ids;
             }
-            res.viewParam.matched = users;
+        }
+
+        n--;
+        if (n === 0) {
             next();
-        });
-
+        }
     });
-}
 
-const getEntry = (req, res, next) => {
-    ActEntry.findOne({ _id: req.user.id }, (err, entry) => {
+    Entry.findOne({ _id: req.user.id }).populate("_id").exec((err, entry) => {
         if (err) {
             logger.error(err);
             throw err;
-            return;
+            next();
+        } else {
+            res.viewParam.entry = entry;
         }
 
-        res.viewParam.entry = entry;
-        next();
+        n--;
+        if (n === 0) {
+            next();
+        }
     });
 }
 
-const isSafeTwitter = (user) => {
+module.exports.isSafeTwitter = (user) => {
     if (!user.twitter_created_at) {
         return false;
     }
@@ -58,10 +54,3 @@ const isSafeTwitter = (user) => {
 
     return true;
 }
-
-
-module.exports = {
-    getMatch: getMatch
-    ,getEntry: getEntry
-    ,isSafeTwitter: isSafeTwitter
-};
