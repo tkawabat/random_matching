@@ -61,6 +61,9 @@ module.exports.findMatch = (entries, n) => {
     let list = [];
     let m = actSexConstraint[n];
     let f = actSexConstraint[n];
+
+    logger.info("find "+n);
+
     for (let i = 0; i < entries.length; i++) {
         let user = entries[i]._id;
         if (user.sex === "m") {
@@ -99,7 +102,8 @@ module.exports.matchAct = async (numbers) => {
     logger.info("matching num: "+entries.length);
 
     while (1) {
-        let shuffleNumbers = this.shuffle(numbers); // 人数候補
+        //let shuffleNumbers = this.shuffle(numbers); // 人数候補
+        let shuffleNumbers = numbers.slice(); // コピー
         let failCount = shuffleNumbers.length;
         while (shuffleNumbers.length > 0) {
             let list = this.findMatch(entries, shuffleNumbers.pop());
