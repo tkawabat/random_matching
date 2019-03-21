@@ -16,14 +16,15 @@ const actSexConstraint = {
     ,7: 4 // 4:3 ~ 3:4
 }
 
-const shuffle = (list) => {
-    for(var i = list.length - 1; i > 0; i--){
-        var r = Math.floor(Math.random() * (i + 1));
-        var tmp = list[i];
-        list[i] = list[r];
-        list[r] = tmp;
+module.exports.shuffle = (list) => {
+    let copied = list.slice();
+    for(let i = copied.length - 1; i > 0; i--){
+        let r = Math.floor(Math.random() * (i + 1));
+        let tmp = copied[i];
+        copied[i] = copied[r];
+        copied[r] = tmp;
     }
-    return list;
+    return copied;
 }
 
 module.exports.matched = (list) => {
@@ -82,44 +83,39 @@ module.exports.findMatch = (entries, n) => {
     return [];
 }
 
-module.exports.matchAct = () => {
+module.exports.matchAct = async (numbers) => {
     logger.info("match start");
-    Entry.find().populate("_id").exec((err, entries) => {
+    let entries;
+    try {
+        entries = await Entry.find().populate("_id").exec();
+    } catch (err) {
         if (err) {
             logger.error(err);
             throw err;
             return;
         }
+    }
 
-        logger.info("matching num: "+entries.length);
+    logger.info("matching num: "+entries.length);
 
-        while (1) {
-            let numbers = shuffle([3,4,5,6]); // 人数候補
-            let failCount = numbers.length;
-            while (numbers.length > 0) {
-                let list = this.findMatch(entries, numbers.pop());
-                if (list.length === 0) {
-                    // マッチング失敗
-                    failCount--;
-                } else {
-                    entries = entries.filter((n) => list.indexOf(n._id) === -1);
-                    this.matched(list);
-                }
+    while (1) {
+        let shuffleNumbers = this.shuffle(numbers); // 人数候補
+        let failCount = shuffleNumbers.length;
+        while (shuffleNumbers.length > 0) {
+            let list = this.findMatch(entries, shuffleNumbers.pop());
+            if (list.length === 0) { // マッチング失敗
+                failCount--;
+            } else {
+                entries = entries.filter((n) => list.indexOf(n._id) === -1);
+                this.matched(list);
             }
-            if (failCount === 0) break;
         }
+        if (failCount === 0) break;
+    }
 
-        for (let i = 0; i < entries.length; i++) {
-            this.matched([entries[i]._id]); // 一人
-        }
+    for (let i = 0; i < entries.length; i++) {
+        this.matched([entries[i]._id]); // 一人
+    }
 
-        logger.info("match end");
-    });
+    logger.info("match end");
 }
-
-
-//module.exports = {
-//    matchAct: matchAct
-//    ,matchActN: matchActN
-//    ,matched: matched
-//};

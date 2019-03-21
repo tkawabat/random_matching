@@ -12,11 +12,11 @@ let mockMacher;
 
 beforeEach(() => {
     mockMacher = sinon.mock(matcher);
-})
+});
 
 afterEach(() => {
     mockMacher.restore();
-})
+});
 
 after(() => {
     db.disconnect();
@@ -86,7 +86,7 @@ it("4マッチひとりあまり", () => {
     ]);
 });
 
-it("5マッチ1:4", () => {
+it("5マッチ失敗1:4", () => {
     let entries = [
         { "_id": { "_id": 0, "sex": "m" } }
         ,{ "_id": { "_id": 1, "sex": "f" } }
