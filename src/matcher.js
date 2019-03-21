@@ -15,6 +15,7 @@ const actSexConstraint = {
     ,6: 4 // 4:2 ~ 2:4
     ,7: 4 // 4:3 ~ 3:4
 }
+
 const shuffle = (list) => {
     for(var i = list.length - 1; i > 0; i--){
         var r = Math.floor(Math.random() * (i + 1));
@@ -25,7 +26,7 @@ const shuffle = (list) => {
     return list;
 }
 
-const match = (list) => {
+module.exports.matched = (list) => {
     let ids = [];
     let log = [];
     for (let i = 0; i < list.length; i++) {
@@ -55,7 +56,7 @@ const match = (list) => {
     }
 }
 
-const matchActN = (entries, n) => {
+module.exports.findMatch = (entries, n) => {
     let list = [];
     let m = actSexConstraint[n];
     let f = actSexConstraint[n];
@@ -73,17 +74,15 @@ const matchActN = (entries, n) => {
             f--;
         }
 
-        list.push(entries.splice(i, 1)[0]._id);
-        i--;
+        list.push(user);
         if (list.length === n) {
-            match(list);
-            return true;
+            return list;
         }
     }
-    return false;
+    return [];
 }
 
-const matchAct = () => {
+module.exports.matchAct = () => {
     logger.info("match start");
     Entry.find().populate("_id").exec((err, entries) => {
         if (err) {
@@ -98,16 +97,20 @@ const matchAct = () => {
             let numbers = shuffle([3,4,5,6]); // 人数候補
             let failCount = numbers.length;
             while (numbers.length > 0) {
-                let n = numbers.pop();
-                if (!matchActN(entries, n)) {
+                let list = this.findMatch(entries, numbers.pop());
+                if (list.length === 0) {
+                    // マッチング失敗
                     failCount--;
+                } else {
+                    entries = entries.filter((n) => list.indexOf(n._id) === -1);
+                    this.matched(list);
                 }
             }
             if (failCount === 0) break;
         }
 
         for (let i = 0; i < entries.length; i++) {
-            match([entries[i]._id]); // 一人
+            this.matched([entries[i]._id]); // 一人
         }
 
         logger.info("match end");
@@ -115,6 +118,8 @@ const matchAct = () => {
 }
 
 
-module.exports = {
-    matchAct: matchAct
-};
+//module.exports = {
+//    matchAct: matchAct
+//    ,matchActN: matchActN
+//    ,matched: matched
+//};
