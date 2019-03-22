@@ -26,7 +26,7 @@ if (process.env.NODE_ENV === "prod") {
     cookieName = "dev_session_id";
 }
 
-let session = expressSession({
+module.exports.session = expressSession({
     secret: secret.session.secret,
     name: cookieName,
     resave: false,
@@ -72,11 +72,13 @@ passport.use(new TwitterStrategy({
 
 // セッションに保存
 passport.serializeUser(function(user, done) {
+    logger.debug("serializeUser");
     done(null, user.id);
 });
 
 // セッションから復元 routerのreq.userから利用可能
 passport.deserializeUser(function(id, done) {
+    logger.debug("deserializeUser");
     User.findById(id, (err, user) => {
         if (err) {
             return done(err);
@@ -85,18 +87,13 @@ passport.deserializeUser(function(id, done) {
     });
 });
 
-function isAuthenticated(req, res, next){
+module.exports.passport = passport;
+
+module.exports.isAuthenticated = (req, res, next) => {
+    logger.debug("isAuthenticated");
     if (req.isAuthenticated()) { // 認証済
         return next();
-    }
-    else { // 認証されていない
+    } else { // 認証されていない
         res.redirect("/");  // ログイン画面に遷移
     }
-}
-
-
-module.exports = {
-    session: session,
-    passport: passport,
-    isAuthenticated: isAuthenticated
 }
