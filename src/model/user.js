@@ -33,7 +33,7 @@ model.get = (id, done) => {
         }
 
         this.schema.findById(id, (err, user) => {
-            if (!err) {
+            if (!err && user) {
                 cache.set(cachePrefix+user._id, user);
             }
             done(err, user);
@@ -46,7 +46,9 @@ model.set = (user, done) => {
         if (err) {
             logger.error(err);
         }
-        cache.del(cachePrefix+user._id);
+        if (!err && user) {
+            cache.del(cachePrefix+user._id);
+        }
 
         done(err, user);
     });
