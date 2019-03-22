@@ -15,7 +15,7 @@ let mockMatcher;
 
 before((done) => {
     db.connection.once("open", async () => {
-        await Match.deleteMany().exec();
+        await Match.schema.deleteMany().exec();
         done();
     });
 });
@@ -33,8 +33,8 @@ after(() => {
 });
 
 it("3:1マッチ成功1人あまり", async () => {
-    await Entry.deleteMany().exec();
-    await Entry.insertMany([
+    await Entry.schema.deleteMany().exec();
+    await Entry.schema.insertMany([
         {_id: 100}
         ,{_id: 101}
         ,{_id: 102}
@@ -45,14 +45,14 @@ it("3:1マッチ成功1人あまり", async () => {
     await matcher.matchAct([4]);
 
     let match;
-    match = await Match.findOne({_id: 100}).exec();
+    match = await Match.schema.findOne({_id: 100}).exec();
     expect(match.ids).toEqual(["100", "101", "102", "200"]);
-    match = await Match.findOne({_id: 101}).exec();
+    match = await Match.schema.findOne({_id: 101}).exec();
     expect(match.ids).toEqual(["100", "101", "102", "200"]);
-    match = await Match.findOne({_id: 102}).exec();
+    match = await Match.schema.findOne({_id: 102}).exec();
     expect(match.ids).toEqual(["100", "101", "102", "200"]);
-    match = await Match.findOne({_id: 103}).exec();
+    match = await Match.schema.findOne({_id: 103}).exec();
     expect(match.ids).toEqual(["103"]); // ぼっち・・・
-    match = await Match.findOne({_id: 200}).exec();
+    match = await Match.schema.findOne({_id: 200}).exec();
     expect(match.ids).toEqual(["100", "101", "102", "200"]);
 });

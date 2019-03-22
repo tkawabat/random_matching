@@ -38,17 +38,17 @@ module.exports.matched = (list) => {
     logger.info("match: "+log.join(", "));
 
     for (let i = 0; i < list.length; i++) {
-        Entry.deleteOne({_id: list[i]._id}, (err, entry) => {
+        Entry.schema.deleteOne({_id: list[i]._id}, (err, entry) => {
             if (err) {
                 logger.error(err);
                 throw err;
             }
         });
-        let match = new Match({
+        let match = new Match.schema({
             _id: list[i]._id
             ,ids: ids
         });
-        Match.findOneAndUpdate({ "_id" : match._id}, match, { upsert: true, setDefaultsOnInsert: true }, (err, res) => {
+        Match.schema.findOneAndUpdate({ "_id" : match._id}, match, { upsert: true, setDefaultsOnInsert: true }, (err, res) => {
             if (err) {
                 logger.error(err);
                 throw err;
@@ -90,7 +90,7 @@ module.exports.matchAct = async (numbers) => {
     logger.info("match start");
     let entries;
     try {
-        entries = await Entry.find().populate("_id").exec();
+        entries = await Entry.schema.find().populate("_id").exec();
     } catch (err) {
         if (err) {
             logger.error(err);

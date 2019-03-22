@@ -5,6 +5,7 @@ const moment = require("moment-timezone");
 moment.tz.setDefault("Asia/Tokyo");
 
 const logger = require(rootDir + "/src/log4js");
+const cache = require(rootDir + "/src/cache");
 const User = require(rootDir + "/src/model/user");
 const Entry = require(rootDir + "/src/model/entry");
 const Match = require(rootDir + "/src/model/match");
@@ -13,7 +14,7 @@ const Match = require(rootDir + "/src/model/match");
 module.exports.get = (req, res, next) => {
     let n = 2;
 
-    Match.findOne({ _id: req.user.id }).populate("ids").exec((err, match) => {
+    Match.schema.findOne({ _id: req.user.id }).populate("ids").exec((err, match) => {
         if (err) {
             logger.error(err);
             throw err;
@@ -29,7 +30,7 @@ module.exports.get = (req, res, next) => {
         }
     });
 
-    Entry.findOne({ _id: req.user.id }).populate("_id").exec((err, entry) => {
+    Entry.schema.findOne({ _id: req.user.id }).populate("_id").exec((err, entry) => {
         if (err) {
             logger.error(err);
             throw err;

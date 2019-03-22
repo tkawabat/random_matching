@@ -1,11 +1,15 @@
 "use strict";
 
-let moment = require("moment-timezone");
+const rootDir = require("app-root-path");
+const moment = require("moment-timezone");
 moment.tz.setDefault("Asia/Tokyo");
 
-let db = require("../mongodb");
+const db = require(rootDir+"/src/mongodb");
+const cache = require(rootDir + "/src/cache");
 
-const userSchema = db.Schema({
+const cachePrefix = "db_user_";
+
+const schema = db.Schema({
     _id: { type: String }
     ,twitter_token: { type: String}
     ,twitter_token_secret: { type: String}
@@ -19,4 +23,34 @@ const userSchema = db.Schema({
     { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );
 
-module.exports = db.model("user", userSchema);
+const model = {}
+model.get = (id, done) => {
+    cache.get(cachePrefix+id, (err, value) => {
+        if (!err && value) {
+            let user = new this.schema(value);
+            done(null, user);
+            return;
+        }
+
+        this.schema.findById(id, (err, user) => {
+            if (!err) {
+                cache.set(cachePrefix+user._id, user);
+            }
+            done(err, user);
+        });
+    });
+}
+
+model.set = (user, done) => {
+    this.schema.findOneAndUpdate({"_id": user._id}, user, {upsert: true}, (err, user) => {
+        if (err) {
+            logger.error(err);
+        }
+        cache.del(cachePrefix+user._id);
+
+        done(err, user);
+    });
+}
+
+module.exports.schema = db.model("user", schema);
+module.exports.model = model;

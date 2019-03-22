@@ -48,7 +48,7 @@ passport.use(new TwitterStrategy({
     //console.log(profile);
 
     // db save
-    const user = new User({
+    const user = new User.schema({
         _id: profile.id
         ,twitter_token: token
         ,twitter_token_secret: tokenSecret
@@ -57,7 +57,7 @@ passport.use(new TwitterStrategy({
         ,twitter_created_at: profile._json.created_at
         ,image_url_https: profile.photos[0].value
     });
-    User.findOneAndUpdate({ "_id" : profile.id }, user, { upsert: true }, (err, res) => {
+    User.model.set(user, (err, res) => {
         if (err) throw err; // TODO
     });
 
@@ -77,12 +77,7 @@ passport.serializeUser(function(user, done) {
 
 // セッションから復元 routerのreq.userから利用可能
 passport.deserializeUser(function(id, done) {
-    User.findById(id, (err, user) => {
-        if (err) {
-            return done(err);
-        }
-        done(null, user);
-    });
+    User.model.get(id, done);
 });
 
 module.exports.passport = passport;

@@ -11,8 +11,8 @@ const Match = require(rootDir+"/src/model/match");
 const matcher = require(rootDir+"/src/matcher");
 
 db.connection.once("open", async () => {
-    await User.deleteMany().exec();
-    await User.insertMany([
+    await User.schema.deleteMany().exec();
+    await User.schema.insertMany([
          {_id: "100", sex: "f", twitter_id:"id100", twitter_name:"0"}
         ,{_id: "101", sex: "f", twitter_id:"id101", twitter_name:"1"}
         ,{_id: "102", sex: "f", twitter_id:"id102", twitter_name:"2"}

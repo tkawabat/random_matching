@@ -51,10 +51,10 @@ router.post("/", account.isAuthenticated, validator.entry, (req, res) => {
         return;
     }
 
-    const entry = new Entry({
+    const entry = new Entry.schema({
         _id: req.user._id
     });
-    Entry.findOneAndUpdate({_id: entry.id}, entry, {upsert: true}, (err, entry) => {
+    Entry.schema.findOneAndUpdate({_id: entry.id}, entry, {upsert: true}, (err, entry) => {
         if (err) {
             logger.error(err);
             res.redirect("/entry/?warning=entry_save");
@@ -72,7 +72,7 @@ router.post("/cancel", account.isAuthenticated, validator.entry, (req, res) => {
         return;
     }
 
-    const entry = new Entry({
+    const entry = new Entry.schema({
         _id: req.user._id
     });
     entry.remove((err, entry) => {

@@ -1,9 +1,9 @@
 "use strict";
 
-let moment = require("moment-timezone");
+const moment = require("moment-timezone");
 moment.tz.setDefault("Asia/Tokyo");
 
-let db = require("../mongodb");
+const db = require("../mongodb");
 
 const schema = db.Schema({
     _id: { type: String, ref: "user"}
@@ -13,4 +13,4 @@ const schema = db.Schema({
 );
 schema.index("created_at", {expireAfterSeconds: 60 * 60 * 3});
 
-module.exports = db.model("match", schema);
+module.exports.schema = db.model("match", schema);
