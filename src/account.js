@@ -72,13 +72,11 @@ passport.use(new TwitterStrategy({
 
 // セッションに保存
 passport.serializeUser(function(user, done) {
-    logger.debug("serializeUser");
     done(null, user.id);
 });
 
 // セッションから復元 routerのreq.userから利用可能
 passport.deserializeUser(function(id, done) {
-    logger.debug("deserializeUser");
     User.findById(id, (err, user) => {
         if (err) {
             return done(err);
@@ -90,7 +88,6 @@ passport.deserializeUser(function(id, done) {
 module.exports.passport = passport;
 
 module.exports.isAuthenticated = (req, res, next) => {
-    logger.debug("isAuthenticated");
     if (req.isAuthenticated()) { // 認証済
         return next();
     } else { // 認証されていない

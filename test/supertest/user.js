@@ -11,35 +11,30 @@ const db = require(rootDir+"/src/mongodb");
 const account = require(rootDir+"/src/account");
 
 
-before((done) => {
-    db.connection.once("open", async () => {
-        done();
-    });
+afterEach(() => {
+    passportStub.uninstall(app);
 });
 after(() => {
     db.disconnect();
     app.schedule.cancel();
 });
 
-
-it("未ログイン", function(done) {
-    request(app).get("/user/")
-        .end((err, res) => {
-            expect(res.status).toBe(302);
-            done();
-        });
+it("user未ログイン", function(done) {
+    request(app).get("/user/").end((err, res) => {
+        expect(res.status).toBe(302);
+        expect(res.text.includes("Redirecting to /")).toBe(true);
+        done();
+    });
 });
 
-it("ログイン済", function(done) {
+it("userログイン済", function(done) {
     passportStub.install(app);
     passportStub.login("100");
 
-    request(app).get("/user/")
-        .end((err, res) => {
-            expect(res.status).toBe(200);
-            expect(res.text.includes("@id100")).toBe(true);
+    request(app).get("/user/").end((err, res) => {
+        expect(res.status).toBe(200);
+        expect(res.text.includes("@id100")).toBe(true);
 
-            passportStub.uninstall(app);
-            done();
-        })
+        done();
+    })
 });
