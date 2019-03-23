@@ -88,6 +88,10 @@ p {
     float: right;
 }
 
+.modal {
+    top: 150px;
+}
+
 footer {
     padding: 0 10px 10px 10px;
     font-size: x-small;
