@@ -130,6 +130,7 @@ footer {
     margin: 2px 5px 8px 0;
 }
 
+/* animation */
 .loading {
     margin: auto;
     width: 60px;
@@ -143,6 +144,20 @@ footer {
     0% {transform: rotate(0deg);}
     100% {transform: rotate(360deg);}
 }
+.fadeIn {
+    animation: fadeIn 0.8s ease;
+}
+@keyframes fadeIn {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+}
+.fadeOut {
+    animation: fadeOut 0.4s ease;
+}
+@keyframes fadeOut {
+    0% {opacity: 1;}
+    100% {opacity: 0;}
+}
 
 /* index */
 .intro_icon {
@@ -154,4 +169,9 @@ footer {
 }
 .intro {
     color: #555555;
+}
+
+/* user */
+#user_ng_list_input_sample {
+    display: none;
 }

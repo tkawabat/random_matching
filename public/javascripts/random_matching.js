@@ -36,4 +36,26 @@ let RandomMatching = {};
         modal("コピーしました");
     };
 
+    // user page
+    RandomMatching.user = {};
+    {
+        let sample = document.getElementById("user_ng_list_input_sample");
+        RandomMatching.user.addNgListInput = () => {
+            let add = sample.cloneNode(true);
+            add.removeAttribute("id");
+            sample.parentNode.insertBefore(add, sample);
+        }
+    }
+    RandomMatching.user.removeNgListInput = (button) => {
+        let element = button;
+        while (element.tagName.toLowerCase() !== "body") {
+            if (element.classList.contains("input-group")) {
+                element.classList.add("fadeOut");
+                setTimeout(() => element.remove(), 400);
+                break;
+            }
+            element = element.parentNode;
+        }
+    }
+
 })();
