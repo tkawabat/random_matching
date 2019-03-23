@@ -1,5 +1,7 @@
 "use strict";
 
+let RandomMatching = {};
+
 (() => {
     { // GA
         window.dataLayer = window.dataLayer || [];
@@ -12,32 +14,26 @@
         $("#modal").modal("show");
     }
 
-    let links = document.querySelectorAll("a.copylink");
-    links.forEach((link) => {
-        link.addEventListener("click", (e) => {
-            e.preventDefault();
+    RandomMatching.copyLink = (target, text) => {
+        // dummy dom
+        let span = document.createElement("span");
+        span.textContent = text;
+        let body = document.getElementsByTagName("body")[0];
+        body.appendChild(span);
 
-            let txt = link.getAttribute("href");
+        // cancel select
+        let s = window.getSelection();
+        if (s.rangeCount > 0) s.removeAllRanges();
 
-            // dummy dom
-            let span = document.createElement("span");
-            span.textContent = txt;
-            let b = document.getElementsByTagName("body")[0];
-            b.appendChild(span);
+        // drag dummy dom
+        let range = document.createRange();
+        range.selectNode(span);
+        s.addRange(range);
 
-            // cancel select
-            let s = window.getSelection();
-            if (s.rangeCount > 0) s.removeAllRanges();
+        document.execCommand("copy");
 
-            // drag dummy dom
-            let r = document.createRange();
-            r.selectNode(span);
-            s.addRange(r);
+        span.remove();
+        modal("コピーしました");
+    };
 
-            document.execCommand("copy");
-
-            span.remove();
-            modal("コピーしました");
-        });
-    });
 })();

@@ -70,6 +70,10 @@ p {
     background: #ccc;
 }
 
+.pointer {
+    cursor: pointer;
+}
+
 .site_title {
     font-color: #696969;
     text-shadow: 1px 1px 1px silver;
