@@ -40,21 +40,27 @@ let RandomMatching = {};
     RandomMatching.user = {};
     {
         let sample = document.getElementById("user_ng_list_input_sample");
+        let plus = document.getElementById("user_ng_list_plus");
         RandomMatching.user.addNgListInput = () => {
+            if (sample.parentNode.querySelectorAll("[name='ng_list[]']").length > 20) {
+                // hiddenがあるので21個からエラー
+                modal("NGリストは20個までです。");
+                return;
+            }
             let add = sample.cloneNode(true);
             add.removeAttribute("id");
             sample.parentNode.insertBefore(add, sample);
         }
-    }
-    RandomMatching.user.removeNgListInput = (button) => {
-        let element = button;
-        while (element.tagName.toLowerCase() !== "body") {
-            if (element.classList.contains("input-group")) {
-                element.classList.add("fadeOut");
-                setTimeout(() => element.remove(), 400);
-                break;
+        RandomMatching.user.removeNgListInput = (button) => {
+            let element = button;
+            while (element.tagName.toLowerCase() !== "body") {
+                if (element.classList.contains("input-group")) {
+                    element.classList.add("fadeOut");
+                    setTimeout(() => element.remove(), 400);
+                    break;
+                }
+                element = element.parentNode;
             }
-            element = element.parentNode;
         }
     }
 

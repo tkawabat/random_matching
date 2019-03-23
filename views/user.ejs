@@ -34,7 +34,6 @@ let sex_f = user.sex === 'f' ? "checked" : "";
         </div>
     </div>
 
-
     <div id="user_ng_list_input_sample" class="input-group mb-2 fadeIn">
         <div class="input-group-prepend">
             <button type="button" class="btn btn-secondary" onClick="RandomMatching.user.removeNgListInput(this);"><i class="fas fa-trash-alt"></i></button>
@@ -42,7 +41,7 @@ let sex_f = user.sex === 'f' ? "checked" : "";
         <input type="text" class="form-control" name="ng_list[]" placeholder="twitter id" maxlength="15" pattern="^[a-zA-Z0-9]*$">
     </div>
 
-    <div>
+    <div id="user_ng_list_plus">
         <button type="button" class="btn btn-success" onClick="RandomMatching.user.addNgListInput();"><i class="fas fa-plus"></i></button>
     </div>
 
