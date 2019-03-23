@@ -3,7 +3,7 @@
       {
           "name" : "dev",
           "script"    : "bin/www",
-          "instances" : "max",
+          "instances" : "1",
           "instance_var": "INSTANCE_ID",
           "exec_mode" : "cluster",
           "watch": ["./"],
@@ -20,7 +20,7 @@
       {
           "name" : "prod",
           "script"    : "bin/www",
-          "instances" : "max",
+          "instances" : "1",
           "instance_var": "INSTANCE_ID",
           "exec_mode" : "cluster",
           "env" : {
