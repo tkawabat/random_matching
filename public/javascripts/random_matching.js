@@ -42,13 +42,14 @@ let RandomMatching = {};
         let sample = document.getElementById("user_ng_list_input_sample");
         let plus = document.getElementById("user_ng_list_plus");
         RandomMatching.user.addNgListInput = () => {
-            if (sample.parentNode.querySelectorAll("[name='ng_list[]']").length > 20) {
+            if (sample.parentNode.querySelectorAll("[name='ng_list[]']").length >= 21) {
                 // hiddenがあるので21個からエラー
                 modal("NGリストは20個までです。");
                 return;
             }
             let add = sample.cloneNode(true);
             add.removeAttribute("id");
+            add.querySelector("input").removeAttribute("disabled");
             sample.parentNode.insertBefore(add, sample);
         }
         RandomMatching.user.removeNgListInput = (button) => {

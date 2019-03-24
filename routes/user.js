@@ -26,6 +26,11 @@ router.post("/", account.isAuthenticated, validator.user, routeHelper.check, (re
     let user = req.user;
     user.sex = user.sex ? user.sex : req.body.sex;
     user.skype_id = req.body.skype_id;
+    if (req.body.ng_list) {
+        user.ng_list = req.body.ng_list.filter(v => v !== "");
+    } else {
+        user.ng_list = [];
+    }
     User.model.set(user, (err, user) => {
         if (err) {
             res.redirect("/user/?warning=user_save");
