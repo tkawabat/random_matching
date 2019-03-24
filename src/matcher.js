@@ -27,6 +27,14 @@ module.exports.shuffle = (list) => {
     return copied;
 }
 
+module.exports.checkNg = (list, ngList, user) => {
+    if (ngList.includes(user.twitter_id)) return false;
+    for (let i = 0; i < list.length; i++) {
+        if (user.ng_list.includes(list[i].twitter_id)) return false;
+    }
+    return true;
+}
+
 module.exports.matched = (list) => {
     let ids = [];
     let log = [];
@@ -59,6 +67,7 @@ module.exports.matched = (list) => {
 
 module.exports.findMatch = (entries, n) => {
     let list = [];
+    let ngList = [];
     let m = actSexConstraint[n];
     let f = actSexConstraint[n];
 
@@ -66,6 +75,8 @@ module.exports.findMatch = (entries, n) => {
 
     for (let i = 0; i < entries.length; i++) {
         let user = entries[i]._id;
+
+        if (!this.checkNg(list, ngList, user)) continue;
         if (user.sex === "m") {
             if (m === 0) {
                 continue;
@@ -79,6 +90,7 @@ module.exports.findMatch = (entries, n) => {
         }
 
         list.push(user);
+        ngList = ngList.concat(user.ng_list);
         if (list.length === n) {
             return list;
         }
