@@ -22,10 +22,11 @@
 </div>
 
 <% let disabled = isReady ? "" : "disabled" %>
-<div class="mt-4">
+<div class="mt-5">
 <form method="POST" action="/entry/">
    <p class="text-center"><button type="submit" class="btn bg_red" <%= disabled %>>マッチング開始</button></p>
 </form>
 </div>
 
+<p class="text-center text-secondary">※マッチングは開始から30分有効です。</p>
 <%- include("./module/entry_explain", {}) %>

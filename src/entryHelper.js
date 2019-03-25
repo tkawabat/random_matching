@@ -21,6 +21,7 @@ module.exports.get = (req, res, next) => {
         } else {
             if (match) {
                 res.viewParam.matched = match.ids;
+                res.viewParam.match_expiration = moment(match.created_at).add(1, "hours").format("kk:mm");
             }
         }
 
@@ -37,6 +38,9 @@ module.exports.get = (req, res, next) => {
             next();
         } else {
             res.viewParam.entry = entry;
+            if (entry) {
+                res.viewParam.entry_expiration = moment(entry.created_at).add(30, "minutes").format("kk:mm");
+            }
         }
 
         n--;
