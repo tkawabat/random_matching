@@ -71,7 +71,7 @@ module.exports.findMatch = (entries, n) => {
     let m = actSexConstraint[n];
     let f = actSexConstraint[n];
 
-    logger.info("find "+n);
+    logger.debug("find "+n);
 
     for (let i = 0; i < entries.length; i++) {
         let user = entries[i]._id;
@@ -99,7 +99,7 @@ module.exports.findMatch = (entries, n) => {
 }
 
 module.exports.matchAct = async (numbers) => {
-    logger.info("match start");
+    logger.debug("match start");
     let entries;
     try {
         entries = await Entry.schema.find().populate("_id").exec();
@@ -111,7 +111,7 @@ module.exports.matchAct = async (numbers) => {
         }
     }
 
-    logger.info("matching num: "+entries.length);
+    logger.debug("matching num: "+entries.length);
 
     while (1) {
         //let shuffleNumbers = this.shuffle(numbers); // 人数候補
@@ -133,5 +133,5 @@ module.exports.matchAct = async (numbers) => {
     //    this.matched([entries[i]._id]); // 一人
     //}
 
-    logger.info("match end");
+    logger.debug("match end");
 }
