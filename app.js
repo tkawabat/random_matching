@@ -28,7 +28,7 @@ app.use(morgan);
 app.use(helmet())
 app.use(compression())
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(rootDir +"/public"));
 app.use(expressLayouts);
@@ -75,6 +75,12 @@ app.use("/entry", require("./routes/entry"));
 // schedule
 app.schedule = schedule.scheduleJob("0 21 * * *", () => {
     matcher.matchAct([3,4,5,6,7]);
+});
+app.schedule = schedule.scheduleJob("* 22 * * *", () => {
+    matcher.matchAct([2]);
+});
+app.schedule = schedule.scheduleJob("* 23 * * *", () => {
+    matcher.matchAct([2]);
 });
 
 // catch 404 and forward to error handler

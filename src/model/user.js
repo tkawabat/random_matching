@@ -19,6 +19,7 @@ const schema = db.Schema({
     ,skype_id: { type: String }
     ,sex: { type: String }
     ,image_url_https: { type: String }
+    ,ng_list: [{ type: String }]
 },
     { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );

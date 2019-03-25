@@ -51,8 +51,13 @@ it("3:1マッチ成功1人あまり", async () => {
     expect(match.ids).toEqual(["100", "101", "102", "200"]);
     match = await Match.schema.findOne({_id: 102}).exec();
     expect(match.ids).toEqual(["100", "101", "102", "200"]);
-    match = await Match.schema.findOne({_id: 103}).exec();
-    expect(match.ids).toEqual(["103"]); // ぼっち・・・
     match = await Match.schema.findOne({_id: 200}).exec();
     expect(match.ids).toEqual(["100", "101", "102", "200"]);
+
+    // 失敗
+    let entry;
+    match = await Match.schema.findOne({_id: 103}).exec();
+    expect(match).toBe(null);
+    entry = await Entry.schema.findOne({_id: 103}).exec();
+    expect(entry._id).toEqual("103");
 });

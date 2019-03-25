@@ -9,17 +9,56 @@ let sex_f = user.sex === 'f' ? "checked" : "";
 <%- include("./module/user", {user:user}) %>
 
 <form class="mt-5 mb-5" method="POST" action="/user/">
-    <div class="form-group">
-        性別：
+    <label>性別<span class="ml-2 text-secondary">※決定すると変更できません。</span></label>
+    <div class="ml-3 form-group">
         男&nbsp;<input type="radio" name="sex" value="m" required <%= sex_m %> <%= sex_disabled %>>&nbsp;
         女&nbsp;<input type="radio" name="sex" value="f" required <%= sex_f %> <%= sex_disabled %>>
-        <p class="text-right text-secondary">※性別は決定すると変更できません。</p>
     </div>
-    <div class="form-group form-inline mt-4">
-        Skype：
-        <input type="text" class="form-control" name="skype_id" placeholder="skype id" maxlength=64" required value="<%= user.skype_id %>">
+
+    <label>Skype ID</label>
+    <div class="form-group">
+        <input type="text" class="form-control" name="skype_id" placeholder="skype id" maxlength=64" pattern="^[a-zA-Z0-9_\.\-:]*$" required value="<%= user.skype_id %>">
     </div>
-    <div class="mt-3 text-center">
+
+    <label>マッチングNGリスト</label>
+
+    <%# 0個だったら空ボックス %>
+    <% if (user.ng_list.length === 0) { %>
+        <div class="input-group mb-2">
+            <div class="input-group-prepend">
+                <button type="button" class="btn btn-secondary" onClick="RandomMatching.user.removeNgListInput(this);"><i class="fas fa-trash-alt"></i></button>
+            </div>
+            <input type="text" class="form-control" name="ng_list[]" placeholder="twitter id" maxlength="15" pattern="^[a-zA-Z0-9_]*$">
+        </div>
+    <% } %>
+    <% for (let i = 0; i < user.ng_list.length; i++) { %>
+        <div class="input-group mb-2">
+            <div class="input-group-prepend">
+                <button type="button" class="btn btn-secondary" onClick="RandomMatching.user.removeNgListInput(this);"><i class="fas fa-trash-alt"></i></button>
+            </div>
+            <input type="text" class="form-control" name="ng_list[]" placeholder="twitter id" maxlength="15" pattern="^[a-zA-Z0-9_]*$" value="<%=user.ng_list[i]%>">
+            <div class="input-group-append">
+                <button type="button" class="btn btn-white">
+                    <a href="https://twitter.com/<%=user.ng_list[i]%>"><i class="color-twitter fab fa-twitter"></i></a>
+                </button>
+            </div>
+        </div>
+    <% } %>
+
+    <div id="user_ng_list_input_sample" class="input-group mb-2 fadeIn">
+        <div class="input-group-prepend">
+            <button type="button" class="btn btn-secondary" onClick="RandomMatching.user.removeNgListInput(this);"><i class="fas fa-trash-alt"></i></button>
+        </div>
+        <input type="text" class="form-control" name="ng_list[]" placeholder="twitter id" maxlength="15" pattern="^[a-zA-Z0-9_]*$" disabled>
+    </div>
+
+    <div id="user_ng_list_plus">
+        <button type="button" class="btn btn-success" onClick="RandomMatching.user.addNgListInput();"><i class="fas fa-plus"></i></button>
+    </div>
+
+
+
+    <div class="mt-5 text-center">
         <a href="/entry/"><button type="button" class="btn bg_orange mr-4">戻る</button></a>
         <button type="submit" class="btn bg_red">更新</button>
     </div>
