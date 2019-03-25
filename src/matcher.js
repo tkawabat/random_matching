@@ -129,9 +129,9 @@ module.exports.matchAct = async (numbers) => {
         if (failCount === 0) break;
     }
 
-    for (let i = 0; i < entries.length; i++) {
-        this.matched([entries[i]._id]); // 一人
-    }
+    //for (let i = 0; i < entries.length; i++) {
+    //    this.matched([entries[i]._id]); // 一人
+    //}
 
     logger.info("match end");
 }
