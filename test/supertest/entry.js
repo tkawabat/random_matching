@@ -16,7 +16,9 @@ afterEach(() => {
 });
 after(() => {
     db.disconnect();
-    app.schedule.cancel();
+    for (let s of app.schedule) {
+        s.cancel();
+    }
 });
 
 

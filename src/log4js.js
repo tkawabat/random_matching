@@ -4,10 +4,16 @@ const rootDir = require("app-root-path");
 const log4js = require("log4js")
 
 let file;
+let level;
 if (process.env.NODE_ENV === "prod") {
     file = "prod.log";
+    level = "info";
+} else if (process.env.NODE_ENV === "test") {
+    file = "test.log";
+    level = "error";
 } else {
     file = "dev.log";
+    level = "debug";
 }
 
 log4js.configure({
@@ -20,7 +26,7 @@ log4js.configure({
         }
     }
     ,categories: {
-        default: { appenders: [ "app", "console" ], level: "debug" }
+        default: { appenders: [ "app", "console" ], level: level }
     }
     ,pm2: true
     ,pm2InstanceVar: "INSTANCE_ID"

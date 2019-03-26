@@ -73,15 +73,16 @@ app.use("/entry", require("./routes/entry"));
 
 
 // schedule
-app.schedule = schedule.scheduleJob("0 21 * * *", () => {
+app.schedule = [];
+app.schedule.push(schedule.scheduleJob("0 21 * * *", () => {
     matcher.matchAct([3,4,5,6,7]);
-});
-app.schedule = schedule.scheduleJob("* 22 * * *", () => {
+}));
+app.schedule.push(schedule.scheduleJob("* 22 * * *", () => {
     matcher.matchAct([2]);
-});
-app.schedule = schedule.scheduleJob("* 23 * * *", () => {
+}));
+app.schedule.push(schedule.scheduleJob("* 23 * * *", () => {
     matcher.matchAct([2]);
-});
+}));
 
 // catch 404 and forward to error handler
 //app.use(routeHelper.Error404); // mapファイルが404を起こすのでコメントアウト
