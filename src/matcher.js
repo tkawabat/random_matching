@@ -111,7 +111,7 @@ module.exports.matchAct = async (numbers) => {
         }
     }
 
-    logger.debug("matching num: "+entries.length);
+    logger.info("matching num: "+entries.length);
 
     while (1) {
         //let shuffleNumbers = this.shuffle(numbers); // 人数候補
