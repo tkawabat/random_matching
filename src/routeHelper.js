@@ -8,23 +8,16 @@ const createError = require("http-errors");
 const warning = {
     twitter_auth_failed: "Twitter認証で失敗しました"
     ,validate: "入力値に問題があります"
-    ,user_save: "ユーザー情報の更新に失敗しました"
     ,entry_save: "マッチング開始に失敗しました"
     ,entry_delete: "マッチングキャンセルに失敗しました"
     ,not_registered: "性別、Skyepe IDを登録してください"
     ,twitter_unsafe: "twitterアカウントがマッチング条件を満たしていません"
     ,error500: "予期せぬエラーが発生しました。時間を置いてアクセスしてください"
 }
-const info = {
-    user_save: "ユーザー情報を更新しました"
-}
 
 const check = ( req, res, next) => {
     if (req.query.warning && warning[req.query.warning]) {
         res.viewParam.alert_warning = warning[req.query.warning];
-    }
-    if (req.query.info && info[req.query.info]) {
-        res.viewParam.alert_info = info[req.query.info];
     }
 
     next();

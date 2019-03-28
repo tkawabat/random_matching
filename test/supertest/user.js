@@ -9,6 +9,7 @@ const passportStub = require("passport-stub");
 const app = require(rootDir+"/app");
 const db = require(rootDir+"/src/mongodb");
 const account = require(rootDir+"/src/account");
+const User = require(rootDir + "/src/model/user");
 
 
 afterEach(() => {
@@ -39,4 +40,57 @@ it("userログイン済", function(done) {
 
         done();
     })
+});
+
+it("user save成功", function(done) {
+    passportStub.install(app);
+    passportStub.login("100");
+
+    let param = {
+        skype_id: "skypeid100",
+        sex: "f",
+    }
+    request(app).post("/user/").send(param).end((err, res) => {
+        expect(res.status).toBe(200);
+        expect(res.text.includes("skypeid100")).toBe(true);
+
+        done();
+    })
+});
+
+it("user save validateエラー", function(done) {
+    passportStub.install(app);
+    passportStub.login("100");
+
+    let param = {
+        skype_id: "skypeid100",
+        sex: "aaa",
+    }
+    request(app).post("/user/").send(param).end((err, res) => {
+        expect(res.status).toBe(400);
+        expect(res.text.includes("入力値に問題があります")).toBe(true);
+
+        done();
+    })
+});
+
+it("user save saveエラー", function(done) {
+    passportStub.install(app);
+    passportStub.login("100");
+
+    let stub = sinon.stub(User.model, "set");
+    stub.callsArgWith(1, true, null);
+
+    let param = {
+        skype_id: "skypeid100"
+        ,sex: "f"
+    }
+    request(app).post("/user/").send(param).end((err, res) => {
+        expect(res.status).toBe(500);
+        expect(res.text.includes("ユーザー情報の更新に失敗しました")).toBe(true);
+
+        stub.restore();
+        done();
+    })
+
 });
