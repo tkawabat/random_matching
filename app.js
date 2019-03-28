@@ -77,6 +77,7 @@ app.use("/", require("./routes/index"));
 app.use("/help", require("./routes/help"));
 app.use("/user", require("./routes/user"));
 app.use("/entry", require("./routes/entry"));
+app.use("/reserved", require("./routes/reserved"));
 
 // event
 db.connection.once("open", () => {
