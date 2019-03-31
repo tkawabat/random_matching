@@ -13,13 +13,6 @@ const matcher = require(rootDir+"/src/matcher");
 
 let mockMatcher;
 
-before((done) => {
-    db.connection.once("open", async () => {
-        await Match.schema.deleteMany().exec();
-        done();
-    });
-});
-
 beforeEach(() => {
     mockMatcher = sinon.mock(matcher);
 });
@@ -28,9 +21,6 @@ afterEach(() => {
     mockMatcher.restore();
 });
 
-after(() => {
-    db.disconnect();
-});
 
 it("3:1マッチ成功1人あまり", async () => {
     await Entry.schema.deleteMany().exec();

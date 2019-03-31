@@ -15,12 +15,7 @@ const User = require(rootDir + "/src/model/user");
 afterEach(() => {
     passportStub.uninstall(app);
 });
-after(() => {
-    db.disconnect();
-    for (let s of app.schedule) {
-        s.cancel();
-    }
-});
+
 
 it("user未ログイン", function(done) {
     request(app).get("/user/").end((err, res) => {
