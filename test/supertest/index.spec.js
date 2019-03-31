@@ -14,12 +14,6 @@ const account = require(rootDir+"/src/account");
 afterEach(() => {
     passportStub.uninstall(app);
 });
-after(() => {
-    db.disconnect();
-    for (let s of app.schedule) {
-        s.cancel();
-    }
-});
 
 
 it("index未ログイン", function(done) {

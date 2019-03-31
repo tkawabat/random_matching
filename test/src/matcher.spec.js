@@ -18,10 +18,6 @@ afterEach(() => {
     mockMacher.restore();
 });
 
-after(() => {
-    db.disconnect();
-});
-
 it("2マッチ成功", () => {
     let entries = [
         { _id: { _id: "0", twitter_id: "t0", sex: "m", ng_list: [] } }
