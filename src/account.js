@@ -49,7 +49,7 @@ passport.use(new TwitterStrategy({
     //console.log(profile);
 
     // db save
-    const user = new User.schema({
+    const user = {
         _id: profile.id
         ,twitter_token: token
         ,twitter_token_secret: tokenSecret
@@ -57,7 +57,7 @@ passport.use(new TwitterStrategy({
         ,twitter_name: profile.displayName
         ,twitter_created_at: profile._json.created_at
         ,image_url_https: profile.photos[0].value
-    });
+    };
     User.model.set(user, (err, res) => {
         if (err) throw err; // TODO
     });

@@ -12,24 +12,46 @@ const cache = require(rootDir + "/src/cache");
 let id = "999999";
 
 
-beforeEach((done) => {
-    User.schema.deleteOne({_id: id}, (err, user) => {
-        done();
+describe("user model set", () => {
+    beforeEach((done) => {
+        User.schema.deleteOne({_id: id}, (err, user) => {
+            done();
+        });
     });
-});
 
 
-it("user save push match デフォルト値", (done) => {
-    let stub = sinon.stub(cache, "del");
-    let user = {
-        _id: id
-        ,sex: "f"
-    }
+    it("user save push match デフォルト値", (done) => {
+        let stub = sinon.stub(cache, "del");
+        let user = {
+            _id: id
+            ,sex: "f"
+        }
 
-    User.model.set(user, (err, user) => {
-        expect(user.push.match).toEqual(true);
+        User.model.set(user, (err, user) => {
+            expect(user.push.match).toBe(true);
 
-        stub.restore();
-        done();
-    })
+            stub.restore();
+            done();
+        })
+    });
+
+    it("user save push match push.matchが空のとき上書きしない", (done) => {
+        let stub = sinon.stub(cache, "del");
+        let user = {
+            _id: id
+            ,push: {match: false}
+        }
+
+        User.model.set(user, (err, user) => {
+            user = {
+                _id: id
+            }
+            User.model.set(user, (err, user) => {
+                expect(user.push.match).toBe(false);
+
+                stub.restore();
+                done();
+            });
+        });
+    });
 });
