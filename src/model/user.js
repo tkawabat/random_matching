@@ -5,7 +5,8 @@ const moment = require("moment-timezone");
 moment.tz.setDefault("Asia/Tokyo");
 
 const db = require(rootDir+"/src/mongodb");
-const cache = require(rootDir + "/src/cache");
+const logger = require(rootDir+"/src/log4js");
+const cache = require(rootDir+"/src/cache");
 
 const cachePrefix = "db_user_";
 
@@ -20,6 +21,9 @@ const schema = db.Schema({
     ,sex: { type: String }
     ,image_url_https: { type: String }
     ,ng_list: [{ type: String }]
+    ,push: {
+        match: {type: Boolean, default: true }
+    }
 },
     { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );
@@ -43,7 +47,7 @@ model.get = (id, done) => {
 }
 
 model.set = (user, done) => {
-    this.schema.findOneAndUpdate({"_id": user._id}, user, {upsert: true}, (err, user) => {
+    this.schema.findOneAndUpdate({"_id": user._id}, user, {upsert: true, new: true}, (err, user) => {
         if (err) {
             logger.error(err);
         }

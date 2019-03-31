@@ -34,6 +34,11 @@ router.post("/", account.isAuthenticated, validator.user, routeHelper.check, (re
     } else {
         user.ng_list = [];
     }
+    if (req.body.push_match && req.body.push_match === "on") {
+        user.push.match = true;
+    } else {
+        user.push.match = false;
+    }
 
     User.model.set(user, (err, user) => {
         if (err) {
@@ -42,6 +47,7 @@ router.post("/", account.isAuthenticated, validator.user, routeHelper.check, (re
             return;
         }
         res.viewParam.alert_info = "ユーザー情報を更新しました";
+        res.viewParam.user = user;
         res.render("user", res.viewParam);
     });
 

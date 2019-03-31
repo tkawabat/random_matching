@@ -63,6 +63,10 @@ module.exports.isSafeTwitter = (user) => {
 }
 
 module.exports.isEntryTime = () => {
+    if (process.env.NODE_ENV !== "prod") {
+        return true;
+    }
+
     let hour = moment().hour();
     let minutes = moment().minutes();
     if (hour === 20 && minutes > 30) {
@@ -70,4 +74,6 @@ module.exports.isEntryTime = () => {
     } if (hour >= 22) {
         return true;
     }
+
+    return false;
 }

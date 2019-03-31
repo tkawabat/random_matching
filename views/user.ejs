@@ -2,6 +2,7 @@
 let sex_disabled = user.sex == null ? "" : "disabled"; 
 let sex_m = user.sex === 'm' ? "checked" : "";
 let sex_f = user.sex === 'f' ? "checked" : "";
+let push_match = user.push.match && user.push.match=== true ? "checked" : "";
 %>
 
 <h4 class="mb-4">ユーザー設定</h4>
@@ -18,6 +19,11 @@ let sex_f = user.sex === 'f' ? "checked" : "";
     <label>Skype ID</label>
     <div class="form-group">
         <input type="text" class="form-control" name="skype_id" placeholder="skype id" maxlength=64" pattern="^[a-zA-Z0-9_\.\-:]*$" required value="<%= user.skype_id %>">
+    </div>
+
+    <label>Twitter DM通知</label>
+    <div class="form-group">
+        <input class="ml-2" type="checkbox" name="push_match" <%=push_match%>>
     </div>
 
     <label>マッチングNGリスト</label>

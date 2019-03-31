@@ -1,7 +1,9 @@
 "use strict";
 
 const rootDir = require("app-root-path");
+const C = require(rootDir+"/src/const");
 const logger = require(rootDir + "/src/log4js");
+const twitter = require(rootDir + "/src/twitter");
 const User = require("../src/model/user");
 const Entry = require(rootDir + "/src/model/entry");
 const Match = require(rootDir + "/src/model/match");
@@ -18,7 +20,7 @@ const actSexConstraint = {
 
 module.exports.shuffle = (list) => {
     let copied = list.slice();
-    for(let i = copied.length - 1; i > 0; i--){
+    for (let i = copied.length - 1; i > 0; i--){
         let r = Math.floor(Math.random() * (i + 1));
         let tmp = copied[i];
         copied[i] = copied[r];
@@ -46,14 +48,15 @@ module.exports.matched = (list) => {
     logger.info("match: "+log.join(", "));
 
     for (let i = 0; i < list.length; i++) {
-        Entry.schema.deleteOne({_id: list[i]._id}, (err, entry) => {
+        let user = list[i];
+        Entry.schema.deleteOne({_id: user._id}, (err, entry) => {
             if (err) {
                 logger.error(err);
                 throw err;
             }
         });
         let match = new Match.schema({
-            _id: list[i]._id
+            _id: user._id
             ,ids: ids
         });
         Match.schema.findOneAndUpdate({ "_id" : match._id}, match, { upsert: true, setDefaultsOnInsert: true }, (err, res) => {
@@ -62,6 +65,12 @@ module.exports.matched = (list) => {
                 throw err;
             }
         });
+
+        if (user.push.match === true) {
+            let text = "マッチングしました。結果を確認してください。\n"
+                +C.BASE_URL;
+            twitter.sendDm(user, text);
+        }
     }
 }
 
