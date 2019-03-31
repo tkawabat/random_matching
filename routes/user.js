@@ -18,12 +18,15 @@ router.get("/", account.isAuthenticated, routeHelper.check, function(req, res) {
 });
 
 router.post("/", account.isAuthenticated, validator.user, routeHelper.check, (req, res) => {
+    let user = req.user;
+    res.viewParam.user = user;
+
     if (validator.isError(req)) {
-        res.redirect("/user/?warning=validate");
+        res.viewParam.alert_warning = "入力値に問題があります";
+        res.status(400).render("user", res.viewParam);
         return;
     }
 
-    let user = req.user;
     user.sex = user.sex ? user.sex : req.body.sex;
     user.skype_id = req.body.skype_id;
     if (req.body.ng_list) {
@@ -31,14 +34,15 @@ router.post("/", account.isAuthenticated, validator.user, routeHelper.check, (re
     } else {
         user.ng_list = [];
     }
+
     User.model.set(user, (err, user) => {
         if (err) {
-            res.redirect("/user/?warning=user_save");
+            res.viewParam.alert_warning = "ユーザー情報の更新に失敗しました";
+            res.status(500).render("user", res.viewParam);
             return;
         }
-        res.viewParam.user = user;
-        res.viewParam.info = "user_save";
-        res.redirect("/user/?info=user_save");
+        res.viewParam.alert_info = "ユーザー情報を更新しました";
+        res.render("user", res.viewParam);
     });
 
 });
