@@ -44,15 +44,33 @@ it("user save成功", function(done) {
     let param = {
         skype_id: "skypeid100",
         sex: "f",
+        push_match: "on",
     }
     request(app).post("/user/").send(param).end((err, res) => {
         expect(res.status).toBe(200);
         expect(res.text.includes("skypeid100")).toBe(true);
+        expect(res.text.includes("name=\"push_match\" checked")).toBe(true);
 
         done();
     })
 });
 
+it("user save成功 push_match off", function(done) {
+    passportStub.install(app);
+    passportStub.login("100");
+
+    let param = {
+        skype_id: "skypeid100",
+        sex: "f",
+    }
+    request(app).post("/user/").send(param).end((err, res) => {
+        expect(res.status).toBe(200);
+        expect(res.text.includes("skypeid100")).toBe(true);
+        expect(res.text.includes("name=\"push_match\" checked")).toBe(false);
+
+        done();
+    })
+});
 it("user save validateエラー", function(done) {
     passportStub.install(app);
     passportStub.login("100");

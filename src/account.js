@@ -7,6 +7,7 @@ const passport = require("passport");
 const TwitterStrategy = require("passport-twitter").Strategy;
 const connectMongo = require("connect-mongo");
 
+const C = require(rootDir+"/src/const");
 const secret = require(rootDir+"/secret.json");
 const logger = require(rootDir+"/src/log4js");
 const User = require(rootDir+"/src/model/user");
@@ -19,10 +20,10 @@ let sessionStore = new mongoStore({ mongooseConnection: db.connection });
 let callback;
 let cookieName;
 if (process.env.NODE_ENV === "prod") {
-    callback = "https://random-matching.tokyo/twitter/callback";
+    callback = C.BASE_URL+"/twitter/callback";
     cookieName = "session_id";
 } else {
-    callback = "https://random-matching.tokyo:3452/twitter/callback";
+    callback = C.BASE_URL+":3452/twitter/callback";
     cookieName = "dev_session_id";
 }
 

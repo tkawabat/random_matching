@@ -1,17 +1,36 @@
-"use strict";
+const Twit = require('twit')
 
-const twitter = require("twitter");
-const fs = require("fs");
+const rootDir = require("app-root-path");
+const logger = require(rootDir + "/src/log4js");
+const secret = require(rootDir + "/secret.json");
 
-let json = JSON.parse(fs.readFileSync("secret.json","utf-8")).twitter;
-const client = new twitter(json);
 
-client.get("account/settings", {}, function(error, tweet, response){
-    if (!error) {
-        console.log(tweet);
-    } else {
-        console.log(error);
+let twitter = new Twit({
+    consumer_key:         secret.twitter_admin.consumer_key,
+    consumer_secret:      secret.twitter_admin.consumer_secret,
+    access_token:         secret.twitter_admin.access_token_key,
+    access_token_secret:  secret.twitter_admin.access_token_secret,
+    timeout_ms:           3*1000,
+    strictSSL:            true,
+})
+
+module.exports.sendDm = (user, text) => {
+    logger.info("sending dm to "+user.twitter_id);
+
+    let param = {
+        event: {
+            type: "message_create"
+            ,message_create: {
+                target: { recipient_id: user._id }
+                ,message_data : {
+                    text: text
+                }
+            }
+        }
     }
-});
 
-exports.twitter = twitter;
+    twitter.post("direct_messages/events/new", param, (err, res) => {
+        if (err) logger.error(err);
+    });
+}
+
