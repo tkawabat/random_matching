@@ -9,7 +9,7 @@ let push_match = user.push.match && user.push.match=== true ? "checked" : "";
 
 <%- include("./module/user", {user:user}) %>
 
-<form class="mt-5 mb-5" method="POST" action="/user/">
+<form class="mt-4 mb-5" method="POST" action="/user/">
     <label>性別<span class="ml-2 text-secondary">※決定すると変更できません。</span></label>
     <div class="ml-3 form-group">
         男&nbsp;<input type="radio" name="sex" value="m" required <%= sex_m %> <%= sex_disabled %>>&nbsp;

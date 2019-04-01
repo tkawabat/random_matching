@@ -1,5 +1,50 @@
-<h4 class="mb-4">フランダースの負け犬</h4>
+<h4>フランダースの負け犬</h4>
 
-<h6>フランダースの負け犬</h6>
+<div class="text-right mb-3">
+    <%- include("./module/tweet", {text:"ただいまマッチング中...\n", hash:title}) %>
+</div>
+
+<div class="reserved mt-2 ml-2">
+<p>時間：2019/04/01 (月) 21:00～　約90分</p>
+<p>場所：Skype</p>
+</div>
+
+<h5>役表</h5>
+
+<div class="chara clearfix">
+    <div class="mb-2">
+        <i class="fas fa-mars"></i>&nbsp;ヒュンケル役
+    </div>
+    <% let user1 = { twitter_name: "超やばい劇人", twitter_id: "sugoi", skype_id: "umai", image_url_https:"https://pbs.twimg.com/profile_images/901426633793454084/iBB2Yjit_400x400.jpg"} %>
+    <%- include("./module/user", {user:user1}) %>
+</div>
+
+<div class="chara clearfix">
+    <div class="mb-2">
+        <i class="fas fa-mars"></i>&nbsp;バラック役
+    </div>
+    <form>
+        <button type="button" class="btn btn-success"><i class="fas fa-plus"></i></button>
+    </from>
+</div>
+
+<div class="chara clearfix">
+    <div class="mb-2">
+        <i class="fas fa-mars"></i>&nbsp;ベルニウス役
+    </div>
+    <%- include("./module/user", {user:user}) %>
+    <div class="text-right">
+        <button type="button" class="btn btn-sm btn-danger">キャンセル</button>
+    </div>
+</div>
+
+<div class="chara clearfix">
+    <div class="mb-2">
+        <i class="fas fa-mars"></i>&nbsp;クレーゼル役
+    </div>
+    <form>
+        <button type="button" class="btn btn-success"><i class="fas fa-plus"></i></button>
+    </from>
+</div>
 
 
