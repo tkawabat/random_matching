@@ -7,17 +7,26 @@ const logger = require(rootDir + "/src/log4js");
 
 module.exports.jobs = {};
 
-module.exports.push = (name, cron, fn) => {
+module.exports.push = (name, once, cron, fn) => {
     if (this.jobs[name]) {
         logger.info("skip duplicated name schedule push");
-    } else {
-        this.jobs[name] = schedule.scheduleJob(cron, fn);
+        return;
+    }
+
+    this.jobs[name] = schedule.scheduleJob(cron, fn);
+
+    if (once) {
+        let fn = this.cancel;
+        this.jobs[name].on("run", () => {
+            fn(name);
+        });
     }
 };
 
 module.exports.cancel = (name) => {
     if (this.jobs[name]) {
         this.jobs[name].cancel();
+        delete this.jobs[name];
     }
 }
 

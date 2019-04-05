@@ -73,13 +73,10 @@ app.use("/entry", require("./routes/entry"));
 
 
 // schedule
-schedule.push("act3-7", "0 21 * * *", () => {
+schedule.push("act3-7", false, "0 21 * * *", () => {
     matcher.matchAct([3,4,5,6,7]);
 });
-schedule.push("act2_22", "* 22 * * *", () => {
-    matcher.matchAct([2]);
-});
-schedule.push("act2_23", "* 23 * * *", () => {
+schedule.push("act2_22-23", false, "* 22-23 * * *", () => {
     matcher.matchAct([2]);
 });
 
