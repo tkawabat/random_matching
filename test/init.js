@@ -5,6 +5,7 @@ const expect = require("expect");
 
 const app = require(rootDir+"/app");
 const db = require(rootDir+"/src/mongodb");
+const schedule = require(rootDir+"/src/schedule");
 
 
 before(async () => {
@@ -13,7 +14,5 @@ before(async () => {
 
 after(() => {
     db.disconnect();
-    for (let s of app.schedule) {
-        s.cancel();
-    }
+    schedule.cancelAll();
 });
