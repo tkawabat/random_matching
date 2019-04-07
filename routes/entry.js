@@ -9,7 +9,6 @@ moment.tz.setDefault("Asia/Tokyo");
 const logger = require(rootDir + "/src/log4js");
 const account = require(rootDir + "/src/account");
 const schedule = require(rootDir + "/src/schedule");
-const twitter = require(rootDir + "/src/twitter");
 const validator = require(rootDir + "/src/validator");
 const routeHelper = require(rootDir + "/src/routeHelper");
 const entryHelper = require(rootDir + "/src/entryHelper");
@@ -24,10 +23,13 @@ router.get("/",
         res.viewParam.user = req.user;
         res.viewParam.registered = req.user.sex && req.user.skype_id;
         res.viewParam.twitter_safe = entryHelper.isSafeTwitter(req.user);
-        res.viewParam.isReady = res.viewParam.registered
-            && res.viewParam.twitter_safe
-            && entryHelper.isEntryTime()
-        ;
+        res.viewParam.isReady = {
+            act2: res.viewParam.registered
+                && res.viewParam.twitter_safe
+            ,act3_7: res.viewParam.registered
+                && res.viewParam.twitter_safe
+                && entryHelper.isAct3_7EntryTime()
+        };
 
         if (res.viewParam.matched && res.viewParam.matched.length === 1) {
             res.render("entry_fail", res.viewParam);
@@ -55,25 +57,19 @@ router.post("/", account.isAuthenticated, validator.entry, (req, res) => {
         return;
     }
 
-    const entry = new Entry.schema({
+    const entry = {
         _id: req.user._id
-    });
-    Entry.schema.findOneAndUpdate({_id: entry.id}, entry, {upsert: true}, (err, entry) => {
+        ,type: [req.body.entry_type]
+    };
+    Entry.schema.findOneAndUpdate({"_id": entry._id}, entry, {upsert: true}, (err, entry) => {
         if (err) {
             logger.error(err);
             res.redirect("/entry/?warning=entry_save");
             return;
         }
-        schedule.push("entry_tweet", true, moment().add(3, "minutes").toDate(), async () => {
-            let res = await Entry.model.isEntryExist();
-            if (res) {
-                let time = moment().format("kk:mm")
-                let text = "ただいま声劇マッチングで待っている方がいるようです。劇をしたい方はいかがですか？ ("+time+")\n"
-                    + "https://random-matching.tokyo"
-                twitter.tweet(text);
-            }
-
-        });
+        if (req.body.entry_type === "act2") {
+            schedule.push("entry_act2_tweet", true, moment().add(3, "minutes").toDate(), entryHelper.tweetAct2);
+        }
         res.redirect("/entry/");
     });
 

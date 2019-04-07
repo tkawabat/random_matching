@@ -14,6 +14,20 @@ const matcher = require(rootDir+"/src/matcher");
 
 let stubs = [];
 
+let assertMatch = async (id, ids) => {
+    let match = await Match.schema.findOne({_id: id}).exec();
+    let entry = await Entry.schema.findOne({_id: id}).exec();
+    expect(match.ids).toEqual(ids);
+    expect(entry).toBe(null);
+}
+
+let assertNotMatch = async (id) => {
+    let match = await Match.schema.findOne({_id: id}).exec();
+    let entry = await Entry.schema.findOne({_id: id}).exec();
+    expect(match).toBe(null);
+    expect(entry._id).toEqual(id);
+}
+
 describe("machter dbあり", () => {
 
     beforeEach(() => {
@@ -25,35 +39,71 @@ describe("machter dbあり", () => {
     });
 
 
+    it("2マッチ成功", async () => {
+        await Match.schema.deleteMany().exec();
+        await Entry.schema.deleteMany().exec();
+        await Entry.schema.insertMany([
+            {_id: 100, type: ["act2"]}
+            ,{_id: 101, type: ["act2"]}
+        ]);
+
+        await matcher.match("act2");
+
+        let match;
+        let entry;
+
+        await assertMatch("100", ["100", "101"]);
+        await assertMatch("101", ["100", "101"]);
+    });
+
+    it("2マッチ失敗 type違い", async () => {
+        await Match.schema.deleteMany().exec();
+        await Entry.schema.deleteMany().exec();
+        await Entry.schema.insertMany([
+            {_id: 100, type: ["act2"]}
+            ,{_id: 101, type: ["act3_7"]}
+        ]);
+
+        await matcher.match("act2");
+
+        await assertNotMatch("100");
+        await assertNotMatch("101");
+    });
+
     it("3:1マッチ成功1人あまり", async () => {
         await Match.schema.deleteMany().exec();
         await Entry.schema.deleteMany().exec();
         await Entry.schema.insertMany([
-            {_id: 100}
-            ,{_id: 101}
-            ,{_id: 102}
-            ,{_id: 103}
-            ,{_id: 200}
+            {_id: 100, type: ["act3_7"]}
+            ,{_id: 101, type: ["act3_7"]}
+            ,{_id: 102, type: ["act3_7"]}
+            ,{_id: 103, type: ["act3_7"]}
+            ,{_id: 200, type: ["act3_7"]}
         ]);
 
-        await matcher.matchAct([4]);
+        await matcher.match("act3_7");
 
-        let match;
-        match = await Match.schema.findOne({_id: 100}).exec();
-        expect(match.ids).toEqual(["100", "101", "102", "200"]);
-        match = await Match.schema.findOne({_id: 101}).exec();
-        expect(match.ids).toEqual(["100", "101", "102", "200"]);
-        match = await Match.schema.findOne({_id: 102}).exec();
-        expect(match.ids).toEqual(["100", "101", "102", "200"]);
-        match = await Match.schema.findOne({_id: 200}).exec();
-        expect(match.ids).toEqual(["100", "101", "102", "200"]);
+        await assertMatch("100", ["100", "101", "102", "200"]);
+        await assertMatch("101", ["100", "101", "102", "200"]);
+        await assertMatch("102", ["100", "101", "102", "200"]);
+        await assertNotMatch("103");
+        await assertMatch("200", ["100", "101", "102", "200"]);
+    });
 
-        // 失敗
-        let entry;
-        match = await Match.schema.findOne({_id: 103}).exec();
-        expect(match).toBe(null);
-        entry = await Entry.schema.findOne({_id: 103}).exec();
-        expect(entry._id).toEqual("103");
+    it("3マッチ失敗 type違い", async () => {
+        await Match.schema.deleteMany().exec();
+        await Entry.schema.deleteMany().exec();
+        await Entry.schema.insertMany([
+            {_id: 100, type: ["act3_7"]}
+            ,{_id: 101, type: ["act3_7"]}
+            ,{_id: 102, type: ["act2"]}
+        ]);
+
+        await matcher.match("act3_7");
+
+        await assertNotMatch("100");
+        await assertNotMatch("101");
+        await assertNotMatch("102");
     });
 
 });

@@ -6,6 +6,7 @@ moment.tz.setDefault("Asia/Tokyo");
 
 const logger = require(rootDir + "/src/log4js");
 const cache = require(rootDir + "/src/cache");
+const twitter = require(rootDir + "/src/twitter");
 const User = require(rootDir + "/src/model/user");
 const Entry = require(rootDir + "/src/model/entry");
 const Match = require(rootDir + "/src/model/match");
@@ -50,6 +51,16 @@ module.exports.get = (req, res, next) => {
     });
 }
 
+module.exports.tweetAct2 = async () => {
+    let res = await Entry.model.isEntryExist();
+    if (!res) return;
+
+    let time = moment().format("kk:mm")
+    let text = "サシ劇マッチングで待っている方がいるようです。すぐに劇をしたい方は是非マッチングを！ ("+time+")\n"
+        + "https://random-matching.tokyo"
+    twitter.tweet(text);
+}
+
 module.exports.isSafeTwitter = (user) => {
     if (!user.twitter_created_at) {
         return false;
@@ -62,16 +73,13 @@ module.exports.isSafeTwitter = (user) => {
     return true;
 }
 
-module.exports.isEntryTime = () => {
-    if (process.env.NODE_ENV !== "prod") {
-        return true;
-    }
-
+module.exports.isAct3_7EntryTime = () => {
     let hour = moment().hour();
     let minutes = moment().minutes();
     if (hour === 20 && minutes > 30) {
         return true;
-    } if (hour >= 22) {
+    }
+    if (hour === 21 && minutes > 30) {
         return true;
     }
 
