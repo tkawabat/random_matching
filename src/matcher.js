@@ -128,7 +128,9 @@ module.exports.match = async (type) => {
         }
     }
 
-    logger.info("matching num: "+entries.length);
+    if (entries.length > 0) {
+        logger.info("matching num: "+entries.length);
+    }
 
     while (1) {
         //let shuffleNumbers = this.shuffle(numbers); // 人数候補
