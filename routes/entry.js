@@ -9,7 +9,6 @@ moment.tz.setDefault("Asia/Tokyo");
 const logger = require(rootDir + "/src/log4js");
 const account = require(rootDir + "/src/account");
 const schedule = require(rootDir + "/src/schedule");
-const twitter = require(rootDir + "/src/twitter");
 const validator = require(rootDir + "/src/validator");
 const routeHelper = require(rootDir + "/src/routeHelper");
 const entryHelper = require(rootDir + "/src/entryHelper");
@@ -68,15 +67,9 @@ router.post("/", account.isAuthenticated, validator.entry, (req, res) => {
             res.redirect("/entry/?warning=entry_save");
             return;
         }
-        schedule.push("entry_tweet", true, moment().add(3, "minutes").toDate(), async () => {
-            let res = await Entry.model.isEntryExist();
-            if (res) {
-                let time = moment().format("kk:mm")
-                let text = "ただいま声劇マッチングで待っている方がいるようです。劇をしたい方はいかがですか？ ("+time+")\n"
-                    + "https://random-matching.tokyo"
-                twitter.tweet(text);
-            }
-        });
+        if (req.body.entry_type === "act2") {
+            schedule.push("entry_act2_tweet", true, moment().add(3, "minutes").toDate(), entryHelper.tweetAct2);
+        }
         res.redirect("/entry/");
     });
 

@@ -151,14 +151,12 @@ describe("machter dbなし", () => {
         let user1 = {twitter_id: "t1", push: {match: false}};
 
         let mock = sinon.mock(twitter);
-        let text = "マッチングしました。結果を確認してください。\n";
-            //+"https://random-matching.tokyo";
+
         mock.expects("sendDm").once();
 
         matcher.matched([user0, user1]);
 
         mock.verify();
-
         mock.restore();
     });
 

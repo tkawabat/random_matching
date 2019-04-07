@@ -76,7 +76,7 @@ app.use("/entry", require("./routes/entry"));
 schedule.push("act3-7", false, "0 21-22 * * *", () => {
     matcher.match("act3_7");
 });
-schedule.push("act2_22-23", false, "* * * * *", () => {
+schedule.push("act2", false, "* * * * *", () => {
     matcher.match("act2");
 });
 

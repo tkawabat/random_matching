@@ -13,6 +13,7 @@ module.exports.push = (name, once, cron, fn) => {
         return;
     }
 
+    logger.debug("push schedule "+name);
     this.jobs[name] = schedule.scheduleJob(cron, fn);
 
     if (once) {
@@ -25,6 +26,7 @@ module.exports.push = (name, once, cron, fn) => {
 
 module.exports.cancel = (name) => {
     if (this.jobs[name]) {
+        logger.debug("cancel schedule "+name);
         this.jobs[name].cancel();
         delete this.jobs[name];
     }
