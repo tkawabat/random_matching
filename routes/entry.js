@@ -76,7 +76,6 @@ router.post("/", account.isAuthenticated, validator.entry, (req, res) => {
                     + "https://random-matching.tokyo"
                 twitter.tweet(text);
             }
-
         });
         res.redirect("/entry/");
     });

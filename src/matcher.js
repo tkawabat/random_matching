@@ -86,7 +86,6 @@ module.exports.findMatch = (entries, n, sexConstraint) => {
     let f = sexConstraint;
 
     logger.debug("find "+n);
-    logger.debug("sexConstraint "+sexConstraint);
 
     for (let i = 0; i < entries.length; i++) {
         let user = entries[i]._id;
@@ -114,10 +113,13 @@ module.exports.findMatch = (entries, n, sexConstraint) => {
 }
 
 module.exports.match = async (type) => {
-    logger.debug("match start");
+    logger.debug(type+" match start");
     let entries;
+    let filter = {
+        type: type
+    };
     try {
-        entries = await Entry.schema.find().populate("_id").exec();
+        entries = await Entry.schema.find(filter).populate("_id").exec();
     } catch (err) {
         if (err) {
             logger.error(err);

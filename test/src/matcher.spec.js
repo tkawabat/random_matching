@@ -155,7 +155,7 @@ describe("machter dbなし", () => {
             //+"https://random-matching.tokyo";
         mock.expects("sendDm").once();
 
-        matcher.findMatched([user0, user1]);
+        matcher.matched([user0, user1]);
 
         mock.verify();
 
