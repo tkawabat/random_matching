@@ -55,10 +55,11 @@ router.post("/", account.isAuthenticated, validator.entry, (req, res) => {
         return;
     }
 
-    const entry = new Entry.schema({
+    const entry = {
         _id: req.user._id
-    });
-    Entry.schema.findOneAndUpdate({_id: entry.id}, entry, {upsert: true}, (err, entry) => {
+        ,type: [req.body.entry_type]
+    };
+    Entry.schema.findOneAndUpdate({"_id": entry._id}, entry, {upsert: true}, (err, entry) => {
         if (err) {
             logger.error(err);
             res.redirect("/entry/?warning=entry_save");

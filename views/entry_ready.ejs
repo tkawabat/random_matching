@@ -23,10 +23,17 @@
 
 <% let disabled = isReady ? "" : "disabled" %>
 <div class="mt-5">
-<form method="POST" action="/entry/">
-   <p class="text-center"><button type="submit" class="btn bg_red" <%= disabled %>>マッチング開始</button></p>
-</form>
+    <div class="text-center">
+    <form class="d-inline" method="POST" action="/entry/">
+        <input type="hidden" name="entry_type" value="act2">
+        <button type="submit" class="btn bg_red" <%= disabled %>>サシ劇</button>
+    </form>
+    <form class="d-inline ml-2" method="POST" action="/entry/">
+        <input type="hidden" name="entry_type" value="act3_7">
+        <button type="submit" class="btn bg_red" <%= disabled %>>複数人劇</button>
+    </form>
+    </div>
 </div>
 
-<p class="text-center text-secondary">※マッチングは開始から30分有効です。</p>
+<p class="mt-2 text-center text-secondary">※マッチングは30分間有効です。</p>
 <%- include("./module/entry_explain", {}) %>
