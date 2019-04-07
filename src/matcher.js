@@ -9,6 +9,11 @@ const Entry = require(rootDir + "/src/model/entry");
 const Match = require(rootDir + "/src/model/match");
 
 
+const numberConstraint = {
+    act2: [2]
+    ,act3_7: [3,4,5,6,7]
+}
+
 const actSexConstraint = {
     2: 2  
     ,3: 3
@@ -74,13 +79,14 @@ module.exports.matched = (list) => {
     }
 }
 
-module.exports.findMatch = (entries, n) => {
+module.exports.findMatch = (entries, n, sexConstraint) => {
     let list = [];
     let ngList = [];
-    let m = actSexConstraint[n];
-    let f = actSexConstraint[n];
+    let m = sexConstraint;
+    let f = sexConstraint;
 
     logger.debug("find "+n);
+    logger.debug("sexConstraint "+sexConstraint);
 
     for (let i = 0; i < entries.length; i++) {
         let user = entries[i]._id;
@@ -107,7 +113,7 @@ module.exports.findMatch = (entries, n) => {
     return [];
 }
 
-module.exports.matchAct = async (numbers) => {
+module.exports.match = async (type) => {
     logger.debug("match start");
     let entries;
     try {
@@ -124,10 +130,12 @@ module.exports.matchAct = async (numbers) => {
 
     while (1) {
         //let shuffleNumbers = this.shuffle(numbers); // 人数候補
-        let shuffleNumbers = numbers.slice(); // コピー
+        let shuffleNumbers = numberConstraint[type].slice(); // コピー
         let failCount = shuffleNumbers.length;
+        
         while (shuffleNumbers.length > 0) {
-            let list = this.findMatch(entries, shuffleNumbers.pop());
+            let number = shuffleNumbers.pop();
+            let list = this.findMatch(entries, number, actSexConstraint[number]);
             if (list.length === 0) { // マッチング失敗
                 failCount--;
             } else {

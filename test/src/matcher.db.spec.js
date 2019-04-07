@@ -36,7 +36,7 @@ describe("machter dbあり", () => {
             ,{_id: 200}
         ]);
 
-        await matcher.matchAct([4]);
+        await matcher.match("act3_7");
 
         let match;
         match = await Match.schema.findOne({_id: 100}).exec();
