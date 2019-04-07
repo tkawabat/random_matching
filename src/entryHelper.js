@@ -62,16 +62,13 @@ module.exports.isSafeTwitter = (user) => {
     return true;
 }
 
-module.exports.isEntryTime = () => {
-    if (process.env.NODE_ENV !== "prod") {
-        return true;
-    }
-
+module.exports.isAct3_7EntryTime = () => {
     let hour = moment().hour();
     let minutes = moment().minutes();
     if (hour === 20 && minutes > 30) {
         return true;
-    } if (hour >= 22) {
+    }
+    if (hour === 21 && minutes > 30) {
         return true;
     }
 

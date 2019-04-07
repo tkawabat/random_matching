@@ -24,10 +24,13 @@ router.get("/",
         res.viewParam.user = req.user;
         res.viewParam.registered = req.user.sex && req.user.skype_id;
         res.viewParam.twitter_safe = entryHelper.isSafeTwitter(req.user);
-        res.viewParam.isReady = res.viewParam.registered
-            && res.viewParam.twitter_safe
-            && entryHelper.isEntryTime()
-        ;
+        res.viewParam.isReady = {
+            act2: res.viewParam.registered
+                && res.viewParam.twitter_safe
+            ,act3_7: res.viewParam.registered
+                && res.viewParam.twitter_safe
+                && entryHelper.isAct3_7EntryTime()
+        };
 
         if (res.viewParam.matched && res.viewParam.matched.length === 1) {
             res.render("entry_fail", res.viewParam);

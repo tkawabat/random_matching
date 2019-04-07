@@ -1,10 +1,20 @@
-<h4 class="mb-4">マッチング中</h4>
+<%
+let match_type = [];
+if (entry.type.includes("act2")) {
+    match_type.push("サシ劇");
+} else if (entry.type.includes("act3_7")) {
+    match_type.push("3~7人劇");
+}
+let match_text = match_type.join("、")+"マッチング";
+%>
+
+<h4 class="mb-4"><%=match_text%></h4>
 
 <div class="ml-3">
-    <h6>ただいまマッチングしております。<h6>
-    <h6>しばらくお待ち下さい。<h6>
+    <p>ただいま、マッチング中です。</p>
+    <p>しばらくお待ち下さい。</p>
     <div class="text-right">
-    <%- include("./module/tweet", {text:"ただいまマッチング中...\n", hash:title}) %>
+    <%- include("./module/tweet", {text: match_text+"中・・・\n", hash:title}) %>
     </div>
 </div>
 
