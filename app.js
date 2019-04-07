@@ -6,7 +6,6 @@ const rootDir = require("app-root-path");
 const helmet = require("helmet");
 const compression = require("compression");
 const cookieParser = require("cookie-parser");
-const schedule = require("node-schedule");
 const moment = require("moment-timezone");
 moment.tz.setDefault("Asia/Tokyo");
 moment.locale("ja", {
@@ -20,6 +19,7 @@ const db = require(rootDir + "/src/mongodb");
 const account = require(rootDir + "/src/account");
 const matcher = require(rootDir + "/src/matcher");
 const routeHelper = require(rootDir + "/src/routeHelper");
+const schedule = require(rootDir + "/src/schedule");
 
 
 const app = express();
@@ -73,16 +73,12 @@ app.use("/entry", require("./routes/entry"));
 
 
 // schedule
-app.schedule = [];
-app.schedule.push(schedule.scheduleJob("0 21 * * *", () => {
+schedule.push("act3-7", false, "0 21 * * *", () => {
     matcher.matchAct([3,4,5,6,7]);
-}));
-app.schedule.push(schedule.scheduleJob("* 22 * * *", () => {
+});
+schedule.push("act2_22-23", false, "* 22-23 * * *", () => {
     matcher.matchAct([2]);
-}));
-app.schedule.push(schedule.scheduleJob("* 23 * * *", () => {
-    matcher.matchAct([2]);
-}));
+});
 
 // catch 404 and forward to error handler
 //app.use(routeHelper.Error404); // mapファイルが404を起こすのでコメントアウト

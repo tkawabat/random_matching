@@ -1,4 +1,4 @@
-const Twit = require('twit')
+const Twit = require("twit")
 
 const rootDir = require("app-root-path");
 const logger = require(rootDir + "/src/log4js");
@@ -13,6 +13,23 @@ let twitter = new Twit({
     timeout_ms:           3*1000,
     strictSSL:            true,
 })
+
+module.exports.tweet = (text) => {
+    logger.info("tweet "+text);
+
+    if (process.env.NODE_ENV !== "prod") {
+        logger.info("skip");
+        return true;
+    }
+
+    let param = {
+        status: text
+    }
+
+    twitter.post("statuses/update", param, (err, res) => {
+        if (err) logger.error(err);
+    });
+}
 
 module.exports.sendDm = (user, text) => {
     logger.info("sending dm to "+user.twitter_id);

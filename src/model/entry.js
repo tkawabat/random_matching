@@ -15,4 +15,15 @@ const schema = db.Schema(
 );
 schema.index("created_at", {expireAfterSeconds: 60 * 30});
 
+const model = {}
+model.isEntryExist = async () => {
+    let res = await this.schema.findOne().exec();
+    if (res) {
+        return true;
+    } else {
+        return false;
+    }
+};
+
 module.exports.schema = db.model("entry", schema);
+module.exports.model = model;
