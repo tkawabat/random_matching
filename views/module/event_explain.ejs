@@ -3,7 +3,7 @@ let start_at = moment(event.start_at).format("M/D kk:mm");
 let end_at = moment(event.end_at).format("M/D kk:mm");
 %>
 
-<h6 class="mt-4">イベント情報</h6>
+<h5 class="mt-4">イベント情報</h5>
 <div class="alert alert-primary" role="alert">
     <div class="font-weight-bold"><%=event.title%></div>
     <div>開催時間: <%=start_at%> ~ <%=end_at%></div>

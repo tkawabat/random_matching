@@ -107,3 +107,140 @@ describe("machter dbあり", () => {
     });
 
 });
+
+describe("machter dbあり matchEvent", () => {
+
+    beforeEach(() => {
+        stubs.push(sinon.stub(twitter, "sendDm"));
+    });
+
+    afterEach(() => {
+        for (let s of stubs) s.restore();
+    });
+
+
+    it("2:2エントリー　1:1台本", async () => {
+        await Match.schema.deleteMany().exec();
+        await Entry.schema.deleteMany().exec();
+        await Entry.schema.insertMany([
+            {_id: 100, type: ["event"]}
+            ,{_id: 101, type: ["event"]}
+            ,{_id: 200, type: ["event"]}
+            ,{_id: 201, type: ["event"]}
+        ]);
+
+        let scenario = {
+            title: ""
+            ,chara: [
+                {sex: "f"}
+                ,{sex: "m"}
+            ]
+        };
+        let event = {
+            title: ""
+            ,scenario: scenario
+        }
+        await matcher.matchEvent(event);
+
+        let match;
+        let entry;
+
+        await assertMatch("100", ["100", "200"]);
+        await assertMatch("101", ["101", "201"]);
+        await assertMatch("200", ["100", "200"]);
+        await assertMatch("201", ["101", "201"]);
+    });
+
+    it("3:1エントリー　1:1台本", async () => {
+        await Match.schema.deleteMany().exec();
+        await Entry.schema.deleteMany().exec();
+        await Entry.schema.insertMany([
+            {_id: 100, type: ["event"]}
+            ,{_id: 101, type: ["event"]}
+            ,{_id: 200, type: ["event"]}
+            ,{_id: 102, type: ["event"]}
+        ]);
+
+        let scenario = {
+            title: ""
+            ,chara: [
+                {sex: "f"}
+                ,{sex: "m"}
+            ]
+        };
+        let event = {
+            title: ""
+            ,scenario: scenario
+        }
+        await matcher.matchEvent(event);
+
+        let match;
+        let entry;
+
+        await assertNotMatch("101");
+        await assertNotMatch("102");
+        await assertMatch("100", ["100", "200"]);
+        await assertMatch("200", ["100", "200"]);
+    });
+
+    it("2マッチ失敗 type違い", async () => {
+        await Match.schema.deleteMany().exec();
+        await Entry.schema.deleteMany().exec();
+        await Entry.schema.insertMany([
+            {_id: 100, type: ["event"]}
+            ,{_id: 200, type: ["act2"]}
+        ]);
+        let scenario = {
+            title: ""
+            ,chara: [
+                {sex: "f"}
+                ,{sex: "m"}
+            ]
+        };
+        let event = {
+            title: ""
+            ,scenario: scenario
+        }
+        await matcher.matchEvent(event);
+
+        await assertNotMatch("100");
+        await assertNotMatch("200");
+    });
+
+    it("4:2エントリー　3:1台本", async () => {
+        await Match.schema.deleteMany().exec();
+        await Entry.schema.deleteMany().exec();
+        await Entry.schema.insertMany([
+             {_id: 100, type: ["event"]}
+            ,{_id: 101, type: ["event"]}
+            ,{_id: 102, type: ["event"]}
+            ,{_id: 103, type: ["event"]}
+            ,{_id: 200, type: ["event"]}
+            ,{_id: 201, type: ["event"]}
+            ,{_id: 202, type: ["event"]}
+        ]);
+
+        let scenario = {
+            title: ""
+            ,chara: [
+                {sex: "f"}
+                ,{sex: "m"}
+                ,{sex: "f"}
+                ,{sex: "f"}
+            ]
+        };
+        let event = {
+            title: ""
+            ,scenario: scenario
+        }
+        await matcher.matchEvent(event);
+
+        await assertMatch("100", ["100", "101", "102", "200"]);
+        await assertMatch("101", ["100", "101", "102", "200"]);
+        await assertMatch("102", ["100", "101", "102", "200"]);
+        await assertMatch("200", ["100", "101", "102", "200"]);
+        await assertNotMatch("103");
+        await assertNotMatch("201");
+        await assertNotMatch("202");
+    });
+});

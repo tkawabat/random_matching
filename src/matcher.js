@@ -149,3 +149,42 @@ module.exports.match = async (type) => {
     logger.debug("match end");
 }
 
+module.exports.matchEvent = async (event) => {
+    logger.debug("even match start");
+    let scenario = event.scenario;
+    let entries;
+    let filter = {
+        type: "event"
+    };
+    try {
+        entries = await Entry.schema.find(filter).populate("_id").exec();
+    } catch (err) {
+        if (err) {
+            logger.error(err);
+            throw err;
+            return;
+        }
+    }
+
+    if (entries.length > 0) {
+        logger.info(scenario.title+" matching num: "+entries.length);
+    }
+
+    let number = scenario.chara.length;
+    let sexConstraint = {"f": 0, "m": 0};
+    for (let c of scenario.chara) {
+        sexConstraint[c.sex]++;
+    }
+
+    while (1) {
+        let list = this.findMatch(entries, number, sexConstraint);
+        if (list.length === 0) { // マッチング失敗
+            break;
+        } else {
+            entries = entries.filter((n) => list.indexOf(n._id) === -1);
+            this.matched(list);
+        }
+    }
+
+    logger.debug("event match end");
+}
