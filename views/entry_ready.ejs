@@ -39,7 +39,7 @@ for (let k of Object.keys(isReady)) {
         <button type="submit" class="btn bg_red" <%= disabled.act3_7 %>>3~7人劇</button>
     </form>
 
-    <% if (Object.keys(event).length > 0) { %>
+    <% if (event) { %>
     <form class="d-inline ml-2" method="POST" action="/entry/">
         <input type="hidden" name="entry_type" value="event">
         <button type="submit" class="btn bg_red">イベント劇</button>

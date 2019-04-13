@@ -1,4 +1,4 @@
-<% if (match.type === "event" && Object.keys(event).length > 0) { %>
+<% if (match.type === "event" && event) { %>
 <h4 class="mb-4"><%=event.title%></h4>
 <div class="alert alert-primary" role="alert">
     『<%=event.scenario.title%>』作: <%=event.scenario.author%>様<br>
@@ -16,7 +16,15 @@
 
 <div class="matched_list mt-3">
     <%
-    let text = "遊び仲間とマッチングしました！\n";
+    let text;
+    if (match.type === "act2") {
+        text = "サシ劇マッチング";
+    } else if (match.type === "act3_7") {
+        text = "3~7人劇マッチング";
+    } else if (match.type === "event" && event) {
+        text = event.title;
+    }
+    text += "\n";
     for (let i = 0; i < match.ids.length; i++) {
         text += " "+match.ids[i].twitter_name+"@"+match.ids[i].twitter_id+"\n";
     %>

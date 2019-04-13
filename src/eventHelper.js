@@ -8,7 +8,7 @@ const logger = require(rootDir + "/src/log4js");
 const Scenario = require(rootDir + "/src/model/scenario");
 const Event = require(rootDir + "/src/model/event");
 
-let event = {};
+let event = null;
 
 
 module.exports.get = () => {

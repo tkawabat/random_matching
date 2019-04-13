@@ -67,8 +67,11 @@ router.post("/", account.isAuthenticated, validator.entry, (req, res) => {
             res.redirect("/entry/?warning=entry_save");
             return;
         }
-        if (req.body.entry_type === "act2") {
-            schedule.push("entry_act2_tweet", true, moment().add(3, "minutes").toDate(), entryHelper.tweetAct2);
+        if (req.body.entry_type === "act2" || req.body.entry_type === "event") {
+            let t = moment().add(3, "minutes").toDate();
+            schedule.push("entry_tweet", true, t, () => {
+                entryHelper.tweet(req.body.entry_type, res.viewParam.event);
+            });
         }
         res.redirect("/entry/");
     });
