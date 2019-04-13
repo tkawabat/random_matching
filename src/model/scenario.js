@@ -8,6 +8,7 @@ const db = require("../mongodb");
 const schema = db.Schema(
     {
         _id: { type: db.Schema.Types.ObjectId }
+        ,title: { type: String }
         ,author: { type: String }
         ,url :{ type: String }
         ,agree_url: { type: String }
@@ -15,6 +16,7 @@ const schema = db.Schema(
             name: { type: String }
             ,sex: { type: String }
         }]
+        ,minutes: { type: Number }
     },
     { 
         timestamps: { createdAt: "created_at", updatedAt: "updated_at" } 

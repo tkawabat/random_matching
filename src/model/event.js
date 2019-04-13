@@ -7,8 +7,9 @@ const db = require("../mongodb");
 
 const schema = db.Schema(
     {
-        _id: { type: db.Schema.Types.ObjectId }
-        ,name: { type: String}
+        _id: { type: String }
+        ,title: { type: String}
+        ,caution: [{ type: String}]
         ,scenario: { type: db.Schema.Types.ObjectId, ref: "scenario" }
         ,start_at: { type: Date }
         ,end_at: { type: Date }

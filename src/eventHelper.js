@@ -8,17 +8,18 @@ const logger = require(rootDir + "/src/log4js");
 const Scenario = require(rootDir + "/src/model/scenario");
 const Event = require(rootDir + "/src/model/event");
 
-let events = [];
+let event = {};
 
 
 module.exports.get = () => {
-    return events;
+    return event;
 }
 
 module.exports.update = async () => {
     let res;
     try {
-        res = await Event.schema.find({
+        // TODO 同時開催対応
+        res = await Event.schema.findOne({
             start_at : { $lt: new Date() }
             ,end_at: { $gt: new Date() }
         }).populate("scenario").exec();
@@ -27,5 +28,5 @@ module.exports.update = async () => {
         return; 
     }
 
-    events = res;
+    event = res;
 }

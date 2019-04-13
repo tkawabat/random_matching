@@ -55,7 +55,8 @@ app.use(function (req, res, next) {
 
     let event = eventHelper.get();
     res.viewParam = {
-        title: title
+        moment: moment
+        ,title: title
         ,alert_warning: ""
         ,alert_info: ""
         ,event: event
