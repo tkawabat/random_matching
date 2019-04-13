@@ -7,11 +7,12 @@ const db = require("../mongodb");
 
 const schema = db.Schema(
     {
-        _id: { type: String }
+        _id: { type: db.Schema.Types.ObjectId }
         ,name: { type: String}
-        ,senario: { type: String, ref: "senario" }
+        ,scenario: { type: db.Schema.Types.ObjectId, ref: "scenario" }
+        ,start_at: { type: Date }
         ,end_at: { type: Date }
-        ,count: { type: Number }
+        ,match_count: { type: Number }
     },
     { 
         timestamps: { createdAt: "created_at", updatedAt: "updated_at" } 

@@ -7,7 +7,7 @@ const db = require("../mongodb");
 
 const schema = db.Schema(
     {
-        _id: { type: String }
+        _id: { type: db.Schema.Types.ObjectId }
         ,author: { type: String }
         ,url :{ type: String }
         ,agree_url: { type: String }

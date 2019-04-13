@@ -19,6 +19,7 @@ const db = require(rootDir + "/src/mongodb");
 const account = require(rootDir + "/src/account");
 const matcher = require(rootDir + "/src/matcher");
 const routeHelper = require(rootDir + "/src/routeHelper");
+const eventHelper = require(rootDir + "/src/eventHelper");
 const schedule = require(rootDir + "/src/schedule");
 
 
@@ -52,10 +53,12 @@ app.use(function (req, res, next) {
     res.header("Pragma", "no-cache");
     res.header("Expires", -1);
 
+    let event = eventHelper.get();
     res.viewParam = {
         title: title
         ,alert_warning: ""
         ,alert_info: ""
+        ,event: event
     };
     next();
 });
@@ -71,6 +74,10 @@ app.use("/", require("./routes/index"));
 app.use("/user", require("./routes/user"));
 app.use("/entry", require("./routes/entry"));
 
+// event
+db.connection.once("open", () => {
+    eventHelper.update();
+});
 
 // schedule
 schedule.push("act3-7", false, "0 21-22 * * *", () => {
@@ -78,6 +85,9 @@ schedule.push("act3-7", false, "0 21-22 * * *", () => {
 });
 schedule.push("act2", false, "* * * * *", () => {
     matcher.match("act2");
+});
+schedule.push("event_update", false, "*/5 * * * *", () => {
+    eventHelper.update();
 });
 
 // catch 404 and forward to error handler
