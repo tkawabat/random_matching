@@ -51,6 +51,6 @@ for (let k of Object.keys(isReady)) {
 
 <p class="mt-3 text-center text-secondary">※マッチングは30分間有効です。</p>
 <p class="mt-1 text-center text-secondary">※3-7人劇は21:00, 22:00の毎日2回行います。</p>
-<% if (Object.keys(event).length > 0) { %>
+<% if (event > 0) { %>
     <%- include("./module/event_explain", {}) %>
 <% } %>
