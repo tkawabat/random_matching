@@ -38,8 +38,19 @@ for (let k of Object.keys(isReady)) {
         <input type="hidden" name="entry_type" value="act3_7">
         <button type="submit" class="btn bg_red" <%= disabled.act3_7 %>>3~7人劇</button>
     </form>
+
+    <% if (event) { %>
+    <form class="d-inline ml-2" method="POST" action="/entry/">
+        <input type="hidden" name="entry_type" value="event">
+        <button type="submit" class="btn bg_red">イベント劇</button>
+    </form>
+    <% } %>
+
     </div>
 </div>
 
 <p class="mt-3 text-center text-secondary">※マッチングは30分間有効です。</p>
-<%- include("./module/entry_explain", {}) %>
+<p class="mt-1 text-center text-secondary">※3-7人劇は21:00, 22:00の毎日2回行います。</p>
+<% if (event > 0) { %>
+    <%- include("./module/event_explain", {}) %>
+<% } %>

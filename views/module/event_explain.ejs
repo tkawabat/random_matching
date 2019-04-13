@@ -1,0 +1,24 @@
+<%
+let start_at = moment(event.start_at).format("M/D kk:mm");
+let end_at = moment(event.end_at).format("M/D kk:mm");
+%>
+
+<h5 class="mt-4">イベント情報</h5>
+<div class="alert alert-primary" role="alert">
+    <div class="font-weight-bold"><%=event.title%></div>
+    <div>開催時間: <%=start_at%> ~ <%=end_at%></div>
+    <div class="ml-3">
+        <% for (text of event.caution) { %>
+            ※<%=text%><br>
+        <% } %>
+    </div>
+
+    <div class="font-weight-bold">台本</div>
+    <div>
+        『<%=event.scenario.title%>』作: <%=event.scenario.author%>様<br>
+        上演時間: 約<%=event.scenario.minutes%>分
+        <a class="ml-2" href="<%=event.scenario.url%>"><i class="fas fa-external-link-alt"></i> 台本</a>
+        <a class="ml-2" href="<%=event.scenario.agree_url%>"><i class="fas fa-external-link-alt"></i> 規約</a>
+    </div>
+
+</div>

@@ -7,6 +7,7 @@ const db = require("../mongodb");
 
 const schema = db.Schema({
     _id: { type: String, ref: "user"}
+    ,type: {type: String }
     ,ids: [{type: String, ref: "user"}]
 },
     { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }

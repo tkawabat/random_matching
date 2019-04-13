@@ -29,7 +29,7 @@ describe("machter dbなし", () => {
             ,{ _id: { _id: "1", twitter_id: "t1", sex: "m", ng_list: [] } }
         ];
 
-        let actual = matcher.findMatch(entries, 2, 2);
+        let actual = matcher.findMatch(entries, 2, {"m": 2, "f": 2});
 
         expect(actual).toEqual([
             { _id: "0", twitter_id: "t0", sex: "m", ng_list: [] }
@@ -42,7 +42,7 @@ describe("machter dbなし", () => {
             { _id: { _id: "0", twitter_id: "t0", sex: "m", ng_list: [] } }
         ];
 
-        let actual = matcher.findMatch(entries, 2, 2);
+        let actual = matcher.findMatch(entries, 2, {"m": 2, "f": 2});
 
         expect(actual).toEqual([]);
     });
@@ -54,7 +54,7 @@ describe("machter dbなし", () => {
             ,{ _id: { _id: "2", twitter_id: "t2", sex: "m", ng_list: [] } }
         ];
 
-        let actual = matcher.findMatch(entries, 3, 3);
+        let actual = matcher.findMatch(entries, 3, {"m": 3, "f": 3});
 
         expect(actual).toEqual([
             { _id: "0", twitter_id: "t0", sex: "m", ng_list: [] }
@@ -72,7 +72,7 @@ describe("machter dbなし", () => {
             ,{ _id: { _id: "4", twitter_id: "t4", sex: "f", ng_list: [] } }
         ];
 
-        let actual = matcher.findMatch(entries, 4, 3);
+        let actual = matcher.findMatch(entries, 4, {"m": 3, "f": 3});
 
         expect(actual).toEqual([
             { _id: "0", twitter_id: "t0", sex: "m", ng_list: [] }
@@ -91,7 +91,7 @@ describe("machter dbなし", () => {
             ,{ _id: { _id: "4", twitter_id: "t4", sex: "f", ng_list: [] } }
         ];
 
-        let actual = matcher.findMatch(entries, 5, 3);
+        let actual = matcher.findMatch(entries, 5, {"m": 3, "f": 3});
 
         expect(actual).toEqual([]);
     });
@@ -106,7 +106,7 @@ describe("machter dbなし", () => {
         let stub = sinon.stub(matcher, "checkNg").returns(true);
         stub.onSecondCall().returns(false);
 
-        let actual = matcher.findMatch(entries, 3, 3);
+        let actual = matcher.findMatch(entries, 3, {"m": 3, "f": 3});
 
         expect(actual).toEqual([]);
 
@@ -120,7 +120,7 @@ describe("machter dbなし", () => {
             ,{ _id: { _id: "2", twitter_id: "t2", sex: "m", ng_list: [] } }
         ];
 
-        let actual = matcher.findMatch(entries, 3, 3);
+        let actual = matcher.findMatch(entries, 3, {"m": 3, "f": 3});
 
         expect(actual).toEqual([]);
     });
@@ -144,20 +144,6 @@ describe("machter dbなし", () => {
         let ngList = ["hoge"];
         let user = {twitter_id: "t999", ng_list: ["hoge", "t0"]};
         expect(matcher.checkNg([user0], ngList, user)).toBe(false);
-    });
-
-    it("matched sendDm", () => {
-        let user0 = {twitter_id: "t0", push: {match: true}};
-        let user1 = {twitter_id: "t1", push: {match: false}};
-
-        let mock = sinon.mock(twitter);
-
-        mock.expects("sendDm").once();
-
-        matcher.matched([user0, user1]);
-
-        mock.verify();
-        mock.restore();
     });
 
 })

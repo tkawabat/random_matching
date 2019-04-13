@@ -37,5 +37,5 @@ module.exports.user = [
 
 module.exports.entry = [
     check("entry_type")
-        .custom((v, {req}) => !v || v === "act2" || v === "act3_7")
+        .custom((v, {req}) => !v || v === "act2" || v === "act3_7" || v === "event")
 ];

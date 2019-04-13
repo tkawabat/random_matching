@@ -21,7 +21,7 @@ module.exports.get = (req, res, next) => {
             throw err;
         } else {
             if (match) {
-                res.viewParam.matched = match.ids;
+                res.viewParam.match = match;
                 res.viewParam.match_expiration = moment(match.created_at).add(1, "hours").format("kk:mm");
             }
         }
@@ -51,13 +51,22 @@ module.exports.get = (req, res, next) => {
     });
 }
 
-module.exports.tweetAct2 = async () => {
-    let res = await Entry.model.isEntryExist();
-    if (!res) return;
+module.exports.tweet = async (type, event) => {
+    let text;
+    if (type === "act2") {
+        text = "サシ劇マッチングで待っている方がいます。すぐに劇をしたい方は是非マッチングを！";
+    } else if (type === "event") {
+        text = event.title+"で待っている方がいます。ご興味ある方は是非マッチングを！";
+    } else {
+        return;
+    }
+    let time = moment().format("kk:mm");
+    text +=  "("+time+")\n"
+        + "https://random-matching.tokyo";
 
-    let time = moment().format("kk:mm")
-    let text = "サシ劇マッチングで待っている方がいるようです。すぐに劇をしたい方は是非マッチングを！ ("+time+")\n"
-        + "https://random-matching.tokyo"
+    let isExist = await Entry.model.isEntryExist(type);
+    if (!isExist) return;
+
     twitter.tweet(text);
 }
 

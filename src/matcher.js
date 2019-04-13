@@ -15,12 +15,12 @@ const numberConstraint = {
 }
 
 const actSexConstraint = {
-    2: 2  
-    ,3: 3
-    ,4: 3 // 3:1 ~ 1:3
-    ,5: 3 // 3:2 ~ 2:3
-    ,6: 4 // 4:2 ~ 2:4
-    ,7: 4 // 4:3 ~ 3:4
+    2: {"f": 2, "m": 2}
+    ,3: {"f": 3, "m": 3}
+    ,4: {"f": 3, "m": 3} // 3:1 ~ 1:3
+    ,5: {"f": 3, "m": 3 } // 3:2 ~ 2:3
+    ,6: {"f": 4, "m": 4 } // 4:2 ~ 2:4
+    ,7: {"f": 4, "m": 4 } // 4:3 ~ 3:4
 }
 
 module.exports.shuffle = (list) => {
@@ -42,7 +42,7 @@ module.exports.checkNg = (list, ngList, user) => {
     return true;
 }
 
-module.exports.matched = (list) => {
+module.exports.matched = (list, type) => {
     let ids = [];
     let log = [];
     for (let i = 0; i < list.length; i++) {
@@ -62,6 +62,7 @@ module.exports.matched = (list) => {
         });
         let match = new Match.schema({
             _id: user._id
+            ,type: type
             ,ids: ids
         });
         Match.schema.findOneAndUpdate({ "_id" : match._id}, match, { upsert: true, setDefaultsOnInsert: true }, (err, res) => {
@@ -82,8 +83,7 @@ module.exports.matched = (list) => {
 module.exports.findMatch = (entries, n, sexConstraint) => {
     let list = [];
     let ngList = [];
-    let m = sexConstraint;
-    let f = sexConstraint;
+    let sex = Object.assign({}, sexConstraint);
 
     logger.debug("find "+n);
 
@@ -91,17 +91,10 @@ module.exports.findMatch = (entries, n, sexConstraint) => {
         let user = entries[i]._id;
 
         if (!this.checkNg(list, ngList, user)) continue;
-        if (user.sex === "m") {
-            if (m === 0) {
-                continue;
-            }
-            m--;
-        } else if (user.sex === "f") {
-            if (f === 0) { // 女性上限チェック
-                continue;
-            }
-            f--;
-        }
+
+        // 性別上限チェック
+        if (sex[user.sex] === 0) continue;
+        sex[user.sex]--;
 
         list.push(user);
         ngList = ngList.concat(user.ng_list);
@@ -129,7 +122,7 @@ module.exports.match = async (type) => {
     }
 
     if (entries.length > 0) {
-        logger.info("matching num: "+entries.length);
+        logger.info(type+" matching num: "+entries.length);
     }
 
     while (1) {
@@ -144,15 +137,52 @@ module.exports.match = async (type) => {
                 failCount--;
             } else {
                 entries = entries.filter((n) => list.indexOf(n._id) === -1);
-                this.matched(list);
+                this.matched(list, type);
             }
         }
         if (failCount === 0) break;
     }
 
-    //for (let i = 0; i < entries.length; i++) {
-    //    this.matched([entries[i]._id]); // 一人
-    //}
-
     logger.debug("match end");
+}
+
+module.exports.matchEvent = async (event) => {
+    logger.debug("even match start");
+    let scenario = event.scenario;
+    let type = "event";
+    let entries;
+    let filter = {
+        type: type
+    };
+    try {
+        entries = await Entry.schema.find(filter).populate("_id").exec();
+    } catch (err) {
+        if (err) {
+            logger.error(err);
+            throw err;
+            return;
+        }
+    }
+
+    if (entries.length > 0) {
+        logger.info(scenario.title+" matching num: "+entries.length);
+    }
+
+    let number = scenario.chara.length;
+    let sexConstraint = {"f": 0, "m": 0};
+    for (let c of scenario.chara) {
+        sexConstraint[c.sex]++;
+    }
+
+    while (1) {
+        let list = this.findMatch(entries, number, sexConstraint);
+        if (list.length === 0) { // マッチング失敗
+            break;
+        } else {
+            entries = entries.filter((n) => list.indexOf(n._id) === -1);
+            this.matched(list, type);
+        }
+    }
+
+    logger.debug("event match end");
 }

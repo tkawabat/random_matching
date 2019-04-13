@@ -17,8 +17,8 @@ const schema = db.Schema(
 schema.index("created_at", {expireAfterSeconds: 60 * 30});
 
 const model = {}
-model.isEntryExist = async () => {
-    let res = await this.schema.findOne().exec();
+model.isEntryExist = async (type) => {
+    let res = await this.schema.findOne({type: type }).exec();
     if (res) {
         return true;
     } else {

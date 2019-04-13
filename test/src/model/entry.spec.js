@@ -9,7 +9,7 @@ const Entry = require(rootDir+"/src/model/entry");
 
 let stubs = [];
 
-describe("entryHelper dbあり", () => {
+describe("entry", () => {
     beforeEach(() => {
     });
 
@@ -21,18 +21,27 @@ describe("entryHelper dbあり", () => {
     it("isEntryExist true", async () => {
         await Entry.schema.deleteMany().exec();
         await Entry.schema.insertMany([
-            {_id: 100}
+            {_id: 100, type: "act2"}
         ]);
 
-        let actual = await Entry.model.isEntryExist();
+        let actual = await Entry.model.isEntryExist("act2");
         expect(actual).toEqual(true);
     });
 
-    it("isEntryExist false", async () => {
+    it("isEntryExist 空 false", async () => {
         await Entry.schema.deleteMany().exec();
 
-        let actual = await Entry.model.isEntryExist();
+        let actual = await Entry.model.isEntryExist("act2");
         expect(actual).toEqual(false);
     });
 
+    it("isEntryExist 空 type違い", async () => {
+        await Entry.schema.deleteMany().exec();
+        await Entry.schema.insertMany([
+            {_id: 100, type: "act3_7"}
+        ]);
+
+        let actual = await Entry.model.isEntryExist("act2");
+        expect(actual).toEqual(false);
+    });
 });

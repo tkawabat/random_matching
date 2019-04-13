@@ -1,11 +1,12 @@
 <%
-let match_type = [];
+let match_text;
 if (entry.type.includes("act2")) {
-    match_type.push("サシ劇");
+    match_text = "サシ劇マッチング";
 } else if (entry.type.includes("act3_7")) {
-    match_type.push("3~7人劇");
+    match_text = "3~7人劇マッチング";
+} else if (entry.type.includes("event")) {
+    match_text = event.title;
 }
-let match_text = match_type.join("、")+"マッチング";
 %>
 
 <h4 class="mb-4"><%=match_text%></h4>
@@ -13,9 +14,6 @@ let match_text = match_type.join("、")+"マッチング";
 <div class="ml-3">
     <p>ただいま、マッチング中です。</p>
     <p>しばらくお待ち下さい。</p>
-    <div class="text-right">
-    <%- include("./module/tweet", {text: match_text+"中・・・\n", hash:title}) %>
-    </div>
 </div>
 
 <%# <div class="mt-5 loading"></div> %>
@@ -31,7 +29,9 @@ let match_text = match_type.join("、")+"マッチング";
     <p class="text-center text-secondary">※このマッチングは<%=entry_expiration%>まで有効です。</p>
 </div>
 
-<%- include("./module/entry_explain", {}) %>
+<% if (event) { %>
+    <%- include("./module/event_explain", {}) %>
+<% } %>
 
 <script>
 (() => {
