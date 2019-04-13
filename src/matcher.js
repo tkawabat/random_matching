@@ -15,12 +15,12 @@ const numberConstraint = {
 }
 
 const actSexConstraint = {
-    2: 2  
-    ,3: 3
-    ,4: 3 // 3:1 ~ 1:3
-    ,5: 3 // 3:2 ~ 2:3
-    ,6: 4 // 4:2 ~ 2:4
-    ,7: 4 // 4:3 ~ 3:4
+    2: {"f": 2, "m": 2}
+    ,3: {"f": 3, "m": 3}
+    ,4: {"f": 3, "m": 3} // 3:1 ~ 1:3
+    ,5: {"f": 3, "m": 3 } // 3:2 ~ 2:3
+    ,6: {"f": 4, "m": 4 } // 4:2 ~ 2:4
+    ,7: {"f": 4, "m": 4 } // 4:3 ~ 3:4
 }
 
 module.exports.shuffle = (list) => {
@@ -82,8 +82,7 @@ module.exports.matched = (list) => {
 module.exports.findMatch = (entries, n, sexConstraint) => {
     let list = [];
     let ngList = [];
-    let m = sexConstraint;
-    let f = sexConstraint;
+    let sex = Object.assign({}, sexConstraint);
 
     logger.debug("find "+n);
 
@@ -91,17 +90,10 @@ module.exports.findMatch = (entries, n, sexConstraint) => {
         let user = entries[i]._id;
 
         if (!this.checkNg(list, ngList, user)) continue;
-        if (user.sex === "m") {
-            if (m === 0) {
-                continue;
-            }
-            m--;
-        } else if (user.sex === "f") {
-            if (f === 0) { // 女性上限チェック
-                continue;
-            }
-            f--;
-        }
+
+        // 性別上限チェック
+        if (sex[user.sex] === 0) continue;
+        sex[user.sex]--;
 
         list.push(user);
         ngList = ngList.concat(user.ng_list);
@@ -129,7 +121,7 @@ module.exports.match = async (type) => {
     }
 
     if (entries.length > 0) {
-        logger.info("matching num: "+entries.length);
+        logger.info(type+" matching num: "+entries.length);
     }
 
     while (1) {
@@ -156,3 +148,4 @@ module.exports.match = async (type) => {
 
     logger.debug("match end");
 }
+
