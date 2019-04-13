@@ -42,7 +42,7 @@ module.exports.checkNg = (list, ngList, user) => {
     return true;
 }
 
-module.exports.matched = (list) => {
+module.exports.matched = (list, type) => {
     let ids = [];
     let log = [];
     for (let i = 0; i < list.length; i++) {
@@ -62,6 +62,7 @@ module.exports.matched = (list) => {
         });
         let match = new Match.schema({
             _id: user._id
+            ,type: type
             ,ids: ids
         });
         Match.schema.findOneAndUpdate({ "_id" : match._id}, match, { upsert: true, setDefaultsOnInsert: true }, (err, res) => {
@@ -136,15 +137,11 @@ module.exports.match = async (type) => {
                 failCount--;
             } else {
                 entries = entries.filter((n) => list.indexOf(n._id) === -1);
-                this.matched(list);
+                this.matched(list, type);
             }
         }
         if (failCount === 0) break;
     }
-
-    //for (let i = 0; i < entries.length; i++) {
-    //    this.matched([entries[i]._id]); // 一人
-    //}
 
     logger.debug("match end");
 }
@@ -152,9 +149,10 @@ module.exports.match = async (type) => {
 module.exports.matchEvent = async (event) => {
     logger.debug("even match start");
     let scenario = event.scenario;
+    let type = "event";
     let entries;
     let filter = {
-        type: "event"
+        type: type
     };
     try {
         entries = await Entry.schema.find(filter).populate("_id").exec();
@@ -182,7 +180,7 @@ module.exports.matchEvent = async (event) => {
             break;
         } else {
             entries = entries.filter((n) => list.indexOf(n._id) === -1);
-            this.matched(list);
+            this.matched(list, type);
         }
     }
 

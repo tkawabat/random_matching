@@ -21,7 +21,7 @@ module.exports.get = (req, res, next) => {
             throw err;
         } else {
             if (match) {
-                res.viewParam.matched = match.ids;
+                res.viewParam.match = match;
                 res.viewParam.match_expiration = moment(match.created_at).add(1, "hours").format("kk:mm");
             }
         }

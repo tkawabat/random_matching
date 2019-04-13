@@ -14,10 +14,11 @@ const matcher = require(rootDir+"/src/matcher");
 
 let stubs = [];
 
-let assertMatch = async (id, ids) => {
+let assertMatch = async (id, type, ids) => {
     let match = await Match.schema.findOne({_id: id}).exec();
     let entry = await Entry.schema.findOne({_id: id}).exec();
     expect(match.ids).toEqual(ids);
+    expect(match.type).toEqual(type);
     expect(entry).toBe(null);
 }
 
@@ -52,8 +53,8 @@ describe("machter dbあり", () => {
         let match;
         let entry;
 
-        await assertMatch("100", ["100", "101"]);
-        await assertMatch("101", ["100", "101"]);
+        await assertMatch("100", "act2", ["100", "101"]);
+        await assertMatch("101", "act2", ["100", "101"]);
     });
 
     it("2マッチ失敗 type違い", async () => {
@@ -83,11 +84,11 @@ describe("machter dbあり", () => {
 
         await matcher.match("act3_7");
 
-        await assertMatch("100", ["100", "101", "102", "200"]);
-        await assertMatch("101", ["100", "101", "102", "200"]);
-        await assertMatch("102", ["100", "101", "102", "200"]);
         await assertNotMatch("103");
-        await assertMatch("200", ["100", "101", "102", "200"]);
+        await assertMatch("100", "act3_7", ["100", "101", "102", "200"]);
+        await assertMatch("101", "act3_7", ["100", "101", "102", "200"]);
+        await assertMatch("102", "act3_7", ["100", "101", "102", "200"]);
+        await assertMatch("200", "act3_7", ["100", "101", "102", "200"]);
     });
 
     it("3マッチ失敗 type違い", async () => {
@@ -145,10 +146,10 @@ describe("machter dbあり matchEvent", () => {
         let match;
         let entry;
 
-        await assertMatch("100", ["100", "200"]);
-        await assertMatch("101", ["101", "201"]);
-        await assertMatch("200", ["100", "200"]);
-        await assertMatch("201", ["101", "201"]);
+        await assertMatch("100", "event", ["100", "200"]);
+        await assertMatch("101", "event", ["101", "201"]);
+        await assertMatch("200", "event", ["100", "200"]);
+        await assertMatch("201", "event", ["101", "201"]);
     });
 
     it("3:1エントリー　1:1台本", async () => {
@@ -179,8 +180,8 @@ describe("machter dbあり matchEvent", () => {
 
         await assertNotMatch("101");
         await assertNotMatch("102");
-        await assertMatch("100", ["100", "200"]);
-        await assertMatch("200", ["100", "200"]);
+        await assertMatch("100", "event", ["100", "200"]);
+        await assertMatch("200", "event", ["100", "200"]);
     });
 
     it("2マッチ失敗 type違い", async () => {
@@ -235,12 +236,12 @@ describe("machter dbあり matchEvent", () => {
         }
         await matcher.matchEvent(event);
 
-        await assertMatch("100", ["100", "101", "102", "200"]);
-        await assertMatch("101", ["100", "101", "102", "200"]);
-        await assertMatch("102", ["100", "101", "102", "200"]);
-        await assertMatch("200", ["100", "101", "102", "200"]);
         await assertNotMatch("103");
         await assertNotMatch("201");
         await assertNotMatch("202");
+        await assertMatch("100", "event", ["100", "101", "102", "200"]);
+        await assertMatch("101", "event", ["100", "101", "102", "200"]);
+        await assertMatch("102", "event", ["100", "101", "102", "200"]);
+        await assertMatch("200", "event", ["100", "101", "102", "200"]);
     });
 });

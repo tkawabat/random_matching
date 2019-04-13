@@ -31,9 +31,9 @@ router.get("/",
                 && entryHelper.isAct3_7EntryTime()
         };
 
-        if (res.viewParam.matched && res.viewParam.matched.length === 1) {
+        if (res.viewParam.match && res.viewParam.match.ids.length === 1) {
             res.render("entry_fail", res.viewParam);
-        } else if (res.viewParam.matched) {
+        } else if (res.viewParam.match) {
             res.render("entry_success", res.viewParam);
         } else if (res.viewParam.entry) {
             res.render("entry_now", res.viewParam);

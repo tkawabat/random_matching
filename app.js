@@ -87,6 +87,9 @@ schedule.push("act3-7", false, "0 21-22 * * *", () => {
 schedule.push("act2", false, "* * * * *", () => {
     matcher.match("act2");
 });
+schedule.push("event_match", false, "* * * * *", () => {
+    matcher.matchEvent(eventHelper.get());
+});
 schedule.push("event_update", false, "*/5 * * * *", () => {
     eventHelper.update();
 });

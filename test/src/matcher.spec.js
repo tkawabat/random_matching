@@ -146,18 +146,4 @@ describe("machter dbなし", () => {
         expect(matcher.checkNg([user0], ngList, user)).toBe(false);
     });
 
-    it("matched sendDm", () => {
-        let user0 = {twitter_id: "t0", push: {match: true}};
-        let user1 = {twitter_id: "t1", push: {match: false}};
-
-        let mock = sinon.mock(twitter);
-
-        mock.expects("sendDm").once();
-
-        matcher.matched([user0, user1]);
-
-        mock.verify();
-        mock.restore();
-    });
-
 })

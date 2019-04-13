@@ -1,16 +1,26 @@
+<% if (match.type === "event" && Object.keys(event).length > 0) { %>
+<h4 class="mb-4"><%=event.title%></h4>
+<div class="alert alert-primary" role="alert">
+    『<%=event.scenario.title%>』作: <%=event.scenario.author%>様<br>
+    上演時間: 約<%=event.scenario.minutes%>分
+    <a class="ml-2" href="<%=event.scenario.url%>"><i class="fas fa-external-link-alt"></i> 台本</a>
+    <a class="ml-2" href="<%=event.scenario.agree_url%>"><i class="fas fa-external-link-alt"></i> 規約</a>
+</div>
+<% } else { %>
 <h4 class="mb-4">マッチングしました！</h4>
+<% } %>
 
 <div class="ml-3">
-    <span class="bolder"><%= matched[0].twitter_name %></span>さんがSkypeで会議を作ってください
+    <span class="bolder"><%= match.ids[0].twitter_name %></span>さんがSkypeで会議を作ってください
 </div>
 
 <div class="matched_list mt-3">
     <%
     let text = "遊び仲間とマッチングしました！\n";
-    for (let i = 0; i < matched.length; i++) {
-        text += " "+matched[i].twitter_name+"@"+matched[i].twitter_id+"\n";
+    for (let i = 0; i < match.ids.length; i++) {
+        text += " "+match.ids[i].twitter_name+"@"+match.ids[i].twitter_id+"\n";
     %>
-    <%- include("./module/user", {user:matched[i]}) %>
+    <%- include("./module/user", {user:match.ids[i]}) %>
     <% } %>
 
     <div class="mt-3 text-right">
