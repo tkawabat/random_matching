@@ -29,6 +29,8 @@ router.get("/",
             ,act3_7: res.viewParam.registered
                 && res.viewParam.twitter_safe
                 && entryHelper.isAct3_7EntryTime()
+            ,event: res.viewParam.registered
+                && res.viewParam.twitter_safe
         };
 
         if (res.viewParam.match && res.viewParam.match.ids.length === 1) {
