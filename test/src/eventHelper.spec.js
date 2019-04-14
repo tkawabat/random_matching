@@ -41,7 +41,7 @@ describe("event helper", () => {
             _id: "event2"
             ,title: "公開中"
             ,scenario: scenario._id
-            ,start_at: moment().toDate()
+            ,start_at: moment().add(-1, "seconds").toDate()
             ,end_at: moment().add(1, "minutes").toDate()
         };
         let event3 = {

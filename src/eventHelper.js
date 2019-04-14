@@ -12,17 +12,23 @@ let event = null;
 
 
 module.exports.get = () => {
-    return event;
+    if (!event) return null;
+    let now = moment();
+    if (now.isBetween(moment(event.start_at), moment(event.end_at))) {
+        return event;
+    } else {
+        return null;
+    }
 }
 
 module.exports.update = async () => {
     let res;
     try {
         // TODO 同時開催対応
+        let now = moment().toDate();
         res = await Event.schema.findOne({
-            start_at : { $lt: new Date() }
-            ,end_at: { $gt: new Date() }
-        }).populate("scenario").exec();
+            end_at: { $gt: now }
+        }).sort("start_at").populate("scenario").exec();
     } catch (err) {
         logger.error(err);
         return; 
