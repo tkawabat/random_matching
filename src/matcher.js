@@ -47,10 +47,10 @@ module.exports.matched = (list, type) => {
     let log = [];
     for (let i = 0; i < list.length; i++) {
         ids.push(list[i]._id);
-        log.push(list[i].sex + ":" + list[i].twitter_name);
+        log.push(list[i].sex + ":" + list[i].twitter_id);
     }
 
-    logger.info("match: "+log.join(", "));
+    logger.info("match "+type+" "+log.join(", "));
 
     for (let i = 0; i < list.length; i++) {
         let user = list[i];

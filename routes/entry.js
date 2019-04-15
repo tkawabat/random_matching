@@ -75,6 +75,7 @@ router.post("/", account.isAuthenticated, validator.entry, (req, res) => {
                 entryHelper.tweet(req.body.entry_type, res.viewParam.event);
             });
         }
+        logger.info("entry "+req.body.entry_type+" "+req.user.twitter_id);
         res.redirect("/entry/");
     });
 
@@ -96,6 +97,7 @@ router.post("/cancel", account.isAuthenticated, validator.entry, (req, res) => {
             res.redirect("/entry/?warning=entry_delete");
             return;
         }
+        logger.info("cancel entry "+req.user.twitter_id);
         res.redirect("/entry/");
     });
 
