@@ -72,6 +72,7 @@ app.use(account.passport.session());
 
 // router
 app.use("/", require("./routes/index"));
+app.use("/help", require("./routes/help"));
 app.use("/user", require("./routes/user"));
 app.use("/entry", require("./routes/entry"));
 
