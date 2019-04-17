@@ -30,11 +30,13 @@
 
 <header class="header border-bottom w-100 mb-4">
     <nav class="navbar navbar-light">
-        <a class="site_title navbar-brand" href="/entry"><%= title %></a>
-        <%# <i class="question fas fa-question"></i> %>
-        <% if (typeof(user) != "undefined") { %>
-        <a href="/user"><img class="user_img" src="<%=user.image_url_https%>"></a>
-        <% } %>
+        <a class="site_title navbar-brand" href="/entry/"><%= title %></a>
+        <span class="text-right">
+            <a class="question text-secondary" href="/help/"><i class="fas fa-question"></i></a>
+            <% if (typeof(user) != "undefined") { %>
+                <a href="/user/"><img class="user_img" src="<%=user.image_url_https%>"></a>
+            <% } %>
+        </span>
     </nav>
 </header>
 

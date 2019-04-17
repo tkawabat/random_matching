@@ -82,17 +82,28 @@ p {
     text-shadow: 1px 1px 1px silver;
 }
 
+.header span {
+    height: 40px;
+}
 .header .question {
+    display: inline-block;
     border-radius: 50%;
-    width: 40px;
-    margin-right: 2px;
-    float: right;
+    border: solid thin;
+    width:  40px;
+    height: 40px;
+    margin-right: 6px;
+}
+.header .question i {
+    font-size: 1.5em;
+    position: relative;
+    top: 6px;
+    right: 10px;
 }
 .header .user_img {
+    margin-top: 0px;
     border-radius: 50%;
     width:  40px;
     height: 40px;
-    float: right;
 }
 
 .modal {
@@ -196,6 +207,15 @@ footer {
 }
 .intro {
     color: #555555;
+}
+
+/* help */
+.help_main {
+    width: 80%;
+}
+.help_img_sp {
+    width: 180px;
+    height: 320px;
 }
 
 /* user */
