@@ -4,6 +4,7 @@ const rootDir = require("app-root-path");
 const moment = require("moment-timezone");
 moment.tz.setDefault("Asia/Tokyo");
 
+const C = require(rootDir + "/src/const");
 const logger = require(rootDir + "/src/log4js");
 const cache = require(rootDir + "/src/cache");
 const twitter = require(rootDir + "/src/twitter");
@@ -22,7 +23,7 @@ module.exports.get = (req, res, next) => {
         } else {
             if (match) {
                 res.viewParam.match = match;
-                res.viewParam.match_expiration = moment(match.created_at).add(1, "hours").format("kk:mm");
+                res.viewParam.match_expiration = moment(match.created_at).add(C.MATCH_EXPIRE_SECONDS, "seconds").format("kk:mm");
             }
         }
 

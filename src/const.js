@@ -5,3 +5,4 @@ module.exports.sex = {
     "f": "男性"
     ,"m": "女性"
 }
+module.exports.MATCH_EXPIRE_SECONDS = 60 * 30;
