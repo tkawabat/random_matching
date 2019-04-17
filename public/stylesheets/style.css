@@ -210,8 +210,11 @@ footer {
 }
 
 /* help */
+.help_main {
+    width: 80%;
+}
 .help_img_sp {
-    width: 160px;
+    width: 180px;
     height: 320px;
 }
 
