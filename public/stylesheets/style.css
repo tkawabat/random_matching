@@ -34,6 +34,9 @@ body > .content {
     margin: auto auto 40px auto;
 }
 
+h6 {
+    font-weight: bold;
+}
 p {
     line-height: 0.75em;
 }
