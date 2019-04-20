@@ -80,7 +80,7 @@ p {
     color: blue;
 }
 .fa-venus {
-    color: pink;
+    color: red;
 }
 
 .pointer {
@@ -238,6 +238,9 @@ footer {
 }
 .chara {
     font-size: 18px;
+}
+.chara i.fa-question {
+    font-size: 0.9em;
 }
 .chara form {
     height: 62px;

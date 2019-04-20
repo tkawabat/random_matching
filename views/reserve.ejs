@@ -15,20 +15,26 @@
 
 <% for (let c of reserve.chara) { %>
 <div class="chara clearfix">
+    <%
+        let sex;
+        if (c.sex === "m") sex = "mars";
+        else if (c.sex === "f") sex = "venus";
+        else sex = "question";
+    %>
     <div class="mb-2">
-        <i class="fas fa-mars"></i>&nbsp;<%=c.name%>役
+        <i class="fas fa-<%=sex%>"></i>&nbsp;<%=c.name%>役
     </div>
     <% if (c.user) { %>
         <%- include("./module/user", {user:c.user}) %>
 
         <% if (user && c.user._id === user._id) { %>
-            <form class="text-right" method="POST" action="/reserve/entry/cancel">
+            <form class="text-right" method="POST" action="/reserve/<%=reserve._id%>/entry/cancel">
                 <button type="button" class="btn btn-sm btn-danger">キャンセル</button>
             </form>
         <% } %>
     <% } else { %>
-        <form class="ml-2" method="POST" action="/reserve/entry">
-            <input type="hidden" name="chara" value="<%=c.name%>">
+        <form class="ml-2" method="POST" action="/reserve/<%=reserve._id%>/entry">
+            <input type="hidden" name="chara" value="<%=c._id%>">
             <button type="submit" class="btn btn-success"><i class="fas fa-plus"></i></button>
         </form>
     <% } %>
