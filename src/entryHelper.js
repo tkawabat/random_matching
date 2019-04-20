@@ -63,7 +63,7 @@ module.exports.tweet = async (type, event) => {
     }
     let time = moment().format("kk:mm");
     text +=  "("+time+")\n"
-        + "https://random-matching.tokyo";
+        + C.BASE_URL;
 
     let isExist = await Entry.model.isEntryExist(type);
     if (!isExist) return;

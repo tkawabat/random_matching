@@ -14,6 +14,7 @@ moment.locale("ja", {
 });
 
 const logger = require(rootDir + "/src/log4js");
+const C = require(rootDir + "/src/const");
 const morgan = require(rootDir + "/src/morgan");
 const db = require(rootDir + "/src/mongodb");
 const account = require(rootDir + "/src/account");
@@ -21,6 +22,7 @@ const matcher = require(rootDir + "/src/matcher");
 const routeHelper = require(rootDir + "/src/routeHelper");
 const eventHelper = require(rootDir + "/src/eventHelper");
 const schedule = require(rootDir + "/src/schedule");
+const twitter = require(rootDir + "/src/twitter");
 
 
 const app = express();
@@ -84,6 +86,19 @@ db.connection.once("open", () => {
 // schedule
 schedule.push("act3-7", false, "0 21-22 * * *", () => {
     matcher.match("act3_7");
+});
+//schedule.push("act3_7_push_21", false, "50 20 * * *", () => {
+schedule.push("act3_7_push_21", false, "36 9 * * *", () => {
+    let text = "21:00ちょうどに3～7人劇マッチングが行われます\n"
+        +"今日の劇の相手を探している方はぜひ使ってみてください！\n"
+        + C.BASE_URL;
+    twitter.tweet(text);
+});
+schedule.push("act3_7_push_22", false, "50 21 * * *", () => {
+    let text = "22:00ちょうどに3～7人劇マッチングが行われます\n"
+        +"今日の劇の相手を探している方はぜひ使ってみてください！\n"
+        + C.BASE_URL;
+    twitter.tweet(text);
 });
 schedule.push("act2", false, "* * * * *", () => {
     matcher.match("act2");
