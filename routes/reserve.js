@@ -8,6 +8,7 @@ const logger = require(rootDir + "/src/log4js");
 const account = require(rootDir + "/src/account");
 const validator = require(rootDir + "/src/validator");
 const routeHelper = require(rootDir + "/src/routeHelper");
+const reserveHelper = require(rootDir + "/src/reserveHelper");
 
 
 //router.get("/",
@@ -34,15 +35,15 @@ const routeHelper = require(rootDir + "/src/routeHelper");
 //        }
 //    });
 
-router.get("/:id",
-    account.isAuthenticated,
+router.get("/:reserve_id",
+    reserveHelper.get,
     (req, res) => {
         res.viewParam.user = req.user;
-        res.render("reserved", res.viewParam);
+        res.render("reserve", res.viewParam);
 
 });
 
-//router.post("/", account.isAuthenticated, validator.entry, (req, res) => {
+//router.post("/:reserve_id/entry", account.isAuthenticated, validator.reserve.entry, (req, res) => {
 //    if (validator.isError(req)) {
 //        res.redirect("/entry/?warning=validate");
 //        return;

@@ -7,20 +7,21 @@ const db = require("../mongodb");
 
 const schema = db.Schema(
     {
-        _id: { type: String }
+        _id: { type: db.Schema.Types.ObjectId }
         ,owner: { type: String, ref: "user" }
-        ,scenario_id: { type: String, ref: "scenario" }
+        ,scenario: { type: db.Schema.Types.ObjectId, ref: "scenario" }
         ,start_at: { type: Date }
-        ,chara: [
+        ,place: { type: String }
+        ,public: { type: Boolean }
+        ,chara: [{
             name: { type: String }
-            sex: { type: String }
-            user: {type: String, ref: "user"}
-        ]
+            ,sex: { type: String }
+            ,user: {type: String, ref: "user"}
+        }]
     },
     { 
         timestamps: { createdAt: "created_at", updatedAt: "updated_at" } 
     }
 );
-schema.index("created_at", {expireAfterSeconds: 60 * 30});
 
 module.exports.schema = db.model("reverse", schema);

@@ -8,10 +8,7 @@ const compression = require("compression");
 const cookieParser = require("cookie-parser");
 const moment = require("moment-timezone");
 moment.tz.setDefault("Asia/Tokyo");
-moment.locale("ja", {
-    weekdays: ["日曜日","月曜日","火曜日","水曜日","木曜日","金曜日","土曜日"],
-    weekdaysShort: ["日","月","火","水","木","金","土"]
-});
+moment.locale("ja");
 
 const logger = require(rootDir + "/src/log4js");
 const C = require(rootDir + "/src/const");
@@ -77,7 +74,7 @@ app.use("/", require("./routes/index"));
 app.use("/help", require("./routes/help"));
 app.use("/user", require("./routes/user"));
 app.use("/entry", require("./routes/entry"));
-app.use("/reserved", require("./routes/reserved"));
+app.use("/reserve", require("./routes/reserve"));
 
 // event
 db.connection.once("open", () => {
