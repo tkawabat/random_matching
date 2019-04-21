@@ -87,8 +87,7 @@ db.connection.once("open", () => {
 schedule.push("act3-7", false, "0 21-22 * * *", () => {
     matcher.match("act3_7");
 });
-//schedule.push("act3_7_push_21", false, "50 20 * * *", () => {
-schedule.push("act3_7_push_21", false, "36 9 * * *", () => {
+schedule.push("act3_7_push_21", false, "50 20 * * *", () => {
     let text = "21:00ちょうどに3～7人劇マッチングが行われます\n"
         +"今日の劇の相手を探している方はぜひ使ってみてください！\n"
         + C.BASE_URL;
