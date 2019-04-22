@@ -25,3 +25,17 @@ const schema = db.Schema(
 );
 
 module.exports.schema = db.model("reverse", schema);
+
+const model = {};
+
+model.entry = async (user, id) => {
+    return this.schema.findOneAndUpdate(
+        { chara: { $elemMatch: { _id: id, sex: { $in: ["o", user.sex]}, user: null } } }
+        ,{ $set: { "chara.$.user": user._id}}
+        ,{ strict: true, new: true}
+    )
+        .lean();
+};
+
+
+module.exports.model = model;
