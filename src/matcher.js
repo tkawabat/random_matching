@@ -83,7 +83,7 @@ module.exports.matched = (list, type) => {
 module.exports.findMatch = (entries, n, sexConstraint) => {
     let list = [];
     let ngList = [];
-    let sex = Object.assign({}, sexConstraint);
+    let sex = JSON.parse(JSON.stringify(sexConstraint));
 
     logger.debug("find "+n);
 
