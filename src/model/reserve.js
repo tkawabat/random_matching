@@ -30,12 +30,21 @@ const model = {};
 
 model.entry = async (user, id) => {
     return this.schema.findOneAndUpdate(
-        { chara: { $elemMatch: { _id: id, sex: { $in: ["o", user.sex]}, user: null } } }
+        { chara: { 
+            $elemMatch: { _id: id, sex: { $in: ["o", user.sex]}, user: null }
+            , $not: { $elemMatch: { user: user._id } }
+        } }
         ,{ $set: { "chara.$.user": user._id}}
         ,{ strict: true, new: true}
-    )
-        .lean();
+    ).lean();
 };
 
+model.cancelEntry = async (user, id) => {
+    return this.schema.findOneAndUpdate(
+        { chara: { $elemMatch: { _id: id, user: user._id } } }
+        ,{ $set: { "chara.$.user": null }}
+        ,{ strict: true, new: true}
+    ).lean();
+};
 
 module.exports.model = model;
