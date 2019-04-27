@@ -6,6 +6,7 @@ const express = require("express");
 const router = express.Router();
 const logger = require(rootDir + "/src/log4js");
 const account = require(rootDir + "/src/account");
+const C = require(rootDir + "/src/const");
 const validator = require(rootDir + "/src/validator");
 const Reserve = require(rootDir + "/src/model/reserve");
 const routeHelper = require(rootDir + "/src/routeHelper");
@@ -44,6 +45,7 @@ router.get("/:reserve_id",
         res.viewParam.user = req.user;
         // TODO
         res.viewParam.isReady = true;
+        res.viewParam.url = C.BASE_URL+"/reserve/"+req.params.reserve_id;
         res.render("reserve", res.viewParam);
 
 });
