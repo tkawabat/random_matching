@@ -137,3 +137,45 @@ describe("reserve cancel entry", () => {
     });
 
 });
+
+describe("reserve cancel entry by owner", () => {
+
+    beforeEach((done) => {
+        Reserve.schema.deleteMany({}, (err, user) => {
+            done();
+        });
+    });
+
+    it("失敗 データなし", async () => {
+        let ret = await Reserve.model.cancelEntryByOwner(user, reserve.chara[0]._id);
+        expect(ret).toBe(null);
+    });
+
+    it("失敗 user違い", async () => {
+        let tmp = JSON.parse(JSON.stringify(reserve));
+        tmp.chara[0].user = "user001";
+        await Reserve.schema.insertMany(tmp);
+
+        let ret = await Reserve.model.cancelEntryByOwner(user, reserve.chara[0]._id);
+        expect(ret).toBe(null);
+    });
+
+    it("失敗 id違い", async () => {
+        let tmp = JSON.parse(JSON.stringify(reserve));
+        tmp.chara[2].user = "999";
+        await Reserve.schema.insertMany(tmp);
+
+        let ret = await Reserve.model.cancelEntryByOwner({_id: "999"}, reserve.chara[0]._id);
+        expect(ret).toBe(null);
+    });
+
+    it("成功", async () => {
+        let tmp = JSON.parse(JSON.stringify(reserve));
+        tmp.chara[2].user = "user001";
+        await Reserve.schema.insertMany(tmp);
+
+        let ret = await Reserve.model.cancelEntryByOwner({_id: "999"}, reserve.chara[2]._id);
+        expect(ret.chara[2].user).toBe(null);
+    });
+
+});

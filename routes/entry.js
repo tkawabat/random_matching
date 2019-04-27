@@ -48,7 +48,7 @@ router.post("/", account.isAuthenticated, validator.entry, (req, res) => {
         return;
     }
 
-    if (User.model.isReady(req.user)) {
+    if (!User.model.isReady(req.user)) {
         res.redirect("/entry/?warning=invalid_user");
         return;
     }

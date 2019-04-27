@@ -59,10 +59,10 @@ text += "\n";
 </div>
 
 
-<h5 class="mt-3">役表</h5>
+<h5 class="mt-4">役表</h5>
 
 <% for (let c of reserve.chara) { %>
-<div class="chara clearfix">
+<div class="chara mt-1 clearfix">
     <%
         let sex;
         let disabled;
@@ -90,14 +90,20 @@ text += "\n";
         ;
     %>
 
-    <div class="mb-2">
+    <div>
         <i class="fas fa-<%=sex%>"></i>&nbsp;<%=c.name%>役
     </div>
     <% if (c.user) { %>
         <%- include("./module/user", {user:c.user}) %>
 
-        <% if (user && c.user._id === user._id) { %>
+        <% if (user && user._id === c.user._id) { // 登録者 %>
             <form class="text-right" method="POST" action="/reserve/<%=reserve._id%>/entry/cancel">
+                <input type="hidden" name="chara" value="<%=c._id%>">
+                <button type="submit" class="btn btn-sm btn-danger">キャンセル</button>
+            </form>
+        <% } else if (user && user._id === reserve.owner._id) { // owner %>
+            <form class="text-right" method="POST" action="/reserve/<%=reserve._id%>/entry/cancel">
+                <input type="hidden" name="owner" value="true">
                 <input type="hidden" name="chara" value="<%=c._id%>">
                 <button type="submit" class="btn btn-sm btn-danger">キャンセル</button>
             </form>

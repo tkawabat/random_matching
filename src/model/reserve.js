@@ -47,4 +47,12 @@ model.cancelEntry = async (user, id) => {
     ).lean();
 };
 
+model.cancelEntryByOwner = async (user, id) => {
+    return this.schema.findOneAndUpdate(
+        { owner: user._id, chara: { $elemMatch: { _id: id, user: { $ne: null } } } }
+        ,{ $set: { "chara.$.user": null }}
+        ,{ strict: true, new: true}
+    ).lean();
+};
+
 module.exports.model = model;

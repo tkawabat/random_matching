@@ -57,7 +57,7 @@ router.post("/:reserve_id/entry", account.isAuthenticated, validator.reserve.ent
         return;
     }
 
-    if (User.model.isReady(req.user)) {
+    if (!User.model.isReady(req.user)) {
         res.redirect(redirect+"?warning=invalid_user");
         return;
     }
@@ -83,7 +83,7 @@ router.post("/:reserve_id/entry/cancel", account.isAuthenticated, validator.rese
         return;
     }
 
-    Reserve.model.cancelEntry(req.user, req.body.chara).then((reserve) => {
+    let fn = (reserve) => {
         let text = "reserve entry cancel "
             +req.user.twitter_id+" "+req.params.reserve_id;
         if (!reserve) {
@@ -93,7 +93,13 @@ router.post("/:reserve_id/entry/cancel", account.isAuthenticated, validator.rese
             logger.info(text);
             res.redirect(redirect);
         }
-    });
+    };
+
+    if (req.body.owner) {
+        Reserve.model.cancelEntryByOwner(req.user, req.body.chara).then(fn);
+    } else {
+        Reserve.model.cancelEntry(req.user, req.body.chara).then(fn);
+    }
 });
 
 
