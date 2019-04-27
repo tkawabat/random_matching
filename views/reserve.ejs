@@ -10,10 +10,26 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="reserve_regist_guest_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">ゲスト登録</div>
+            <div class="modal-body"><form method="POST" action="/reserve/<%=reserve._id%>/entry_guest">
+                <input id="reserve_guest_chara_id" type="hidden" name="chara">
+                <input id="reserve_guest_name" type="text" class="form-control" name="name" placeholder="演者名" maxlength=64" required>
+            <button type="submit" class="mt-2 btn btn-success">登録</button>
+            </form></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <h4>『<%=reserve.scenario.title%>』</h4>
 
 <%
+let mask = !user || reserve.owner._id !== user._id;
 let start = moment(reserve.start_at).format("M/D (ddd) kk:mm~");
 let place = "Skype";
 let text = "『"+reserve.scenario.title+"』\n"
@@ -94,7 +110,7 @@ text += "\n";
         <i class="fas fa-<%=sex%>"></i>&nbsp;<%=c.name%>役
     </div>
     <% if (c.user) { %>
-        <%- include("./module/user", {user:c.user}) %>
+        <%- include("./module/user", {user:c.user, mask:mask}) %>
 
         <% if (user && user._id === c.user._id) { // 登録者 %>
             <form class="text-right" method="POST" action="/reserve/<%=reserve._id%>/entry/cancel">
@@ -111,11 +127,12 @@ text += "\n";
     <% } else { %>
         <form class="ml-2 d-inline" method="POST" action="/reserve/<%=reserve._id%>/entry">
             <input type="hidden" name="chara" value="<%=c._id%>">
-            <button type="submit" class="btn btn-success" <%=disabled%>><i class="fas fa-plus"></i></button>
+            <button type="submit" class="btn btn-success" <%=disabled%>>エントリー</button>
         </form>
 
         <% if (user && user._id === reserve.owner._id) { %>
-            <a class="ml-2" href="javascript:void(0);" onClick="RandomMatching.reserve.offer('<%=dm%>');"><button type="button" class="btn bg_red">Offer</button></a>
+            <a class="ml-2" href="javascript:void(0);" onClick="RandomMatching.reserve.offer('<%=dm%>');"><button type="button" class="btn bg_red">依頼</button></a>
+            <a class="ml-2" href="javascript:void(0);" onClick="RandomMatching.reserve.registGuest('<%=c._id%>');"><button type="button" class="btn bg_orange">ゲスト登録</button></a>
         <% } %>
     <% } %>
 </div>

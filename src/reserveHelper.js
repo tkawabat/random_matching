@@ -13,17 +13,29 @@ const Scenario = require(rootDir + "/src/model/scenario");
 const Reserve = require(rootDir + "/src/model/reserve");
 
 
-module.exports.get = (req, res, next) => {
-    Reserve.schema.findOne({ _id: req.params.reserve_id })
+module.exports.get = async (req, res, next) => {
+    return Reserve.schema.findOne({ _id: req.params.reserve_id })
         .populate("owner").populate("scenario").populate("chara.user")
-        .exec((err, reserve) => {
-        if (err) {
+        .lean()
+        .exec()
+        .catch((err) => {
             logger.error(err);
             next(err);
-            return;
-        }
+        })
+        .then((reserve) => {
+            // guest対応
+            for (let i = 0; i < reserve.chara.length; i++) {
+                let c = reserve.chara[i];
+                if (!c.guest) continue;
+                c.user = {
+                    _id: c.guest
+                    ,twitter_name: c.guest
+                    ,skype_id: ""
+                    ,image_url_https: C.IMAGE_TWITTER_DEFAULT
+                };
+            }
 
-        res.viewParam.reserve = reserve;
-        next();
-    });
+            res.viewParam.reserve = reserve;
+            next();
+        });
 }

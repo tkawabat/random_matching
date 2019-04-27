@@ -46,6 +46,14 @@ module.exports.reserve.entry = [
         .not().isEmpty()
         .isAlphanumeric()
 ];
+module.exports.reserve.entryGuest = [
+    check("chara")
+        .not().isEmpty()
+        .isAlphanumeric()
+    ,check("name")
+        .not().isEmpty()
+        .not().matches(/[,;'"%&#><\\\n\r\0]/)
+];
 module.exports.reserve.cancelEntry = [
     check("chara")
         .not().isEmpty()

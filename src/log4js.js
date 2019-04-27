@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === "prod") {
     level = "info";
 } else if (process.env.NODE_ENV === "test") {
     file = "test.log";
-    level = "debug";
+    level = "warn";
 } else {
     file = "dev.log";
     level = "debug";

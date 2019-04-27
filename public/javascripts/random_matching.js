@@ -78,5 +78,14 @@ let RandomMatching = {};
             offerModalBody.innerHTML = text;
             offerModal.modal("show");
         }
+
+        let registGuestModal = $("#reserve_regist_guest_modal");
+        let registGuestCharaId = document.getElementById("reserve_guest_chara_id");
+        let registGuestName = document.getElementById("reserve_guest_name");
+        RandomMatching.reserve.registGuest = (id) => {
+            registGuestCharaId.value = id;
+            registGuestName.value = "";
+            registGuestModal.modal("show");
+        }
     }
 })();

@@ -45,9 +45,9 @@ router.get("/:reserve_id",
     (req, res) => {
         res.viewParam.user = req.user;
 
-        res.viewParam.isReady = User.model.isReady(req.user);
+        res.viewParam.isReady = req.user && User.model.isReady(req.user);
         for (let c of res.viewParam.reserve.chara) { // エントリー済み
-            if (c.user && c.user._id === req.user._id) {
+            if (c.user && req.user && c.user._id === req.user._id) {
                 res.viewParam.isReady = false;
                 break;
             }
@@ -71,7 +71,7 @@ router.post("/:reserve_id/entry", account.isAuthenticated, validator.reserve.ent
     }
 
     Reserve.model.entry(req.user, req.body.chara).then((reserve) => {
-        let text = "reserve entry "
+        let text = "reserve entry: "
             +req.user.twitter_id+" "+req.params.reserve_id;
         if (!reserve) {
             logger.error(text);
@@ -83,6 +83,24 @@ router.post("/:reserve_id/entry", account.isAuthenticated, validator.reserve.ent
     });
 });
 
+router.post("/:reserve_id/entry_guest", account.isAuthenticated, validator.reserve.entryGuest, (req, res) => {
+    let redirect = "/reserve/"+req.params.reserve_id;
+    if (validator.isError(req)) {
+        res.redirect(redirect+"?warning=validate");
+        return;
+    }
+
+    Reserve.model.entryGuest(req.user, req.body.chara, req.body.name).then((reserve) => {
+        let text = "reserve entry guest: " + req.body.name;
+        if (!reserve) {
+            logger.error(text);
+            res.redirect(redirect+"?warning=reserve_entry");
+        } else {
+            logger.info(text);
+            res.redirect(redirect);
+        }
+    });
+});
 
 router.post("/:reserve_id/entry/cancel", account.isAuthenticated, validator.reserve.cancelEntry, (req, res) => {
     let redirect = "/reserve/"+req.params.reserve_id;
@@ -91,9 +109,9 @@ router.post("/:reserve_id/entry/cancel", account.isAuthenticated, validator.rese
         return;
     }
 
+    let text;
+
     let fn = (reserve) => {
-        let text = "reserve entry cancel "
-            +req.user.twitter_id+" "+req.params.reserve_id;
         if (!reserve) {
             logger.error(text);
             res.redirect(redirect+"?warning=reserve_entry_cancel");
@@ -104,8 +122,12 @@ router.post("/:reserve_id/entry/cancel", account.isAuthenticated, validator.rese
     };
 
     if (req.body.owner) {
+        text = "reserve entry cancel by owner: "
+            +req.user.twitter_id+" "+req.params.reserve_id;
         Reserve.model.cancelEntryByOwner(req.user, req.body.chara).then(fn);
     } else {
+        text = "reserve entry cancel: "
+            +req.user.twitter_id+" "+req.params.reserve_id;
         Reserve.model.cancelEntry(req.user, req.body.chara).then(fn);
     }
 });
