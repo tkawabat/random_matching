@@ -13,6 +13,7 @@ const validator = require(rootDir + "/src/validator");
 const routeHelper = require(rootDir + "/src/routeHelper");
 const entryHelper = require(rootDir + "/src/entryHelper");
 const Entry = require(rootDir + "/src/model/entry");
+const User = require(rootDir + "/src/model/user");
 
 
 router.get("/",
@@ -22,15 +23,12 @@ router.get("/",
     (req, res) => {
         res.viewParam.user = req.user;
         res.viewParam.registered = req.user.sex && req.user.skype_id;
-        res.viewParam.twitter_safe = entryHelper.isSafeTwitter(req.user);
+        res.viewParam.twitter_safe = User.model.isSafeTwitter(req.user);
+        let ready = User.model.isReady(req.user);
         res.viewParam.isReady = {
-            act2: res.viewParam.registered
-                && res.viewParam.twitter_safe
-            ,act3_7: res.viewParam.registered
-                && res.viewParam.twitter_safe
-                && entryHelper.isAct3_7EntryTime()
-            ,event: res.viewParam.registered
-                && res.viewParam.twitter_safe
+            act2: ready
+            ,act3_7: ready && entryHelper.isAct3_7EntryTime()
+            ,event: ready
         };
 
         if (res.viewParam.match && res.viewParam.match.ids.length === 1) {
@@ -50,12 +48,8 @@ router.post("/", account.isAuthenticated, validator.entry, (req, res) => {
         return;
     }
 
-    if (!req.user.sex || !req.user.skype_id) {
-        res.redirect("/entry/?warning=not_registered");
-        return;
-    }
-    if (!entryHelper.isSafeTwitter(req.user)) {
-        res.redirect("/entry/?warning=twitter_unsafe");
+    if (User.model.isReady(req.user)) {
+        res.redirect("/entry/?warning=invalid_user");
         return;
     }
 

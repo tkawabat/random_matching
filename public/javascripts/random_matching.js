@@ -21,7 +21,7 @@ let RandomMatching = {};
     RandomMatching.copyLink = (text) => {
         // dummy dom
         let span = document.createElement("span");
-        span.textContent = text.replace(/<br>/g, "\n");
+        span.innerHTML = text;
         let body = document.getElementsByTagName("body")[0];
         body.appendChild(span);
 

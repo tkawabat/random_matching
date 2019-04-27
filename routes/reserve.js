@@ -8,10 +8,11 @@ const logger = require(rootDir + "/src/log4js");
 const account = require(rootDir + "/src/account");
 const C = require(rootDir + "/src/const");
 const validator = require(rootDir + "/src/validator");
-const Reserve = require(rootDir + "/src/model/reserve");
 const routeHelper = require(rootDir + "/src/routeHelper");
 const entryHelper = require(rootDir + "/src/entryHelper");
 const reserveHelper = require(rootDir + "/src/reserveHelper");
+const User = require(rootDir + "/src/model/user");
+const Reserve = require(rootDir + "/src/model/reserve");
 
 
 //router.get("/",
@@ -43,8 +44,7 @@ router.get("/:reserve_id",
     routeHelper.check,
     (req, res) => {
         res.viewParam.user = req.user;
-        // TODO
-        res.viewParam.isReady = true;
+        res.viewParam.isReady = User.model.isReady(req.user);
         res.viewParam.url = C.BASE_URL+"/reserve/"+req.params.reserve_id;
         res.render("reserve", res.viewParam);
 
@@ -57,12 +57,8 @@ router.post("/:reserve_id/entry", account.isAuthenticated, validator.reserve.ent
         return;
     }
 
-    if (!req.user.sex || !req.user.skype_id) {
-        res.redirect("/entry/?warning=not_registered");
-        return;
-    }
-    if (!entryHelper.isSafeTwitter(req.user)) {
-        res.redirect("/entry/?warning=twitter_unsafe");
+    if (User.model.isReady(req.user)) {
+        res.redirect(redirect+"?warning=invalid_user");
         return;
     }
 
