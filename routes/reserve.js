@@ -44,7 +44,15 @@ router.get("/:reserve_id",
     routeHelper.check,
     (req, res) => {
         res.viewParam.user = req.user;
+
         res.viewParam.isReady = User.model.isReady(req.user);
+        for (let c of res.viewParam.reserve.chara) { // エントリー済み
+            if (c.user && c.user._id === req.user._id) {
+                res.viewParam.isReady = false;
+                break;
+            }
+        }
+
         res.viewParam.url = C.BASE_URL+"/reserve/"+req.params.reserve_id;
         res.render("reserve", res.viewParam);
 

@@ -73,9 +73,6 @@ module.exports.model.isSafeTwitter = (user) => {
 }
 
 module.exports.model.isReady = (user) => {
-    if (user.sex) console.log("sex ok");
-    if (user.skype_id) console.log("skype ok");
-    if (this.model.isSafeTwitter(user)) console.log("twitter ok");
     return user.sex && user.skype_id && this.model.isSafeTwitter(user);
 }
 
