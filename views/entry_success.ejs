@@ -28,7 +28,7 @@
     for (let i = 0; i < match.ids.length; i++) {
         text += " "+match.ids[i].twitter_name+"@"+match.ids[i].twitter_id+"\n";
     %>
-    <%- include("./module/user", {user:match.ids[i]}) %>
+    <%- include("./module/user", {user:match.ids[i], mask:false}) %>
     <% } %>
 
     <div class="mt-3 text-right">

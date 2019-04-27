@@ -37,7 +37,6 @@ module.exports.get = (req, res, next) => {
         if (err) {
             logger.error(err);
             throw err;
-            next();
         } else {
             res.viewParam.entry = entry;
             if (entry) {

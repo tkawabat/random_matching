@@ -28,8 +28,9 @@ const schema = db.Schema({
     { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );
 
-const model = {}
-model.get = (id, done) => {
+
+module.exports.model = {};
+module.exports.model.get = (id, done) => {
     cache.get(cachePrefix+id, (err, value) => {
         if (!err && value) {
             let user = new this.schema(value);
@@ -46,7 +47,7 @@ model.get = (id, done) => {
     });
 }
 
-model.set = (user, done) => {
+module.exports.model.set = (user, done) => {
     this.schema.findOneAndUpdate({"_id": user._id}, user, {upsert: true, new: true}, (err, user) => {
         if (err) {
             logger.error(err);
@@ -59,5 +60,20 @@ model.set = (user, done) => {
     });
 }
 
+module.exports.model.isSafeTwitter = (user) => {
+    if (!user.twitter_created_at) {
+        return false;
+    }
+    let diff = new Date().getTime() - user.twitter_created_at.getTime();
+    if (diff / 1000 < 60 * 60 * 24 * 180) {
+        return false;
+    }
+
+    return true;
+}
+
+module.exports.model.isReady = (user) => {
+    return user.sex && user.skype_id && this.model.isSafeTwitter(user);
+}
+
 module.exports.schema = db.model("user", schema);
-module.exports.model = model;

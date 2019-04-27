@@ -1,0 +1,139 @@
+<div class="modal fade" id="reserve_offer_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">募集メッセージをコピーしました。</div>
+            <div class="modal-body" id="reserve_offer_modal_body"></div>
+            <div class="modal-footer">
+                <a class="ml-2 btn bg_twitter" href="https://twitter.com/messages/compose">DMを送る</a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="reserve_regist_guest_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">ゲスト登録</div>
+            <div class="modal-body"><form method="POST" action="/reserve/<%=reserve._id%>/entry_guest">
+                <input id="reserve_guest_chara_id" type="hidden" name="chara">
+                <input id="reserve_guest_name" type="text" class="form-control" name="name" placeholder="演者名" maxlength=64" required>
+            <button type="submit" class="mt-2 btn btn-success">登録</button>
+            </form></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h4><%=reserve.scenario.title%></h4>
+
+<%
+let mask = !user || reserve.owner._id !== user._id;
+let start = moment(reserve.start_at).format("M/D (ddd) kk:mm~");
+let place = "Skype";
+let text = "『"+reserve.scenario.title+"』\n"
+    +"主催者: "+reserve.owner.twitter_name+"\n"
+    +start+"@"+place+"\n\n"
+;
+
+for (let c of reserve.chara) {
+    let sex = "";
+    if (c.sex === "m") {
+        sex = "♂";
+    } else if ( c.sex === "f") {
+        sex = "♀";
+    } else {
+        sex = "❓";
+    }
+
+    let name = c.user ? c.user.twitter_name : "未定";
+    text += c.name+sex+": "+name+"\n";
+}
+text += "\n";
+%>
+<div class="mt-4 text-right">
+    <%- include("./module/tweet", {text:text, hash:title}) %>
+</div>
+
+
+<h5 class="mt-3">上演情報</h5>
+<div class="reserve_basic_info ml-2">
+    <div>
+        主催: <a href="https://twitter.com/<%= reserve.owner.twitter_id %>">
+            <i class="fab fa-twitter color_twitter"></i>
+            <%= reserve.owner.twitter_name %>
+        </a>
+    </div>
+    <div>時間：<%=start%>　約<%=reserve.scenario.minutes%>分</div>
+    <div>場所：<%=place%></div>
+    <div>台本: 『<%=reserve.scenario.title%>』作:<%=reserve.scenario.author%>
+        <a class="ml-2" href="<%=reserve.scenario.url%>"><i class="fas fa-external-link-alt"></i> 台本</a>
+        <a class="ml-2" href="<%=reserve.scenario.agree_url%>"><i class="fas fa-external-link-alt"></i> 規約</a>
+    </div>
+
+</div>
+
+
+<h5 class="mt-4">役表</h5>
+
+<% for (let c of reserve.chara) { %>
+<div class="chara mt-1 clearfix">
+    <%
+        let sex;
+        let disabled;
+        if (c.sex === "m") {
+            sex = "mars";
+            disabled = isReady && user && user.sex === "m" ? "" : "disabled";
+        } else if (c.sex === "f") {
+            sex = "venus";
+            disabled = isReady && user && user.sex === "f" ? "" : "disabled";
+        } else {
+            sex = "question";
+            disabled = isReady && user ? "" : "disabled";
+        }
+
+        let dm = "こんにちは、xxxxさん。劇のお誘いです。<br>"
+            +"<br>"
+            +"台本: "+reserve.scenario.title+"<br>"
+            +"日時: "+start+"<br>"
+            +"場所: "+place+"<br>"
+            +"お願いしたい役: "+c.name+"役<br>"
+            +"<br>"
+            +"お時間のご都合がよろしければご参加して頂けないでしょうか。<br>"
+            +"参加して頂ける場合は、こちらからエントリーお願いします。<br>"
+            +url
+        ;
+    %>
+
+    <div>
+        <i class="fas fa-<%=sex%>"></i>&nbsp;<%=c.name%>役
+    </div>
+    <% if (c.user) { %>
+        <%- include("./module/user", {user:c.user, mask:mask}) %>
+
+        <% if (user && user._id === c.user._id) { // 登録者 %>
+            <form class="text-right" method="POST" action="/reserve/<%=reserve._id%>/entry/cancel">
+                <input type="hidden" name="chara" value="<%=c._id%>">
+                <button type="submit" class="btn btn-sm btn-danger">キャンセル</button>
+            </form>
+        <% } else if (user && user._id === reserve.owner._id) { // owner %>
+            <form class="text-right" method="POST" action="/reserve/<%=reserve._id%>/entry/cancel">
+                <input type="hidden" name="owner" value="true">
+                <input type="hidden" name="chara" value="<%=c._id%>">
+                <button type="submit" class="btn btn-sm btn-danger">キャンセル</button>
+            </form>
+        <% } %>
+    <% } else { %>
+        <form class="ml-2 d-inline" method="POST" action="/reserve/<%=reserve._id%>/entry">
+            <input type="hidden" name="chara" value="<%=c._id%>">
+            <button type="submit" class="btn btn-success" <%=disabled%>>エントリー</button>
+        </form>
+
+        <% if (user && user._id === reserve.owner._id) { %>
+            <a class="ml-2" href="javascript:void(0);" onClick="RandomMatching.reserve.offer('<%=dm%>');"><button type="button" class="btn bg_red">依頼</button></a>
+            <a class="ml-2" href="javascript:void(0);" onClick="RandomMatching.reserve.registGuest('<%=c._id%>');"><button type="button" class="btn bg_orange">ゲスト登録</button></a>
+        <% } %>
+    <% } %>
+</div>
+<% } %>

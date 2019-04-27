@@ -76,6 +76,13 @@ p {
     background: #ccc;
 }
 
+.fa-mars {
+    color: blue;
+}
+.fa-venus {
+    color: red;
+}
+
 .pointer {
     cursor: pointer;
 }
@@ -110,7 +117,7 @@ p {
 }
 
 .modal {
-    top: 150px;
+    top: 90px;
 }
 
 footer {
@@ -120,31 +127,30 @@ footer {
 }
 
 .user_module {
-    font-size: 18px;
+    font-size: 16px;
     background: #FFFFCC;
-    padding: 10px;
+    padding: 6px;
 }
 .user_module .twitter_img {
     border-radius: 50%;
-    width:  70px;
-    height: 70px;
-    margin-right: 10px;
+    width:  50px;
+    height: 50px;
+    margin: auto auto 10px 0px;
     float: left;
 }
 .user_module .twitter_name {
     color: #555555;
-    margin-top: 4px;
-    width: 100%;
+    margin: 2px 0px 0px 60px;
     word-wrap: break-word;
 }
 .user_module .twitter_id {
-    margin-left: 5px;
+    margin-left: 2px;
     font-size: 12px;
     opacity: 0.5;
 }
 .user_module .skype {
     opacity: 0.5;
-    margin: 2px 5px 8px 0;
+    margin: 2px 5px 0px 60px;
 }
 
 /* animation */
@@ -225,3 +231,21 @@ footer {
 #user_ng_list_input_sample {
     display: none;
 }
+
+/* reserve */
+.reserve_basic_info {
+    font-size: 16px;
+}
+.chara {
+    font-size: 18px;
+}
+.chara i.fa-question {
+    font-size: 0.9em;
+}
+.chara form {
+    height: 62px;
+}
+.chara button {
+    margin-top: 8px;
+}
+

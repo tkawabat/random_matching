@@ -42,7 +42,8 @@ module.exports.checkNg = (list, ngList, user) => {
     return true;
 }
 
-module.exports.matched = (list, type) => {
+module.exports.matched = async (list, type) => {
+    let p = [];
     let ids = [];
     let log = [];
     for (let i = 0; i < list.length; i++) {
@@ -54,23 +55,18 @@ module.exports.matched = (list, type) => {
 
     for (let i = 0; i < list.length; i++) {
         let user = list[i];
-        Entry.schema.deleteOne({_id: user._id}, (err, entry) => {
-            if (err) {
-                logger.error(err);
-                throw err;
-            }
-        });
-        let match = new Match.schema({
+        p.push(Entry.schema.deleteOne({_id: user._id}).exec()
+            .catch((err) => { logger.error(err); })
+        );
+
+        let match = {
             _id: user._id
             ,type: type
             ,ids: ids
-        });
-        Match.schema.findOneAndUpdate({ "_id" : match._id}, match, { upsert: true, setDefaultsOnInsert: true }, (err, res) => {
-            if (err) {
-                logger.error(err);
-                throw err;
-            }
-        });
+        };
+        p.push(Match.schema.findOneAndUpdate({ "_id" : match._id}, match, { upsert: true, setDefaultsOnInsert: true })
+            .catch((err) => { logger.error(err); })
+        );
 
         if (user.push.match === true) {
             let text = "マッチングしました。結果を確認してください。\n"
@@ -78,12 +74,14 @@ module.exports.matched = (list, type) => {
             twitter.sendDm(user, text);
         }
     }
+
+    return Promise.all(p);
 }
 
 module.exports.findMatch = (entries, n, sexConstraint) => {
     let list = [];
     let ngList = [];
-    let sex = Object.assign({}, sexConstraint);
+    let sex = JSON.parse(JSON.stringify(sexConstraint));
 
     logger.debug("find "+n);
 
@@ -137,7 +135,7 @@ module.exports.match = async (type) => {
                 failCount--;
             } else {
                 entries = entries.filter((n) => list.indexOf(n._id) === -1);
-                this.matched(list, type);
+                await this.matched(list, type);
             }
         }
         if (failCount === 0) break;
@@ -180,7 +178,7 @@ module.exports.matchEvent = async (event) => {
             break;
         } else {
             entries = entries.filter((n) => list.indexOf(n._id) === -1);
-            this.matched(list, type);
+            await this.matched(list, type);
         }
     }
 

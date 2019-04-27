@@ -1,10 +1,16 @@
-<div class="user_module mt-3 shadow-sm">
+<div class="user_module mb-2 shadow-sm">
     <img class="twitter_img" src="<%= user.image_url_https %>">
     <span>
         <div class="twitter_name">
             <%= user.twitter_name %>
-            <span class="twitter_id"><a href="https://twitter.com/<%= user.twitter_id %>">@<%= user.twitter_id %></a></span>
+            <% if (user.twitter_id) { // for guest %>
+                <span class="twitter_id"><a href="https://twitter.com/<%= user.twitter_id %>">@<%= user.twitter_id %></a></span>
+            <% } %>
         </div>
-        <div class="skype">Skype: <a class="pointer" href="javascript:void(0);" onClick="RandomMatching.copyLink(this, '<%=user.skype_id%>');"><%= user.skype_id %></a></div>
+        <% if (mask) { %>
+            <div class="skype">Skype: xxxx</div>
+        <% } else { %>
+            <div class="skype">Skype: <a class="pointer" href="javascript:void(0);" onClick="RandomMatching.copyLink('<%=user.skype_id%>');RandomMatching.modal('Skype IDをコピーしました。');"><%= user.skype_id %></a></div>
+        <% } %>
     </span>
 </div>

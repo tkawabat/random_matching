@@ -9,15 +9,19 @@ let RandomMatching = {};
         gtag("js", new Date());
         gtag("config", "UA-136115470-1");
     }
-    let modal = (txt) => {
-        document.getElementById("modal_body").innerHTML = txt;
-        $("#modal").modal("show");
+    {
+        let modal = $("#modal");
+        let modalBody = document.getElementById("modal_body");
+        RandomMatching.modal = (text) => {
+            modalBody.innerHTML = text;
+            modal.modal("show");
+        }
     }
 
-    RandomMatching.copyLink = (target, text) => {
+    RandomMatching.copyLink = (text) => {
         // dummy dom
         let span = document.createElement("span");
-        span.textContent = text;
+        span.innerHTML = text;
         let body = document.getElementsByTagName("body")[0];
         body.appendChild(span);
 
@@ -33,10 +37,9 @@ let RandomMatching = {};
         document.execCommand("copy");
 
         span.remove();
-        modal("コピーしました");
     };
 
-    // user page
+    // user
     RandomMatching.user = {};
     {
         let sample = document.getElementById("user_ng_list_input_sample");
@@ -65,4 +68,24 @@ let RandomMatching = {};
         }
     }
 
+    // reserve
+    RandomMatching.reserve = {}
+    {
+        let offerModal = $("#reserve_offer_modal");
+        let offerModalBody = document.getElementById("reserve_offer_modal_body");
+        RandomMatching.reserve.offer = (text) => {
+            RandomMatching.copyLink(text);
+            offerModalBody.innerHTML = text;
+            offerModal.modal("show");
+        }
+
+        let registGuestModal = $("#reserve_regist_guest_modal");
+        let registGuestCharaId = document.getElementById("reserve_guest_chara_id");
+        let registGuestName = document.getElementById("reserve_guest_name");
+        RandomMatching.reserve.registGuest = (id) => {
+            registGuestCharaId.value = id;
+            registGuestName.value = "";
+            registGuestModal.modal("show");
+        }
+    }
 })();
