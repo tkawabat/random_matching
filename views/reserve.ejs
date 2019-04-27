@@ -1,25 +1,67 @@
-<h4>フランダースの負け犬</h4>
+<h4>『<%=reserve.scenario.title%>』</h4>
 
-<% let start = moment(reserve.start_at).format("M/D (ddd) kk:mm~");%>
-<div class="reserve ml-2 mt-3">
-    <p>時間：<%=start%>　約<%=reserve.scenario.minutes%>分</p>
-    <p>場所：Skype</p>
+<%
+let start = moment(reserve.start_at).format("M/D (ddd) kk:mm~");
+let place = "Skype";
+let text = "『"+reserve.scenario.title+"』\n"
+    +"主催者: "+reserve.owner.twitter_name+"\n"
+    +start+"@"+place+"\n\n"
+;
+for (let c of reserve.chara) {
+    let sex = "";
+    if (c.sex === "m") {
+        sex = "♂";
+    } else if ( c.sex === "f") {
+        sex = "♀";
+    } else {
+        sex = "❓";
+    }
+
+    let name = c.user ? c.user.twitter_name : "未定";
+    text += c.name+sex+": "+name+"\n";
+}
+text += "\n";
+%>
+<div class="mt-4 text-right">
+    <%- include("./module/tweet", {text:text, hash:title}) %>
 </div>
 
-<div class="text-right">
-    <%- include("./module/tweet", {text:"ただいまマッチング中...\n", hash:title}) %>
+
+<h5 class="mt-3">上演情報</h5>
+<div class="reserve_basic_info ml-2">
+    <div>
+        主催: <a href="https://twitter.com/<%= reserve.owner.twitter_id %>">
+            <i class="fab fa-twitter color_twitter"></i>
+            <%= reserve.owner.twitter_name %>
+        </a>
+    </div>
+    <div>時間：<%=start%>　約<%=reserve.scenario.minutes%>分</div>
+    <div>場所：<%=place%></div>
+    <div>台本: 『<%=reserve.scenario.title%>』作:<%=reserve.scenario.author%>
+        <a class="ml-2" href="<%=reserve.scenario.url%>"><i class="fas fa-external-link-alt"></i> 台本</a>
+        <a class="ml-2" href="<%=reserve.scenario.agree_url%>"><i class="fas fa-external-link-alt"></i> 規約</a>
+    </div>
+
 </div>
 
 
-<h5>役表</h5>
+<h5 class="mt-3">役表</h5>
 
 <% for (let c of reserve.chara) { %>
 <div class="chara clearfix">
     <%
         let sex;
-        if (c.sex === "m") sex = "mars";
-        else if (c.sex === "f") sex = "venus";
-        else sex = "question";
+        let disabled;
+        if (c.sex === "m") {
+            sex = "mars";
+            disabled = isReady && user && user.sex === "m" ? "" : "disabled";
+        } else if (c.sex === "f") {
+            sex = "venus";
+            disabled = isReady && user && user.sex === "f" ? "" : "disabled";
+        } else {
+            sex = "question";
+            disabled = isReady && user ? "" : "disabled";
+        }
     %>
     <div class="mb-2">
         <i class="fas fa-<%=sex%>"></i>&nbsp;<%=c.name%>役
@@ -29,13 +71,14 @@
 
         <% if (user && c.user._id === user._id) { %>
             <form class="text-right" method="POST" action="/reserve/<%=reserve._id%>/entry/cancel">
-                <button type="button" class="btn btn-sm btn-danger">キャンセル</button>
+                <input type="hidden" name="chara" value="<%=c._id%>">
+                <button type="submit" class="btn btn-sm btn-danger">キャンセル</button>
             </form>
         <% } %>
     <% } else { %>
         <form class="ml-2" method="POST" action="/reserve/<%=reserve._id%>/entry">
             <input type="hidden" name="chara" value="<%=c._id%>">
-            <button type="submit" class="btn btn-success"><i class="fas fa-plus"></i></button>
+            <button type="submit" class="btn btn-success" <%=disabled%>><i class="fas fa-plus"></i></button>
         </form>
     <% } %>
 </div>

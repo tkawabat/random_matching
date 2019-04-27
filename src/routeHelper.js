@@ -10,6 +10,8 @@ const warning = {
     ,validate: "入力値に問題があります"
     ,entry_save: "マッチング開始に失敗しました"
     ,entry_delete: "マッチングキャンセルに失敗しました"
+    ,reserve_entry: "エントリーに失敗しました"
+    ,reserve_entry_cancel: "エントリーキャンセルに失敗しました"
     ,not_registered: "性別、Skyepe IDを登録してください"
     ,twitter_unsafe: "twitterアカウントがマッチング条件を満たしていません"
     ,error500: "予期せぬエラーが発生しました。時間を置いてアクセスしてください"

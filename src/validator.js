@@ -39,3 +39,15 @@ module.exports.entry = [
     check("entry_type")
         .custom((v, {req}) => !v || v === "act2" || v === "act3_7" || v === "event")
 ];
+
+module.exports.reserve = {};
+module.exports.reserve.entry = [
+    check("chara")
+        .not().isEmpty()
+        .isAlphanumeric()
+];
+module.exports.reserve.cancelEntry = [
+    check("chara")
+        .not().isEmpty()
+        .isAlphanumeric()
+];

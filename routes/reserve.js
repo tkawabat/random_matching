@@ -7,6 +7,7 @@ const router = express.Router();
 const logger = require(rootDir + "/src/log4js");
 const account = require(rootDir + "/src/account");
 const validator = require(rootDir + "/src/validator");
+const Reserve = require(rootDir + "/src/model/reserve");
 const routeHelper = require(rootDir + "/src/routeHelper");
 const entryHelper = require(rootDir + "/src/entryHelper");
 const reserveHelper = require(rootDir + "/src/reserveHelper");
@@ -41,6 +42,8 @@ router.get("/:reserve_id",
     routeHelper.check,
     (req, res) => {
         res.viewParam.user = req.user;
+        // TODO
+        res.viewParam.isReady = true;
         res.render("reserve", res.viewParam);
 
 });
@@ -61,36 +64,38 @@ router.post("/:reserve_id/entry", account.isAuthenticated, validator.reserve.ent
         return;
     }
 
-    //const entry = new Entry.schema({
-    //    _id: req.user._id
-    //});
-    //Entry.schema.findOneAndUpdate({_id: entry.id}, entry, {upsert: true}, (err, entry) => {
-    //    if (err) {
-    //        logger.error(err);
-    //        res.redirect("/entry/?warning=entry_save");
-    //        return;
-    //    }
-    //    res.redirect("/entry/");
-    //});
-
-    res.redirect(redirect);
+    Reserve.model.entry(req.user, req.body.chara).then((reserve) => {
+        let text = "reserve entry "
+            +req.user.twitter_id+" "+req.params.reserve_id;
+        if (!reserve) {
+            logger.error(text);
+            res.redirect(redirect+"?warning=reserve_entry");
+        } else {
+            logger.info(text);
+            res.redirect(redirect);
+        }
+    });
 });
 
 
-router.post("/cancel", account.isAuthenticated, (req, res) => {
+router.post("/:reserve_id/entry/cancel", account.isAuthenticated, validator.reserve.cancelEntry, (req, res) => {
+    let redirect = "/reserve/"+req.params.reserve_id;
+    if (validator.isError(req)) {
+        res.redirect(redirect+"?warning=validate");
+        return;
+    }
 
-    const entry = new Entry.schema({
-        _id: req.user._id
-    });
-    entry.remove((err, entry) => {
-        if (err) {
-            logger.error(err);
-            res.redirect("/entry/?warning=entry_delete");
-            return;
+    Reserve.model.cancelEntry(req.user, req.body.chara).then((reserve) => {
+        let text = "reserve entry cancel "
+            +req.user.twitter_id+" "+req.params.reserve_id;
+        if (!reserve) {
+            logger.error(text);
+            res.redirect(redirect+"?warning=reserve_entry_cancel");
+        } else {
+            logger.info(text);
+            res.redirect(redirect);
         }
-        res.redirect("/entry/");
     });
-
 });
 
 
