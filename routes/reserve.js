@@ -54,8 +54,41 @@ router.get("/:reserve_id",
         }
 
         res.viewParam.url = C.BASE_URL+"/reserve/"+req.params.reserve_id;
-        res.render("reserve", res.viewParam);
+        res.render("reserve/detail", res.viewParam);
+});
 
+router.get("/create", account.isAuthenticated, (req, res) => {
+    // TODO 個数チェック
+
+    res.render("reserve/create", res.viewParam);
+});
+
+router.get("/:reserve_id/edit", account.isAuthenticated, validator.reserve.entry, (req, res) => {
+});
+
+router.post("/:reserve_id/entry", account.isAuthenticated, validator.reserve.entry, (req, res) => {
+    let redirect = "/reserve/"+req.params.reserve_id;
+    if (validator.isError(req)) {
+        res.redirect(redirect+"?warning=validate");
+        return;
+    }
+
+    if (!User.model.isReady(req.user)) {
+        res.redirect(redirect+"?warning=invalid_user");
+        return;
+    }
+
+    Reserve.model.entry(req.user, req.body.chara).then((reserve) => {
+        let text = "reserve entry: "
+            +req.user.twitter_id+" "+req.params.reserve_id;
+        if (!reserve) {
+            logger.error(text);
+            res.redirect(redirect+"?warning=reserve_entry");
+        } else {
+            logger.info(text);
+            res.redirect(redirect);
+        }
+    });
 });
 
 router.post("/:reserve_id/entry", account.isAuthenticated, validator.reserve.entry, (req, res) => {
