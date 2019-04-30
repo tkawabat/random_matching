@@ -92,6 +92,9 @@ p {
     text-shadow: 1px 1px 1px silver;
 }
 
+.header .menu:hover {
+    text-decoration: none;
+}
 .header span {
     height: 40px;
 }
