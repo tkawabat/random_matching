@@ -14,7 +14,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">ゲスト登録</div>
-            <div class="modal-body"><form method="POST" action="/reserve/<%=reserve._id%>/entry_guest">
+            <div class="modal-body"><form method="POST" action="/reserve/entry_guest/<%=reserve._id%>">
                 <input id="reserve_guest_chara_id" type="hidden" name="chara">
                 <input id="reserve_guest_name" type="text" class="form-control" name="name" placeholder="演者名" maxlength=64" required>
             <button type="submit" class="mt-2 btn btn-success">登録</button>
@@ -113,19 +113,19 @@ text += "\n";
         <%- include("../module/user", {user:c.user, mask:mask}) %>
 
         <% if (user && user._id === c.user._id) { // 登録者 %>
-            <form class="text-right" method="POST" action="/reserve/<%=reserve._id%>/entry/cancel">
+            <form class="text-right" method="POST" action="/reserve/entry_cancel/<%=reserve._id%>">
                 <input type="hidden" name="chara" value="<%=c._id%>">
                 <button type="submit" class="btn btn-sm btn-danger">キャンセル</button>
             </form>
         <% } else if (user && user._id === reserve.owner._id) { // owner %>
-            <form class="text-right" method="POST" action="/reserve/<%=reserve._id%>/entry/cancel">
+            <form class="text-right" method="POST" action="/reserve/entry_cancel/<%=reserve._id%>">
                 <input type="hidden" name="owner" value="true">
                 <input type="hidden" name="chara" value="<%=c._id%>">
                 <button type="submit" class="btn btn-sm btn-danger">キャンセル</button>
             </form>
         <% } %>
     <% } else { %>
-        <form class="ml-2 d-inline" method="POST" action="/reserve/<%=reserve._id%>/entry">
+        <form class="ml-2 d-inline" method="POST" action="/reserve/entry/<%=reserve._id%>">
             <input type="hidden" name="chara" value="<%=c._id%>">
             <button type="submit" class="btn btn-success" <%=disabled%>>エントリー</button>
         </form>

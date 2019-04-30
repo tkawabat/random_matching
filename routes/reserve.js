@@ -39,7 +39,13 @@ const Reserve = require(rootDir + "/src/model/reserve");
 //        }
 //    });
 
-router.get("/:reserve_id",
+router.get("/create", account.isAuthenticated, (req, res) => {
+    // TODO 個数チェック
+
+    res.render("reserve/create", res.viewParam);
+});
+
+router.get("/detail/:reserve_id",
     reserveHelper.get,
     routeHelper.check,
     (req, res) => {
@@ -57,17 +63,11 @@ router.get("/:reserve_id",
         res.render("reserve/detail", res.viewParam);
 });
 
-router.get("/create", account.isAuthenticated, (req, res) => {
-    // TODO 個数チェック
-
-    res.render("reserve/create", res.viewParam);
+router.get("/edit/:reserve_id", account.isAuthenticated, validator.reserve.entry, (req, res) => {
 });
 
-router.get("/:reserve_id/edit", account.isAuthenticated, validator.reserve.entry, (req, res) => {
-});
-
-router.post("/:reserve_id/entry", account.isAuthenticated, validator.reserve.entry, (req, res) => {
-    let redirect = "/reserve/"+req.params.reserve_id;
+router.post("/entry/:reserve_id", account.isAuthenticated, validator.reserve.entry, (req, res) => {
+    let redirect = "/reserve/detail/"+req.params.reserve_id;
     if (validator.isError(req)) {
         res.redirect(redirect+"?warning=validate");
         return;
@@ -91,8 +91,8 @@ router.post("/:reserve_id/entry", account.isAuthenticated, validator.reserve.ent
     });
 });
 
-router.post("/:reserve_id/entry", account.isAuthenticated, validator.reserve.entry, (req, res) => {
-    let redirect = "/reserve/"+req.params.reserve_id;
+router.post("/entry/:reserve_id", account.isAuthenticated, validator.reserve.entry, (req, res) => {
+    let redirect = "/reserve/detail/"+req.params.reserve_id;
     if (validator.isError(req)) {
         res.redirect(redirect+"?warning=validate");
         return;
@@ -116,8 +116,8 @@ router.post("/:reserve_id/entry", account.isAuthenticated, validator.reserve.ent
     });
 });
 
-router.post("/:reserve_id/entry_guest", account.isAuthenticated, validator.reserve.entryGuest, (req, res) => {
-    let redirect = "/reserve/"+req.params.reserve_id;
+router.post("/entry_guest/:reserve_id", account.isAuthenticated, validator.reserve.entryGuest, (req, res) => {
+    let redirect = "/reserve/detail/"+req.params.reserve_id;
     if (validator.isError(req)) {
         res.redirect(redirect+"?warning=validate");
         return;
@@ -135,8 +135,8 @@ router.post("/:reserve_id/entry_guest", account.isAuthenticated, validator.reser
     });
 });
 
-router.post("/:reserve_id/entry/cancel", account.isAuthenticated, validator.reserve.cancelEntry, (req, res) => {
-    let redirect = "/reserve/"+req.params.reserve_id;
+router.post("/entry_cancel/:reserve_id", account.isAuthenticated, validator.reserve.cancelEntry, (req, res) => {
+    let redirect = "/reserve/detail/"+req.params.reserve_id;
     if (validator.isError(req)) {
         res.redirect(redirect+"?warning=validate");
         return;
