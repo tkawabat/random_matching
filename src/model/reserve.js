@@ -10,6 +10,11 @@ const schema = db.Schema(
         _id: { type: db.Schema.Types.ObjectId }
         ,owner: { type: String, ref: "user" }
         ,scenario: { type: db.Schema.Types.ObjectId, ref: "scenario" }
+        ,scenario_title: { type: String }
+        ,author: { type: String }
+        ,url: { type: String }
+        ,agree_url: { type: String }
+        ,minutes: { type: Number }
         ,start_at: { type: Date }
         ,place: { type: String }
         ,public: { type: Boolean }

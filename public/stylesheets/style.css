@@ -245,6 +245,9 @@ footer {
 .reserve_create_basic input {
     width: calc(100% - 80px);
 }
+.reserve_create_basic select {
+    width: calc(100% - 80px);
+}
 .reserve_basic_info {
     font-size: 16px;
 }

@@ -26,27 +26,19 @@
     </div>
 </div>
 
-<h4><%=reserve.scenario.title%></h4>
+<h4><%=reserve.scenario_title%></h4>
 
 <%
 let mask = !user || reserve.owner._id !== user._id;
 let start = moment(reserve.start_at).format("M/D (ddd) kk:mm~");
-let place = "Skype";
-let text = "『"+reserve.scenario.title+"』\n"
+let place = C.RESERVE_PLACE[reserve.place];
+let text = "『"+reserve.scenario_title+"』\n"
     +"主催者: "+reserve.owner.twitter_name+"\n"
     +start+"@"+place+"\n\n"
 ;
 
 for (let c of reserve.chara) {
-    let sex = "";
-    if (c.sex === "m") {
-        sex = "♂";
-    } else if ( c.sex === "f") {
-        sex = "♀";
-    } else {
-        sex = "❓";
-    }
-
+    let sex = C.SEX_ICON[c.sex];
     let name = c.user ? c.user.twitter_name : "未定";
     text += c.name+sex+": "+name+"\n";
 }
@@ -65,11 +57,11 @@ text += "\n";
             <%= reserve.owner.twitter_name %>
         </a>
     </div>
-    <div>時間：<%=start%>　約<%=reserve.scenario.minutes%>分</div>
+    <div>時間：<%=start%>　約<%=reserve.minutes%>分</div>
     <div>場所：<%=place%></div>
-    <div>台本: 『<%=reserve.scenario.title%>』作:<%=reserve.scenario.author%>
-        <a class="ml-2" href="<%=reserve.scenario.url%>"><i class="fas fa-external-link-alt"></i> 台本</a>
-        <a class="ml-2" href="<%=reserve.scenario.agree_url%>"><i class="fas fa-external-link-alt"></i> 規約</a>
+    <div>台本: 『<%=reserve.scenario_title%>』作:<%=reserve.author%>
+        <a class="ml-2" href="<%=reserve.url%>"><i class="fas fa-external-link-alt"></i> 台本</a>
+        <a class="ml-2" href="<%=reserve.agree_url%>"><i class="fas fa-external-link-alt"></i> 規約</a>
     </div>
 
 </div>
@@ -80,22 +72,19 @@ text += "\n";
 <% for (let c of reserve.chara) { %>
 <div class="chara mt-1 clearfix">
     <%
-        let sex;
+        let sex = C.SEX_CLASS[c.sex];
         let disabled;
         if (c.sex === "m") {
-            sex = "mars";
             disabled = isReady && user && user.sex === "m" ? "" : "disabled";
         } else if (c.sex === "f") {
-            sex = "venus";
             disabled = isReady && user && user.sex === "f" ? "" : "disabled";
         } else {
-            sex = "question";
             disabled = isReady && user ? "" : "disabled";
         }
 
         let dm = "こんにちは、xxxxさん。劇のお誘いです。<br>"
             +"<br>"
-            +"台本: "+reserve.scenario.title+"<br>"
+            +"台本: "+reserve.scenario_title+"<br>"
             +"日時: "+start+"<br>"
             +"場所: "+place+"<br>"
             +"お願いしたい役: "+c.name+"役<br>"

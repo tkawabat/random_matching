@@ -13,6 +13,15 @@ let minTime = moment().add(2, "hours").format("YYYY-MM-DDTkk:00");
     </div>
 
     <div class="form-group">
+        <label><span class="color_red">*</span>場所</label>
+        <select class="custom-select d-inline" name="place">
+            <% for (let key of Object.keys(C.RESERVE_PLACE)) { %>
+                <option value="<%=key%>"><%=C.RESERVE_PLACE[key]%></option>
+            <% } %>
+        </select>
+    </div>
+
+    <div class="form-group">
         <label><span class="color_red">*</span>台本名</label>
         <input class="form-control d-inline" type="text" name="scenario_name" required>
     </div>
