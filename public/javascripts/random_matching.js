@@ -47,7 +47,7 @@ let RandomMatching = {};
         RandomMatching.user.addNgListInput = () => {
             if (sample.parentNode.querySelectorAll("[name='ng_list[]']").length >= 21) {
                 // hiddenがあるので21個からエラー
-                modal("NGリストは20個までです。");
+                RandomMatching.modal("NGリストは20個までです。");
                 return;
             }
             let add = sample.cloneNode(true);
