@@ -39,6 +39,18 @@ let RandomMatching = {};
         span.remove();
     };
 
+    RandomMatching.removeInput = (button) => {
+        let element = button;
+        while (element.tagName.toLowerCase() !== "body") {
+            if (element.classList.contains("input-group")) {
+                element.classList.add("fadeOut");
+                setTimeout(() => element.remove(), 400);
+                break;
+            }
+            element = element.parentNode;
+        }
+    }
+
     // user
     RandomMatching.user = {};
     {

@@ -32,7 +32,7 @@ let push_match = user.push.match && user.push.match=== true ? "checked" : "";
     <% if (user.ng_list.length === 0) { %>
         <div class="input-group mb-2">
             <div class="input-group-prepend">
-                <button type="button" class="btn btn-secondary" onClick="RandomMatching.user.removeNgListInput(this);"><i class="fas fa-trash-alt"></i></button>
+                <button type="button" class="btn btn-secondary" onClick="RandomMatching.removeInput(this);"><i class="fas fa-trash-alt"></i></button>
             </div>
             <input type="text" class="form-control" name="ng_list[]" placeholder="twitter id" maxlength="15" pattern="^[a-zA-Z0-9_]*$">
         </div>
@@ -40,7 +40,7 @@ let push_match = user.push.match && user.push.match=== true ? "checked" : "";
     <% for (let i = 0; i < user.ng_list.length; i++) { %>
         <div class="input-group mb-2">
             <div class="input-group-prepend">
-                <button type="button" class="btn btn-secondary" onClick="RandomMatching.user.removeNgListInput(this);"><i class="fas fa-trash-alt"></i></button>
+                <button type="button" class="btn btn-secondary" onClick="RandomMatching.removeInput(this);"><i class="fas fa-trash-alt"></i></button>
             </div>
             <input type="text" class="form-control" name="ng_list[]" placeholder="twitter id" maxlength="15" pattern="^[a-zA-Z0-9_]*$" value="<%=user.ng_list[i]%>">
             <div class="input-group-append">
@@ -53,7 +53,7 @@ let push_match = user.push.match && user.push.match=== true ? "checked" : "";
 
     <div id="user_ng_list_input_sample" class="input-group mb-2 fadeIn">
         <div class="input-group-prepend">
-            <button type="button" class="btn btn-secondary" onClick="RandomMatching.user.removeNgListInput(this);"><i class="fas fa-trash-alt"></i></button>
+            <button type="button" class="btn btn-secondary" onClick="RandomMatching.removeInput(this);"><i class="fas fa-trash-alt"></i></button>
         </div>
         <input type="text" class="form-control" name="ng_list[]" placeholder="twitter id" maxlength="15" pattern="^[a-zA-Z0-9_]*$" disabled>
     </div>
