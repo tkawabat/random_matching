@@ -8,13 +8,18 @@ let minTime = moment().add(2, "hours").format("YYYY-MM-DDTkk:00");
 <h5 class="mb-3">上演情報</h5>
 <div class="reserve_create_basic ml-2">
     <div class="form-group">
-        <label>開始日時</label>
+        <label><span class="color_red">*</span>開始日時</label>
         <input class="form-control d-inline" type="datetime-local" name="start_at" value="<%=minTime%>" required>
     </div>
 
     <div class="form-group">
-        <label>台本名</label>
+        <label><span class="color_red">*</span>台本名</label>
         <input class="form-control d-inline" type="text" name="scenario_name" required>
+    </div>
+
+    <div class="form-group">
+        <label><span class="color_red">*</span>時間(分)</label>
+        <input class="form-control d-inline" type="number" name="minutes" required>
     </div>
 
     <div class="form-group">
@@ -31,11 +36,15 @@ let minTime = moment().add(2, "hours").format("YYYY-MM-DDTkk:00");
         <label>規約URL</label>
         <input class="form-control d-inline" type="text" name="agree_url">
     </div>
+
+    <div class="text-right mr-2">
+        <span class="color_red">*</span> 必須
+    </div>
 </div>
 
 
 <h5 class="mb-3">役表</h5>
-<div id="reserve_create_chara">
+<div id="reserve_create_chara" class="ml-2">
 
 <div class="input-group mb-2">
     <div class="input-group-prepend">

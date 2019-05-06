@@ -56,17 +56,17 @@ p {
 .bg_twitter {
     background: #00ACED;
 }
+.color_green {
+    color: green;
+}
+.color_red {
+    color: red;
+}
 .color_twitter {
     color: #00ACED;
 }
 .color_skype {
     color: #00AFF0;
-}
-.color_ok {
-    color: green;
-}
-.color_ng {
-    color: red;
 }
 
 .btn {
@@ -240,7 +240,7 @@ footer {
     display: none;
 }
 .reserve_create_basic label {
-    width: 70px;
+    width: 75px;
 }
 .reserve_create_basic input {
     width: calc(100% - 80px);

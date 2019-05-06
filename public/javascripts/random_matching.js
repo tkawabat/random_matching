@@ -118,6 +118,5 @@ let RandomMatching = {};
             sample.parentNode.insertBefore(add, sample);
             RandomMatching.reserve.fixCreateCharaInputNumber();
         }
-
     }
 })();
