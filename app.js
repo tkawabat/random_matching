@@ -27,10 +27,10 @@ const app = express();
 app.use(morgan);
 app.use(helmet())
 app.use(compression())
+app.use(express.static(rootDir +"/public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(express.static(rootDir +"/public"));
 app.use(expressLayouts);
 app.set("trust proxy", 1)
 app.set("views", rootDir+"/views");
@@ -42,6 +42,11 @@ if (process.env.NODE_ENV === "prod") {
 } else {
     title = "テストな日和";
 }
+
+// auth
+app.use(account.session);
+app.use(account.passport.initialize());
+app.use(account.passport.session());
 
 app.use(function (req, res, next) {
     res.removeHeader("X-Powered-By");
@@ -59,14 +64,10 @@ app.use(function (req, res, next) {
         ,alert_warning: ""
         ,alert_info: ""
         ,event: event
+        ,user: req.user
     };
     next();
 });
-
-// auth
-app.use(account.session);
-app.use(account.passport.initialize());
-app.use(account.passport.session());
 
 
 // router
