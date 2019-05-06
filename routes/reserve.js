@@ -15,11 +15,11 @@ const User = require(rootDir + "/src/model/user");
 const Reserve = require(rootDir + "/src/model/reserve");
 
 
-//router.get("/",
-//    account.isAuthenticated,
-//    routeHelper.check,
-//    entryHelper.get,
-//    (req, res) => {
+router.get("/",
+    routeHelper.check,
+    (req, res) => {
+        res.render("reserve/index", res.viewParam);
+
 //        res.viewParam.user = req.user;
 //        res.viewParam.registered = req.user.sex && req.user.skype_id;
 //        res.viewParam.twitter_safe = entryHelper.isSafeTwitter(req.user);
@@ -37,7 +37,7 @@ const Reserve = require(rootDir + "/src/model/reserve");
 //        } else {
 //            res.render("entry_ready", res.viewParam);
 //        }
-//    });
+    });
 
 router.get("/create", account.isAuthenticated, (req, res) => {
     // TODO 個数チェック
@@ -45,12 +45,16 @@ router.get("/create", account.isAuthenticated, (req, res) => {
     res.render("reserve/create", res.viewParam);
 });
 
+router.post("/create", account.isAuthenticated, (req, res) => {
+    // TODO 個数チェック
+
+    console.log(req.body);
+});
+
 router.get("/detail/:reserve_id",
     reserveHelper.get,
     routeHelper.check,
     (req, res) => {
-        res.viewParam.user = req.user;
-
         res.viewParam.isReady = req.user && User.model.isReady(req.user);
         for (let c of res.viewParam.reserve.chara) { // エントリー済み
             if (c.user && req.user && c.user._id === req.user._id) {

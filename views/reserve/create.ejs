@@ -1,2 +1,94 @@
-<h4>企画劇　作成</h4>
+<h4 class="mb-4">企画劇　新規作成</h4>
 
+<form method="POST" action="/reserve/create">
+
+<%
+let minTime = moment().add(2, "hours").format("YYYY-MM-DDTkk:00");
+%>
+<h5 class="mb-3">上演情報</h5>
+<div class="reserve_create_basic ml-2">
+    <div class="form-group">
+        <label>開始日時</label>
+        <input class="form-control d-inline" type="datetime-local" name="start_at" value="<%=minTime%>" required>
+    </div>
+
+    <div class="form-group">
+        <label>台本名</label>
+        <input class="form-control d-inline" type="text" name="scenario_name" required>
+    </div>
+
+    <div class="form-group">
+        <label>作者名</label>
+        <input class="form-control d-inline" type="text" name="author">
+    </div>
+
+    <div class="form-group">
+        <label>台本URL</label>
+        <input class="form-control d-inline" type="text" name="url">
+    </div>
+
+    <div class="form-group">
+        <label>規約URL</label>
+        <input class="form-control d-inline" type="text" name="agree_url">
+    </div>
+</div>
+
+
+<h5 class="mb-3">役表</h5>
+<div id="reserve_create_chara">
+
+<div class="input-group mb-2">
+    <div class="input-group-prepend">
+        <button type="button" class="btn btn-secondary" onClick="RandomMatching.removeInput(this);"><i class="fas fa-trash-alt"></i></button>
+    </div>
+
+    <input type="text" class="form-control" name="chara_list[]" placeholder="役名" maxlength="50">
+
+    <div class="form-check form-check-inline ml-2">
+      <input class="form-check-input" type="radio" name="sex_list[0]" value="m" required>
+      <label class="form-check-label"><i class="fas fa-mars"></i></label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="sex_list[0]" value="f" required>
+      <label class="form-check-label"><i class="fas fa-venus"></i></label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="sex_list[0]" value="o" required>
+      <label class="form-check-label"><i class="fas fa-question"></i></label>
+    </div>
+</div>
+
+<%# jsのコピー用 %>
+<div id="reserve_create_chara_sample" class="input-group mb-2 fadeIn">
+    <div class="input-group-prepend">
+        <button type="button" class="btn btn-secondary" onClick="RandomMatching.removeInput(this);RandomMatching.reserve.fixCreateCharaInputNumber();"><i class="fas fa-trash-alt"></i></button>
+    </div>
+
+    <input type="text" class="form-control" name="chara_list[]" placeholder="役名" maxlength="50" disabled>
+
+    <div class="form-check form-check-inline ml-2">
+      <input class="form-check-input" type="radio" name="sex_list[]" value="m" required disabled>
+      <label class="form-check-label"><i class="fas fa-mars"></i></label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="sex_list[]" value="f" required disabled>
+      <label class="form-check-label"><i class="fas fa-venus"></i></label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="sex_list[]" value="o" required disabled>
+      <label class="form-check-label"><i class="fas fa-question"></i></label>
+    </div>
+</div>
+
+<div id="reserve_create_chara_plus">
+    <button type="button" class="btn btn-success" onClick="RandomMatching.reserve.addCreateCharaInput();"><i class="fas fa-plus"></i></button>
+</div>
+
+</div>
+
+
+<div class="mt-3 text-center">
+    <button type="submit" class="btn bg_red">作成</button>
+</div>
+
+</form>

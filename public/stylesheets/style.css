@@ -236,6 +236,15 @@ footer {
 }
 
 /* reserve */
+#reserve_create_chara_sample {
+    display: none;
+}
+.reserve_create_basic label {
+    width: 70px;
+}
+.reserve_create_basic input {
+    width: calc(100% - 80px);
+}
 .reserve_basic_info {
     font-size: 16px;
 }
