@@ -16,10 +16,17 @@ module.exports.isError = (req) => {
     return !errors.isEmpty();
 }
 
+module.exports.sanitizeInvalid = (req) => {
+    let param = JSON.parse(JSON.stringify(req.body));
+    for(let error of validationResult(req).array()) {
+        delete param[error.param];
+    }
+    return param;
+}
+
 module.exports.user = [
     check("skype_id")
-        .isLength({min: 3})
-        .isLength({max: 64})
+        .isLength({min: 3, max: 64})
         .matches(/^[a-zA-Z0-9_\.\-:]*$/)
         .withMessage("SkypeIDが不適切です。")
     ,check("sex")
@@ -50,33 +57,45 @@ module.exports.reserve.create = [
     check("start_at")
         .isAfter() // 日付はあとで別途調べる
     ,check("scenario_title")
-        .not().isEmpty()
-        .not().matches(/[,;'"%&#><\\\n\r\0]/)
+        .isLength({max: C.TEXT_LENGTH_MAX})
+        .not().matches(C.REGEX_INVALID_STRINGS)
     ,check("place")
         .not().isEmpty()
         .custom((v, {req}) => C.RESERVE_PLACE[v])
     ,check("minutes")
         .not().isEmpty()
-        .isNumeric()
+        .isNumeric({min: 0, max: 9999})
     ,check("author")
-        .not().matches(/[,;'"%&#><\\\n\r\0]/)
+        .custom((v, {req}) => {
+            if (!v) return true;
+
+            if (v.match(C.REGEX_INVALID_STRINGS) !== null) return false;
+            if (v.length > C.TEXT_LENGTH_MAX) return false;
+            return true;
+        })
     ,check("url")
         .custom((v, {req}) => {
             if (!v) return true;
-            if (validator.isURL(v)) return true;
+
+            if (!validator.isURL(v)) return false;
+            if (v.length > C.URL_LENGTH_MAX) return false;
+            return true;
         })
     ,check("agree_url")
         .custom((v, {req}) => {
             if (!v) return true;
-            if (validator.isURL(v)) return true;
+
+            if (!validator.isURL(v)) return false;
+            if (v.length > C.URL_LENGTH_MAX) return false;
+            return true;
         })
     ,check("chara_list")
         .isArray()
         .custom((v, {req}) => {
             if (v.length > 50) return false;
             for (let i = 0; i < v.length; i++) {
-                if (v[i].length > 50) return false;
-                if (v[i].match(/[,;'"%&#><\\\n\r\0]/) !== null) return false;
+                if (v[i].length > C.TEXT_LENGTH_MAX) return false;
+                if (v[i].match(C.REGEX_INVALID_STRINGS) !== null) return false;
             }
 
             return true;
@@ -96,18 +115,22 @@ module.exports.reserve.create = [
 module.exports.reserve.entry = [
     check("chara")
         .not().isEmpty()
+        .isLength({max: C.OBJECT_ID_LENGTH_MAX})
         .isAlphanumeric()
 ];
 module.exports.reserve.entryGuest = [
     check("chara")
         .not().isEmpty()
+        .isLength({max: C.OBJECT_ID_LENGTH_MAX})
         .isAlphanumeric()
     ,check("name")
         .not().isEmpty()
-        .not().matches(/[,;'"%&#><\\\n\r\0]/)
+        .isLength({max: C.TEXT_LENGTH_MAX})
+        .not().matches(C.REGEX_INVALID_STRINGS)
 ];
 module.exports.reserve.cancelEntry = [
     check("chara")
         .not().isEmpty()
+        .isLength({max: C.OBJECT_ID_LENGTH_MAX})
         .isAlphanumeric()
 ];

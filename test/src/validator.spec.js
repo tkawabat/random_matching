@@ -13,6 +13,28 @@ const validator = require(rootDir+"/src/validator");
 
 let req;
 
+describe("sanitizeInvalid", () => {
+    it("user ng skype_id undefined", async () => {
+        req = {
+            body: {
+                skype_id: "aaa"
+                ,sex: "hoge"
+                ,ng_list: ["aaa", "", "012345678912345"]
+            }
+        }
+
+        for (let i = 0; i < validator.user.length; i++) {
+            await validator.user[i](req, {}, () => {});
+        }
+
+        let expected = {
+            skype_id: "aaa"
+            ,ng_list: ["aaa", "", "012345678912345"]
+        }
+        expect(validator.sanitizeInvalid(req)).toEqual(expected);
+    });
+});
+
 describe("reserve helper get", () => {
     beforeEach(() => {
         req = {
@@ -184,8 +206,43 @@ describe("validator reserve create", () => {
         }
         expect(validator.isError(req)).toBe(true);
     });
-    it("ok url", async () => {
+    it("ng scenario_title length", async () => {
+        req.body.author = "01234567890123456789012345678901234567890123456789012345678901234"; // 65
+        for (let check of validator.reserve.create) {
+            await check(req, {}, () => {});
+        }
+        expect(validator.isError(req)).toBe(true);
+    });
+    it("ok author 空文字", async () => {
+        req.body.author = "";
+        for (let check of validator.reserve.create) {
+            await check(req, {}, () => {});
+        }
+        expect(validator.isError(req)).toBe(false);
+    });
+    it("ok author", async () => {
+        req.body.author = "aaa";
+        for (let check of validator.reserve.create) {
+            await check(req, {}, () => {});
+        }
+        expect(validator.isError(req)).toBe(false);
+    });
+    it("ng author", async () => {
+        req.body.author = "a\na";
+        for (let check of validator.reserve.create) {
+            await check(req, {}, () => {});
+        }
+        expect(validator.isError(req)).toBe(true);
+    });
+    it("ok url 空文字", async () => {
         req.body.url = "";
+        for (let check of validator.reserve.create) {
+            await check(req, {}, () => {});
+        }
+        expect(validator.isError(req)).toBe(false);
+    });
+    it("ok url", async () => {
+        req.body.url = "https://yahoo.co.jp";
         for (let check of validator.reserve.create) {
             await check(req, {}, () => {});
         }
@@ -229,6 +286,15 @@ describe("validator reserve entry guest", () => {
                 chara: "aaa"
             }
         }
+    });
+
+    it("ng id length", async () => {
+        req.body.name = "aaa";
+        req.body.chara = "0123456789012345678901234"; // 25
+        for (let i = 0; i < validator.reserve.entryGuest.length; i++) {
+            await validator.reserve.entryGuest[i](req, {}, () => {});
+        }
+        expect(validator.isError(req)).toBe(true);
     });
 
     it("ok アルファベット", async () => {
