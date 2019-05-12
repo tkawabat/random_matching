@@ -61,7 +61,15 @@ module.exports.entry = [
 
 module.exports.reserve = {};
 module.exports.reserve.create = [
-    check("start_at")
+    check("_id")
+        .custom((v, {req}) => {
+            if (!v) return true;
+
+            if (!validator.isAlphanumeric(v)) return false;
+            if (!validator.isLength(v, {max: C.OBJECT_ID_LENGTH_MAX})) return false;
+            return true;
+        })
+    ,check("start_at")
         .custom((v, {req}) => {
             if (!validator.isAfter(v)) return false;
             if (moment(v).unix() < moment().unix()) return false;

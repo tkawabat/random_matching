@@ -43,7 +43,6 @@ module.exports.schema = db.model("reverse", schema);
 const model = {};
 
 model.get = async () => {
-    throw new Error("hoge");
     return this.schema.find(
         {}
         ,null

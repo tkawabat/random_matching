@@ -2,9 +2,12 @@
 
 <form method="POST" action="/reserve/create">
 
+<% if (reserve._id) { %>
+    <input type="hidden" name="_id" value="<%=reserve._id%>">
+<% } %>
+
 <%
-//let minTime = moment().format("YYYY-MM-DDTkk:mm");
-let minTime = "";
+let minTime = moment().format("YYYY-MM-DDTkk:mm");
 let maxTime = moment().add(2, "weeks").format("YYYY-MM-DDTkk:mm");
 let time = reserve.start_at ?
     moment(reserve.start_at).format("YYYY-MM-DDTkk:mm")
@@ -60,26 +63,35 @@ let time = reserve.start_at ?
 <h5 class="mb-3">役表</h5>
 <div id="reserve_create_chara" class="ml-2">
 
-<div class="input-group mb-2">
-    <div class="input-group-prepend">
-        <button type="button" class="btn btn-secondary" onClick="RandomMatching.removeInput(this);"><i class="fas fa-trash-alt"></i></button>
-    </div>
+<% for (let i = 0; i < reserve.chara.length; i++) {
+    let c = reserve.chara[i];
+    let checked = {};
 
-    <input type="text" class="form-control" name="chara_list[]" placeholder="役名" pattern="<%=C.INPUT_STRING_PATTERN%>" maxlength="<%=C.TEXT_LENGTH_MAX%>" required>
+    for (let sex of Object.keys(C.SEX)) {
+        checked[sex] = sex === c.sex ? " checked": "";
+    }
+%>
+    <div class="input-group mb-2">
+        <div class="input-group-prepend">
+            <button type="button" class="btn btn-secondary" onClick="RandomMatching.removeInput(this);"><i class="fas fa-trash-alt"></i></button>
+        </div>
 
-    <div class="form-check form-check-inline ml-2">
-      <input class="form-check-input" type="radio" name="sex_list[0]" value="m" required>
-      <label class="form-check-label"><i class="fas fa-mars"></i></label>
+        <input type="text" class="form-control" name="chara_list[]" placeholder="役名" pattern="<%=C.INPUT_STRING_PATTERN%>" maxlength="<%=C.TEXT_LENGTH_MAX%>" value="<%=c.name%>" required>
+
+        <div class="form-check form-check-inline ml-2">
+          <input class="form-check-input" type="radio" name="sex_list[<%=i%>]" value="m" required <%=checked["m"]%>>
+          <label class="form-check-label"><i class="fas fa-mars"></i></label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="sex_list[<%=i%>]" value="f" required <%=checked["f"]%>>
+          <label class="form-check-label"><i class="fas fa-venus"></i></label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="sex_list[<%=i%>]" value="o" required <%=checked["o"]%>>
+          <label class="form-check-label"><i class="fas fa-question"></i></label>
+        </div>
     </div>
-    <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" name="sex_list[0]" value="f" required>
-      <label class="form-check-label"><i class="fas fa-venus"></i></label>
-    </div>
-    <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" name="sex_list[0]" value="o" required>
-      <label class="form-check-label"><i class="fas fa-question"></i></label>
-    </div>
-</div>
+<% } %>
 
 <%# jsのコピー用 %>
 <div id="reserve_create_chara_sample" class="input-group mb-2 fadeIn">

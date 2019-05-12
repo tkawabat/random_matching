@@ -11,7 +11,6 @@ const account = require(rootDir + "/src/account");
 const C = require(rootDir + "/src/const");
 const validator = require(rootDir + "/src/validator");
 const routeHelper = require(rootDir + "/src/routeHelper");
-const entryHelper = require(rootDir + "/src/entryHelper");
 const reserveHelper = require(rootDir + "/src/reserveHelper");
 const User = require(rootDir + "/src/model/user");
 const Reserve = require(rootDir + "/src/model/reserve");
@@ -25,59 +24,86 @@ router.get("/",
     })().catch(next)
 );
 
-router.get("/create/:reserve_id", account.isAuthenticated, (req, res) => {
-    let reserve = {
-        _id: null
-        ,scenario_title: null
-        ,author: null
-        ,url: null
-        ,agree_url: null
-        ,minutes: null
-        ,place: null
-        ,public: null
-        ,chara: null
-    };
+router.get("/create",
+    account.isAuthenticated,
+    routeHelper.check,
+    (req, res, next) => ( async () => {
+        let reserve = {
+            _id: null
+            ,scenario_title: null
+            ,author: null
+            ,url: null
+            ,agree_url: null
+            ,minutes: null
+            ,place: null
+            ,public: null
+            ,chara: [
+                { name: "", sex: "" }
+            ]
+        };
 
-    if (req.params.reserve_id) {
-
-    }
-
-    res.viewParam.reserve = reserve;
-    res.render("reserve/create", res.viewParam);
-});
-
-router.post("/create", account.isAuthenticated, validator.reserve.create, async (req, res) => {
-    // TODO 個数チェック
-
-    if (validator.isError(req)) {
-        res.viewParam.reserve = validator.sanitizeInvalid(req);
-        res.viewParam.alert_warning = res.viewParam.alert_warning.concat(validator.getErrorMessages(req));
+        res.viewParam.reserve = reserve;
         res.render("reserve/create", res.viewParam);
-        return;
-    }
+    })().catch(next)
+);
+router.get("/create/:reserve_id",
 
-    let chara = [];
-    for (let i = 0; i < req.body.chara_list.length; i++) {
-        chara.push({ name: req.body.chara_list[i], sex: req.body.sex_list[i] });
-    }
-    let reserve = JSON.parse(JSON.stringify(req.body));
-    reserve.start_at = moment(reserve.start_at).toDate();
-    delete reserve.chara_list;
-    delete reserve.sex_list;
-    reserve.chara = chara;
+    account.isAuthenticated,
+    routeHelper.check,
+    (req, res, next) => ( async () => {
+        let reserve = await Reserve.schema.findOne({"_id": req.params.reserve_id}).lean();
+        if (reserve.owner !== req.user._id) {
+            next();
+            return;
+        }
 
-    reserve = await Reserve.model.update(reserve, req.user);
-    if (reserve) {
-        res.redirect("/reserve/detail/"+reserve._id);
-    } else {
-        res.redirect("/reserve/create/");
-    }
-});
+        console.log(reserve);
+        res.viewParam.reserve = reserve;
+        res.render("reserve/create", res.viewParam);
+    })().catch(next)
+);
+
+router.post("/create",
+    account.isAuthenticated,
+    validator.reserve.create,
+    (req, res, next) => ( async () => {
+        // TODO 個数チェック
+
+        if (validator.isError(req)) {
+            res.viewParam.reserve = validator.sanitizeInvalid(req);
+            if (!res.viewParam.reserve.chara) {
+                res.viewParam.reserve.chara = [
+                    { name: "", sex: ""}
+                ];
+            }
+            res.viewParam.alert_warning = res.viewParam.alert_warning.concat(validator.getErrorMessages(req));
+            res.render("reserve/create", res.viewParam);
+            return;
+        }
+
+        let chara = [];
+        for (let i = 0; i < req.body.chara_list.length; i++) {
+            chara.push({ name: req.body.chara_list[i], sex: req.body.sex_list[i] });
+        }
+        let reserve = JSON.parse(JSON.stringify(req.body));
+        reserve.start_at = moment(reserve.start_at).toDate();
+        delete reserve.chara_list;
+        delete reserve.sex_list;
+        reserve.chara = chara;
+
+        reserve = await Reserve.model.update(reserve, req.user);
+        if (reserve) {
+            res.redirect("/reserve/detail/"+reserve._id);
+        } else {
+            res.redirect("/reserve/create/");
+        }
+    })().catch(next)
+);
 
 router.get("/detail/:reserve_id",
     reserveHelper.get,
     routeHelper.check,
-    (req, res) => {
+    (req, res, next) => ( async () => {
         res.viewParam.isReady = req.user && User.model.isReady(req.user);
         for (let c of res.viewParam.reserve.chara) { // エントリー済み
             if (c.user && req.user && c.user._id === req.user._id) {
@@ -88,7 +114,8 @@ router.get("/detail/:reserve_id",
 
         res.viewParam.url = C.BASE_URL+"/reserve/"+req.params.reserve_id;
         res.render("reserve/detail", res.viewParam);
-});
+    })().catch(next)
+);
 
 router.post("/entry/:reserve_id", account.isAuthenticated, validator.reserve.entry, (req, res) => {
     let redirect = "/reserve/detail/"+req.params.reserve_id;
