@@ -53,14 +53,22 @@
 
 <div class="main">
 
-    <% if (alert_warning !== "") { %>
-    <div class="alert alert-danger" role="alert"><%= alert_warning %></div>
+<% if (alert_warning.length > 0) { %>
+<div class="alert alert-danger" role="alert">
+    <% for (let m of alert_warning) { %>
+        <%=m%><br>
     <% } %>
-    <% if (alert_info !== "") { %>
-    <div class="alert alert-info" role="alert"><%= alert_info %></div>
+</div>
+<% } %>
+<% if (alert_info.length > 0) { %>
+<div class="alert alert-info" role="alert"><%= alert_info %>
+    <% for (let m of alert_info) { %>
+        <%=m%><br>
     <% } %>
-    
-    <%- body %>
+</div>
+<% } %>
+
+<%- body %>
 
 </div>
 

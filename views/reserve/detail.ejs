@@ -16,7 +16,7 @@
             <div class="modal-header">ゲスト登録</div>
             <div class="modal-body"><form method="POST" action="/reserve/entry_guest/<%=reserve._id%>">
                 <input id="reserve_guest_chara_id" type="hidden" name="chara">
-                <input id="reserve_guest_name" type="text" class="form-control" name="name" placeholder="演者名" maxlength=64" required>
+                <input id="reserve_guest_name" type="text" class="form-control" name="name" placeholder="演者名" pattern="<%=C.INPUT_STRING_PATTERN%>" maxlength=64" required>
             <button type="submit" class="mt-2 btn btn-success">登録</button>
             </form></div>
             <div class="modal-footer">
@@ -132,5 +132,11 @@ text += "\n";
             <a class="ml-2" href="javascript:void(0);" onClick="RandomMatching.reserve.registGuest('<%=c._id%>');"><button type="button" class="btn bg_orange">ゲスト登録</button></a>
         <% } %>
     <% } %>
+</div>
+<% } %>
+
+<% if (user && reserve.owner._id === user._id) { %>
+<div class="reserve_detail_owner_buttons text-center">
+    <a href="/reserve/create/<%=reserve._id%>"><button type="button" class="btn bg_green">企画を編集する</button></a>
 </div>
 <% } %>

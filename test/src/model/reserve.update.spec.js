@@ -76,5 +76,3 @@ describe("reserve update", () => {
     //    expect(ret.chara[0].user).toBe("100");
     //});
 });
-
-

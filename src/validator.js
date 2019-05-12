@@ -16,9 +16,16 @@ module.exports.isError = (req) => {
     return !errors.isEmpty();
 }
 
+module.exports.getErrorMessages = (req) => {
+    let messages = [];
+    for (let error of validationResult(req).array()) {
+        messages.push(error.msg);
+    }
+    return messages;
+}
 module.exports.sanitizeInvalid = (req) => {
     let param = JSON.parse(JSON.stringify(req.body));
-    for(let error of validationResult(req).array()) {
+    for (let error of validationResult(req).array()) {
         delete param[error.param];
     }
     return param;
@@ -55,16 +62,25 @@ module.exports.entry = [
 module.exports.reserve = {};
 module.exports.reserve.create = [
     check("start_at")
-        .isAfter() // 日付はあとで別途調べる
+        .custom((v, {req}) => {
+            if (!validator.isAfter(v)) return false;
+            if (moment(v).unix() < moment().unix()) return false;
+            if (moment(v).unix() > moment().add(2, "weeks").unix()) return false;
+            return true;
+        })
+        .withMessage("開始日時が不適切です。")
     ,check("scenario_title")
         .isLength({max: C.TEXT_LENGTH_MAX})
         .not().matches(C.REGEX_INVALID_STRINGS)
+        .withMessage("台本名が不適切です。")
     ,check("place")
         .not().isEmpty()
         .custom((v, {req}) => C.RESERVE_PLACE[v])
+        .withMessage("場所が不適切です。")
     ,check("minutes")
         .not().isEmpty()
         .isNumeric({min: 0, max: 9999})
+        .withMessage("時間(分)が不適切です。")
     ,check("author")
         .custom((v, {req}) => {
             if (!v) return true;
@@ -73,6 +89,7 @@ module.exports.reserve.create = [
             if (v.length > C.TEXT_LENGTH_MAX) return false;
             return true;
         })
+        .withMessage("作者名が不適切です。")
     ,check("url")
         .custom((v, {req}) => {
             if (!v) return true;
@@ -81,6 +98,7 @@ module.exports.reserve.create = [
             if (v.length > C.URL_LENGTH_MAX) return false;
             return true;
         })
+        .withMessage("台本URLが不適切です。")
     ,check("agree_url")
         .custom((v, {req}) => {
             if (!v) return true;
@@ -89,6 +107,7 @@ module.exports.reserve.create = [
             if (v.length > C.URL_LENGTH_MAX) return false;
             return true;
         })
+        .withMessage("規約URLが不適切です。")
     ,check("chara_list")
         .isArray()
         .custom((v, {req}) => {
@@ -100,6 +119,7 @@ module.exports.reserve.create = [
 
             return true;
         })
+        .withMessage("役名が不適切です。")
     ,check("sex_list")
         .isArray()
         .custom((v, {req}) => {
@@ -111,6 +131,7 @@ module.exports.reserve.create = [
 
             return true;
         })
+        .withMessage("性別が不適切です。")
 ];
 module.exports.reserve.entry = [
     check("chara")

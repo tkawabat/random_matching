@@ -43,6 +43,7 @@ module.exports.schema = db.model("reverse", schema);
 const model = {};
 
 model.get = async () => {
+    throw new Error("hoge");
     return this.schema.find(
         {}
         ,null
@@ -51,6 +52,10 @@ model.get = async () => {
     .populate("owner")
     .lean()
     ;
+}
+
+model.getNum = async (user) => {
+    return this.schema.count({owner: user._id, start_at: { $gte: moment().toDate()}}).lean();
 }
 
 model.update = async (reserve, user) => {

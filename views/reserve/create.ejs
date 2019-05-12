@@ -3,13 +3,18 @@
 <form method="POST" action="/reserve/create">
 
 <%
-let minTime = moment().add(2, "hours").format("YYYY-MM-DDTkk:00");
+//let minTime = moment().format("YYYY-MM-DDTkk:mm");
+let minTime = "";
+let maxTime = moment().add(2, "weeks").format("YYYY-MM-DDTkk:mm");
+let time = reserve.start_at ?
+    moment(reserve.start_at).format("YYYY-MM-DDTkk:mm")
+    : moment().add(30, "minutes").format("YYYY-MM-DDTkk:mm");
 %>
 <h5 class="mb-3">上演情報</h5>
 <div class="reserve_create_basic ml-2">
     <div class="form-group">
         <label><span class="color_red">*</span>開始日時</label>
-        <input class="form-control d-inline" type="datetime-local" name="start_at" value="<%=minTime%>" required>
+        <input class="form-control d-inline" type="datetime-local" name="start_at" min="<%=minTime%>" max="<%=maxTime%>" value="<%=time%>" required>
     </div>
 
     <div class="form-group">
@@ -23,27 +28,27 @@ let minTime = moment().add(2, "hours").format("YYYY-MM-DDTkk:00");
 
     <div class="form-group">
         <label><span class="color_red">*</span>台本名</label>
-        <input class="form-control d-inline" type="text" name="scenario_title" pattern="<%=C.INPUT_STRING_PATTERN%>" maxlength=<%=C.TEXT_LENGTH_MAX%>" required>
+        <input class="form-control d-inline" type="text" name="scenario_title" pattern="<%=C.INPUT_STRING_PATTERN%>" maxlength=<%=C.TEXT_LENGTH_MAX%>" value="<%=reserve.scenario_title%>" required>
     </div>
 
     <div class="form-group">
         <label><span class="color_red">*</span>時間(分)</label>
-        <input class="form-control d-inline" type="number" name="minutes" required>
+        <input class="form-control d-inline" type="number" name="minutes" value="<%=reserve.minutes%>" required>
     </div>
 
     <div class="form-group">
         <label>作者名</label>
-        <input class="form-control d-inline" type="text" name="author" pattern="<%=C.INPUT_STRING_PATTERN%>" maxlength=<%=C.TEXT_LENGTH_MAX%>">
+        <input class="form-control d-inline" type="text" name="author" pattern="<%=C.INPUT_STRING_PATTERN%>" maxlength=<%=C.TEXT_LENGTH_MAX%>" value="<%=reserve.author%>">
     </div>
 
     <div class="form-group">
         <label>台本URL</label>
-        <input class="form-control d-inline" type="url" name="url" maxlength="<%=C.URL_LENGTH_MAX%>">
+        <input class="form-control d-inline" type="url" name="url" maxlength="<%=C.URL_LENGTH_MAX%>" value="<%=reserve.url%>">
     </div>
 
     <div class="form-group">
         <label>規約URL</label>
-        <input class="form-control d-inline" type="url" name="agree_url" maxlength="<%=C.URL_LENGTH_MAX%>">
+        <input class="form-control d-inline" type="url" name="agree_url" maxlength="<%=C.URL_LENGTH_MAX%>" value="<%=reserve.agree_url%>">
     </div>
 
     <div class="text-right mr-2">

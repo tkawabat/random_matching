@@ -1,6 +1,8 @@
 "use strict";
 
 const rootDir = require("app-root-path");
+const moment = require("moment-timezone");
+moment.tz.setDefault("Asia/Tokyo");
 const express = require("express");
 
 const router = express.Router();
@@ -17,14 +19,30 @@ const Reserve = require(rootDir + "/src/model/reserve");
 
 router.get("/",
     routeHelper.check,
-    async (req, res) => {
+    (req, res, next) => ( async () => {
         res.viewParam.reserveList = await Reserve.model.get();
         res.render("reserve/index", res.viewParam);
-    });
+    })().catch(next)
+);
 
-router.get("/create", account.isAuthenticated, (req, res) => {
-    // TODO 個数チェック
+router.get("/create/:reserve_id", account.isAuthenticated, (req, res) => {
+    let reserve = {
+        _id: null
+        ,scenario_title: null
+        ,author: null
+        ,url: null
+        ,agree_url: null
+        ,minutes: null
+        ,place: null
+        ,public: null
+        ,chara: null
+    };
 
+    if (req.params.reserve_id) {
+
+    }
+
+    res.viewParam.reserve = reserve;
     res.render("reserve/create", res.viewParam);
 });
 
@@ -32,7 +50,9 @@ router.post("/create", account.isAuthenticated, validator.reserve.create, async 
     // TODO 個数チェック
 
     if (validator.isError(req)) {
-        res.redirect("/reserve/create/?warning=validate");
+        res.viewParam.reserve = validator.sanitizeInvalid(req);
+        res.viewParam.alert_warning = res.viewParam.alert_warning.concat(validator.getErrorMessages(req));
+        res.render("reserve/create", res.viewParam);
         return;
     }
 
@@ -41,6 +61,7 @@ router.post("/create", account.isAuthenticated, validator.reserve.create, async 
         chara.push({ name: req.body.chara_list[i], sex: req.body.sex_list[i] });
     }
     let reserve = JSON.parse(JSON.stringify(req.body));
+    reserve.start_at = moment(reserve.start_at).toDate();
     delete reserve.chara_list;
     delete reserve.sex_list;
     reserve.chara = chara;
@@ -67,9 +88,6 @@ router.get("/detail/:reserve_id",
 
         res.viewParam.url = C.BASE_URL+"/reserve/"+req.params.reserve_id;
         res.render("reserve/detail", res.viewParam);
-});
-
-router.get("/edit/:reserve_id", account.isAuthenticated, validator.reserve.entry, (req, res) => {
 });
 
 router.post("/entry/:reserve_id", account.isAuthenticated, validator.reserve.entry, (req, res) => {

@@ -62,8 +62,8 @@ app.use(function (req, res, next) {
         moment: moment
         ,C: C
         ,title: title
-        ,alert_warning: ""
-        ,alert_info: ""
+        ,alert_warning: []
+        ,alert_info: []
         ,event: event
         ,user: req.user
     };

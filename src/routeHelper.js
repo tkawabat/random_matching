@@ -18,7 +18,7 @@ const warning = {
 
 const check = ( req, res, next) => {
     if (req.query.warning && warning[req.query.warning]) {
-        res.viewParam.alert_warning = warning[req.query.warning];
+        res.viewParam.alert_warning.push(warning[req.query.warning]);
     }
 
     next();
@@ -38,7 +38,7 @@ const Error500 = (err, req, res, next) => {
 
     logger.error(err);
 
-    res.viewParam.alert_warning = warning.error500;
+    res.viewParam.alert_warning.push(warning.error500);
     res.render("index", res.viewParam);
 }
 
