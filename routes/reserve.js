@@ -17,26 +17,9 @@ const Reserve = require(rootDir + "/src/model/reserve");
 
 router.get("/",
     routeHelper.check,
-    (req, res) => {
+    async (req, res) => {
+        res.viewParam.reserveList = await Reserve.model.get();
         res.render("reserve/index", res.viewParam);
-
-//        res.viewParam.user = req.user;
-//        res.viewParam.registered = req.user.sex && req.user.skype_id;
-//        res.viewParam.twitter_safe = entryHelper.isSafeTwitter(req.user);
-//        res.viewParam.isReady = res.viewParam.registered
-//            && res.viewParam.twitter_safe
-//            && entryHelper.isEntryTime()
-//        ;
-//
-//        if (res.viewParam.matched && res.viewParam.matched.length === 1) {
-//            res.render("entry_fail", res.viewParam);
-//        } else if (res.viewParam.matched) {
-//            res.render("entry_success", res.viewParam);
-//        } else if (res.viewParam.entry) {
-//            res.render("entry_now", res.viewParam);
-//        } else {
-//            res.render("entry_ready", res.viewParam);
-//        }
     });
 
 router.get("/create", account.isAuthenticated, (req, res) => {

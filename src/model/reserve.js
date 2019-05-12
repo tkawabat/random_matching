@@ -25,15 +25,33 @@ const schema = db.Schema(
             ,user: {type: String, ref: "user"}
             ,guest: {type: String}
         }]
+        ,deleted: { type: Boolean }
     },
     {
         timestamps: { createdAt: "created_at", updatedAt: "updated_at" }
     }
 );
 
+schema.index({ owner: 1, type: -1 });
+schema.index({ scenario: 1, type: -1 });
+schema.index({ start_at: 1, type: -1 });
+schema.index({ public: 1, type: -1 });
+schema.index({ deleted: 1, type: -1 });
+
 module.exports.schema = db.model("reverse", schema);
 
 const model = {};
+
+model.get = async () => {
+    return this.schema.find(
+        {}
+        ,null
+        ,{ sort: { "start_at": -1}, limit: 30 }
+    )
+    .populate("owner")
+    .lean()
+    ;
+}
 
 model.update = async (reserve, user) => {
     if (!reserve._id) reserve._id = new db.Types.ObjectId;

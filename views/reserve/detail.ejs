@@ -59,9 +59,17 @@ text += "\n";
     </div>
     <div>時間：<%=start%>　約<%=reserve.minutes%>分</div>
     <div>場所：<%=place%></div>
-    <div>台本: 『<%=reserve.scenario_title%>』作:<%=reserve.author%>
-        <a class="ml-2" href="<%=reserve.url%>"><i class="fas fa-external-link-alt"></i> 台本</a>
-        <a class="ml-2" href="<%=reserve.agree_url%>"><i class="fas fa-external-link-alt"></i> 規約</a>
+    <div>
+        台本: 『<%=reserve.scenario_title%>』
+        <% if (reserve.author) { %>
+            作:<%=reserve.author%>
+        <% } %>
+        <% if (reserve.url) { %>
+            <a class="ml-2" href="<%=reserve.url%>"><i class="fas fa-external-link-alt"></i> 台本</a>
+        <% } %>
+        <% if (reserve.agree_url) { %>
+            <a class="ml-2" href="<%=reserve.agree_url%>"><i class="fas fa-external-link-alt"></i> 規約</a>
+        <% } %>
     </div>
 
 </div>
