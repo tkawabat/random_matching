@@ -45,14 +45,29 @@ router.get("/create", account.isAuthenticated, (req, res) => {
     res.render("reserve/create", res.viewParam);
 });
 
-router.post("/create", account.isAuthenticated, validator.reserve.create, (req, res) => {
+router.post("/create", account.isAuthenticated, validator.reserve.create, async (req, res) => {
     // TODO 個数チェック
 
     if (validator.isError(req)) {
         res.redirect("/reserve/create/?warning=validate");
         return;
     }
-    console.log(req.body);
+
+    let chara = [];
+    for (let i = 0; i < req.body.chara_list.length; i++) {
+        chara.push({ name: req.body.chara_list[i], sex: req.body.sex_list[i] });
+    }
+    let reserve = JSON.parse(JSON.stringify(req.body));
+    delete reserve.chara_list;
+    delete reserve.sex_list;
+    reserve.chara = chara;
+
+    reserve = await Reserve.model.update(reserve, req.user);
+    if (reserve) {
+        res.redirect("/reserve/detail/"+reserve._id);
+    } else {
+        res.redirect("/reserve/create/");
+    }
 });
 
 router.get("/detail/:reserve_id",

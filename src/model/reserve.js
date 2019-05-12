@@ -1,9 +1,10 @@
 "use strict";
 
+const rootDir = require("app-root-path");
 const moment = require("moment-timezone");
 moment.tz.setDefault("Asia/Tokyo");
-
-const db = require("../mongodb");
+const logger = require(rootDir + "/src/log4js");
+const db = require(rootDir + "/src/mongodb");
 
 const schema = db.Schema(
     {
@@ -35,11 +36,18 @@ module.exports.schema = db.model("reverse", schema);
 const model = {};
 
 model.update = async (reserve, user) => {
+    if (!reserve._id) reserve._id = new db.Types.ObjectId;
+
     return this.schema.findOneAndUpdate(
         { _id: reserve._id, owner: user._id }
         , reserve
-        , { "strict": true, "upsert": true, }
-    ).lean();
+        , { "strict": true, "upsert": true, "new": true}
+    ).lean()
+    .catch ((err) => {
+        logger.info("update reserve error. reserve: "+reserve._id+" user: "+user._id);
+        return null;
+    })
+    ;
 };
 
 model.entry = async (user, id) => {
