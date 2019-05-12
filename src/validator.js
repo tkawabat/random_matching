@@ -1,13 +1,18 @@
 "use strict";
 
 const rootDir = require("app-root-path");
+const moment = require("moment-timezone");
+moment.tz.setDefault("Asia/Tokyo");
+moment.locale("ja");
+const C = require(rootDir + "/src/const");
 const { check, validationResult } = require("express-validator/check")
+const validator = require("validator")
 const logger = require(rootDir+"/src/log4js");
 
 
 module.exports.isError = (req) => {
     let errors = validationResult(req);
-    //logger.debug(errors.array());
+    logger.debug(errors.array());
     return !errors.isEmpty();
 }
 
@@ -41,6 +46,53 @@ module.exports.entry = [
 ];
 
 module.exports.reserve = {};
+module.exports.reserve.create = [
+    check("start_at")
+        .isAfter() // 日付はあとで別途調べる
+    ,check("scenario_title")
+        .not().isEmpty()
+        .not().matches(/[,;'"%&#><\\\n\r\0]/)
+    ,check("place")
+        .not().isEmpty()
+        .custom((v, {req}) => C.RESERVE_PLACE[v])
+    ,check("minutes")
+        .not().isEmpty()
+        .isNumeric()
+    ,check("author")
+        .not().matches(/[,;'"%&#><\\\n\r\0]/)
+    ,check("url")
+        .custom((v, {req}) => {
+            if (!v) return true;
+            if (validator.isURL(v)) return true;
+        })
+    ,check("agree_url")
+        .custom((v, {req}) => {
+            if (!v) return true;
+            if (validator.isURL(v)) return true;
+        })
+    ,check("chara_list")
+        .isArray()
+        .custom((v, {req}) => {
+            if (v.length > 50) return false;
+            for (let i = 0; i < v.length; i++) {
+                if (v[i].length > 50) return false;
+                if (v[i].match(/[,;'"%&#><\\\n\r\0]/) !== null) return false;
+            }
+
+            return true;
+        })
+    ,check("sex_list")
+        .isArray()
+        .custom((v, {req}) => {
+            if (v.length !== req.body.chara_list.length) return false;
+            if (v.length > 50) return false;
+            for (let i = 0; i < v.length; i++) {
+                if (!C.SEX[v[i]]) return false;
+            }
+
+            return true;
+        })
+];
 module.exports.reserve.entry = [
     check("chara")
         .not().isEmpty()

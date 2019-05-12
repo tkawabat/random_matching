@@ -45,9 +45,13 @@ router.get("/create", account.isAuthenticated, (req, res) => {
     res.render("reserve/create", res.viewParam);
 });
 
-router.post("/create", account.isAuthenticated, (req, res) => {
+router.post("/create", account.isAuthenticated, validator.reserve.create, (req, res) => {
     // TODO 個数チェック
 
+    if (validator.isError(req)) {
+        res.redirect("/reserve/create/?warning=validate");
+        return;
+    }
     console.log(req.body);
 });
 

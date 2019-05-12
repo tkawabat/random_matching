@@ -1,6 +1,9 @@
 "use strict";
 
 const rootDir = require("app-root-path");
+const moment = require("moment-timezone");
+moment.tz.setDefault("Asia/Tokyo");
+moment.locale("ja");
 const expect = require("expect");
 const sinon = require("sinon");
 
@@ -153,6 +156,71 @@ describe("reserve helper get", () => {
         expect(validator.isError(req)).toBe(true);
     });
 });
+
+describe("validator reserve create", () => {
+    beforeEach(() => {
+        req = {
+            body: {
+                start_at: moment().add(5, "minutes").format("YYYY-MM-DDTkk:00")
+                ,scenario_title: "aaa"
+                ,place: "skype"
+                ,minutes: "90"
+                ,chara_list: ["aaa"]
+                ,sex_list: ["m"]
+            }
+        }
+    });
+
+    it("ok", async () => {
+        for (let check of validator.reserve.create) {
+            await check(req, {}, () => {});
+        }
+        expect(validator.isError(req)).toBe(false);
+    });
+    it("ng start_at is not date", async () => {
+        req.body.start_at = "hoge";
+        for (let check of validator.reserve.create) {
+            await check(req, {}, () => {});
+        }
+        expect(validator.isError(req)).toBe(true);
+    });
+    it("ok url", async () => {
+        req.body.url = "";
+        for (let check of validator.reserve.create) {
+            await check(req, {}, () => {});
+        }
+        expect(validator.isError(req)).toBe(false);
+    });
+    it("ng url", async () => {
+        req.body.url = "a";
+        for (let check of validator.reserve.create) {
+            await check(req, {}, () => {});
+        }
+        expect(validator.isError(req)).toBe(true);
+    });
+    it("sex_list undefined", async () => {
+        delete req.body.sex_list;
+        for (let check of validator.reserve.create) {
+            await check(req, {}, () => {});
+        }
+        expect(validator.isError(req)).toBe(true);
+    });
+    it("sex_list ng", async () => {
+        req.body.sex_list = ["a"];
+        for (let check of validator.reserve.create) {
+            await check(req, {}, () => {});
+        }
+        expect(validator.isError(req)).toBe(true);
+    });
+    it("sex_list length", async () => {
+        req.body.sex_list = ["m", "m"];
+        for (let check of validator.reserve.create) {
+            await check(req, {}, () => {});
+        }
+        expect(validator.isError(req)).toBe(true);
+    });
+});
+
 
 describe("validator reserve entry guest", () => {
     beforeEach(() => {

@@ -34,6 +34,14 @@ module.exports.schema = db.model("reverse", schema);
 
 const model = {};
 
+model.update = async (reserve, user) => {
+    return this.schema.findOneAndUpdate(
+        { _id: reserve._id, owner: user._id }
+        , reserve
+        , { "strict": true, "upsert": true, }
+    ).lean();
+};
+
 model.entry = async (user, id) => {
     return this.schema.findOneAndUpdate(
         { chara: {
