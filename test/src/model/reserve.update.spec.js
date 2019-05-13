@@ -29,6 +29,7 @@ let reserve = {
         { name: "taro", sex:"m"}
         ,{ name: "hanako", sex:"f"}
         ,{ name: "nare", sex:"o"}
+        ,{ name: "xxxx", sex:"o"}
     ]
 };
 
@@ -46,13 +47,23 @@ describe("reserve update", () => {
     });
 
     it("更新", async () => {
-        let ret = await Reserve.model.update(reserve, user);
+        let old = JSON.parse(JSON.stringify(reserve));
+        old.chara[0].user = "100";
+        old.chara[1].guest = "guest001";
+        old.chara[2].user = "101";
+        old.chara[3].guest = "guest001";
+        let ret = await Reserve.model.update(old, user);
 
-        let tmp = JSON.parse(JSON.stringify(ret));
-        tmp.scenario_title = "bbb";
+        let tmp = JSON.parse(JSON.stringify(reserve));
+        tmp._id = ret._id;
+        tmp.chara[2].sex = "m";
+        tmp.chara[3].name = "yyyy";
         ret = await Reserve.model.update(tmp, user);
 
-        expect(ret.scenario_title).toBe("bbb");
+        expect(ret.chara[0].user).toBe("100");
+        expect(ret.chara[1].guest).toBe("guest001");
+        expect(ret.chara[2].user).toBe(undefined);
+        expect(ret.chara[3].guest).toBe(undefined);
     });
 
     it("更新失敗 ユーザー違い", async () => {
@@ -67,12 +78,4 @@ describe("reserve update", () => {
         expect(ret).toBe(null);
     });
 
-    //it("成功　男性", async () => {
-    //    let tmp = JSON.parse(JSON.stringify(reserve));
-    //    tmp.chara[2].user = "200";
-    //    await Reserve.schema.insertMany(tmp);
-
-    //    let ret = await Reserve.model.entry(user, reserve.chara[0]._id);
-    //    expect(ret.chara[0].user).toBe("100");
-    //});
 });

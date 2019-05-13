@@ -58,7 +58,22 @@ model.getNum = async (user) => {
 }
 
 model.update = async (reserve, user) => {
-    if (!reserve._id) reserve._id = new db.Types.ObjectId;
+    if (!reserve._id) {
+        reserve._id = new db.Types.ObjectId;
+    } else {
+        let old = await this.schema.findOne({ _id: reserve._id }).exec();
+        for (let i = 0; i < reserve.chara.length; i++) {
+            if (old && old.chara[i] && old.chara[i].user
+                && reserve.chara[i].name === old.chara[i].name
+                && reserve.chara[i].sex === old.chara[i].sex) {
+                reserve.chara[i].user = old.chara[i].user;
+            } else if (old && old.chara[i] && old.chara[i].guest
+                && reserve.chara[i].name === old.chara[i].name
+                && reserve.chara[i].sex === old.chara[i].sex) {
+                reserve.chara[i].guest = old.chara[i].guest;
+            }
+        }
+    }
 
     return this.schema.findOneAndUpdate(
         { _id: reserve._id, owner: user._id }

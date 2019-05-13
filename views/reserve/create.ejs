@@ -1,4 +1,6 @@
-<h4 class="mb-4">企画劇　新規作成</h4>
+<% let title = reserve._id ? "更新" : "新規作成" %>
+
+<h4 class="mb-5">企画劇　<%=title%></h4>
 
 <form method="POST" action="/reserve/create">
 
@@ -60,7 +62,7 @@ let time = reserve.start_at ?
 </div>
 
 
-<h5 class="mb-3">役表</h5>
+<h5 class="mt-3 mb-3">役表</h5>
 <div id="reserve_create_chara" class="ml-2">
 
 <% for (let i = 0; i < reserve.chara.length; i++) {
@@ -121,9 +123,14 @@ let time = reserve.start_at ?
 
 </div>
 
-
-<div class="mt-3 text-center">
-    <button type="submit" class="btn bg_red">作成</button>
+<div class="mt-5 text-center">
+    <button type="submit" class="btn bg_red"><%=title%></button>
 </div>
+
+<% if (reserve._id) { // 更新 %>
+<div class="mt-3 alert alert-danger" role="alert">
+変更があった役のエントリーはリセットされます。ご注意ください。
+</div>
+<% } %>
 
 </form>
