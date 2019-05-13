@@ -36,7 +36,7 @@ router.get("/create",
             ,agree_url: null
             ,minutes: null
             ,place: null
-            ,public: null
+            ,public: true
             ,chara: [
                 { name: "", sex: "" }
             ]
@@ -89,6 +89,7 @@ router.post("/create",
         delete reserve.chara_list;
         delete reserve.sex_list;
         reserve.chara = chara;
+        reserve.public = reserve.public && reserve.public === "on";
 
         reserve = await Reserve.model.update(reserve, req.user);
         if (reserve) {

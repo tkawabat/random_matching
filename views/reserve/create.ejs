@@ -56,7 +56,7 @@ let time = reserve.start_at ?
         <input class="form-control d-inline" type="url" name="agree_url" maxlength="<%=C.URL_LENGTH_MAX%>" value="<%=reserve.agree_url%>">
     </div>
 
-    <% let checked = reserve.public === "false" ? "" : " checked";%>
+    <% let checked = reserve.public === true ? " checked" : "";%>
     <div class="form-group">
         <label>公開</label>
         <input class="checkbox-inline ml-1" type="checkbox" name="public" <%=checked%>>
