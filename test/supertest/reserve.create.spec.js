@@ -15,7 +15,7 @@ const Reserve = require(rootDir+"/src/model/reserve");
 
 
 let param = {
-    start_at: moment().add(5, "minutes").format("YYYY-MM-DDTkk:mm")
+    start_at: moment().add(5, "minutes").format("YYYY-MM-DDTHH:mm")
     ,scenario_title: "aaa"
     ,place: "skype"
     ,minutes: "90"

@@ -9,11 +9,11 @@
 <% } %>
 
 <%
-let minTime = moment().format("YYYY-MM-DDTkk:mm");
-let maxTime = moment().add(2, "weeks").format("YYYY-MM-DDTkk:mm");
+let minTime = moment().format("YYYY-MM-DDTHH:mm");
+let maxTime = moment().add(2, "weeks").format("YYYY-MM-DDTHH:mm");
 let time = reserve.start_at ?
-    moment(reserve.start_at).format("YYYY-MM-DDTkk:mm")
-    : moment().add(30, "minutes").format("YYYY-MM-DDTkk:mm");
+    moment(reserve.start_at).format("YYYY-MM-DDTHH:mm")
+    : moment().add(30, "minutes").format("YYYY-MM-DDTHH:mm");
 %>
 <h5 class="mb-3">上演情報</h5>
 <div class="reserve_create_basic ml-2">
@@ -54,6 +54,13 @@ let time = reserve.start_at ?
     <div class="form-group">
         <label>規約URL</label>
         <input class="form-control d-inline" type="url" name="agree_url" maxlength="<%=C.URL_LENGTH_MAX%>" value="<%=reserve.agree_url%>">
+    </div>
+
+    <% let checked = reserve.public === "false" ? "" : " checked";%>
+    <div class="form-group">
+        <label>公開</label>
+        <input class="checkbox-inline ml-1" type="checkbox" name="public" <%=checked%>>
+        <div class="float-right text-secondary">※一覧表示、Twitter告知</div>
     </div>
 
     <div class="text-right mr-2">

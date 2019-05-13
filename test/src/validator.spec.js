@@ -183,7 +183,7 @@ describe("validator reserve create", () => {
     beforeEach(() => {
         req = {
             body: {
-                start_at: moment().add(5, "minutes").format("YYYY-MM-DDTkk:mm")
+                start_at: moment().add(5, "minutes").format("YYYY-MM-DDTHH:mm")
                 ,scenario_title: "aaa"
                 ,place: "skype"
                 ,minutes: "90"
@@ -207,14 +207,14 @@ describe("validator reserve create", () => {
         expect(validator.isError(req)).toBe(true);
     });
     it("ng start_at before now", async () => {
-        req.body.start_at = moment().add(-1, "minutes").format("YYYY-MM-DDTkk:mm")
+        req.body.start_at = moment().add(-1, "minutes").format("YYYY-MM-DDTHH:mm")
         for (let check of validator.reserve.create) {
             await check(req, {}, () => {});
         }
         expect(validator.isError(req)).toBe(true);
     });
     it("ng start_at after 2weeks", async () => {
-        req.body.start_at = moment().add(15, "days").format("YYYY-MM-DDTkk:mm")
+        req.body.start_at = moment().add(15, "days").format("YYYY-MM-DDTHH:mm")
         for (let check of validator.reserve.create) {
             await check(req, {}, () => {});
         }

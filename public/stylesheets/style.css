@@ -83,6 +83,11 @@ p {
     color: red;
 }
 
+input[type="checkbox"] {
+    height: 1em;
+    width: 1em;
+}
+
 .pointer {
     cursor: pointer;
 }
@@ -241,6 +246,9 @@ footer {
 }
 .reserve_create_basic label {
     width: 75px;
+}
+.reserve_create_basic input[type="checkbox"] {
+    width: 1em;
 }
 .reserve_create_basic input {
     width: calc(100% - 80px);

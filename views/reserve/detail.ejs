@@ -30,7 +30,7 @@
 
 <%
 let mask = !user || reserve.owner._id !== user._id;
-let start = moment(reserve.start_at).format("M/D (ddd) kk:mm~");
+let start = moment(reserve.start_at).format("M/D (ddd) HH:mm~");
 let place = C.RESERVE_PLACE[reserve.place];
 let text = "『"+reserve.scenario_title+"』\n"
     +"主催者: "+reserve.owner.twitter_name+"\n"

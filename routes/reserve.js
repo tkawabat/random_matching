@@ -57,7 +57,6 @@ router.get("/create/:reserve_id",
             return;
         }
 
-        console.log(reserve);
         res.viewParam.reserve = reserve;
         res.render("reserve/create", res.viewParam);
     })().catch(next)

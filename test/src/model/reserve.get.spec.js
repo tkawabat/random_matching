@@ -24,13 +24,43 @@ let reserve = {
     ,minutes: 60
     ,start_at: moment().toDate()
     ,place: "skype"
-    ,public: false
+    ,public: true
     ,chara: [
         { name: "taro", sex:"m"}
         ,{ name: "hanako", sex:"f"}
         ,{ name: "nare", sex:"o"}
     ]
 };
+
+describe("reserve get", () => {
+
+    beforeEach((done) => {
+        Reserve.schema.deleteMany({}, (err, user) => {
+            done();
+        });
+    });
+
+    it("getNum", async () => {
+        let tmp = [
+            JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve))
+        ];
+
+        tmp[0].scenario_title = "000";
+        tmp[1].scenario_title = "001";
+        tmp[2].scenario_title = "002";
+        tmp[0].start_at = moment().add(-5, "minutes").toDate();
+        tmp[1].public = false;
+
+        await Reserve.schema.insertMany(tmp);
+
+        let ret = await Reserve.model.get();
+        expect(ret.length).toBe(2);
+        expect(ret[0].scenario_title).toBe("002");
+        expect(ret[1].scenario_title).toBe("000");
+    });
+});
 
 describe("reserve getNum", () => {
 

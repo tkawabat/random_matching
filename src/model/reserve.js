@@ -44,7 +44,7 @@ const model = {};
 
 model.get = async () => {
     return this.schema.find(
-        {}
+        { public: true }
         ,null
         ,{ sort: { "start_at": -1}, limit: 30 }
     )
