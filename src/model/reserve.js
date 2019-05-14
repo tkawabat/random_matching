@@ -5,8 +5,9 @@ const moment = require("moment-timezone");
 moment.tz.setDefault("Asia/Tokyo");
 const logger = require(rootDir + "/src/log4js");
 const C = require(rootDir + "/src/const");
-const db = require(rootDir + "/src/mongodb");
 const schedule = require(rootDir + "/src/schedule");
+const db = require(rootDir + "/src/mongodb");
+const User = require(rootDir+"/src/model/user");
 const reserveHelper = require(rootDir+"/src/reserveHelper");
 
 const schema = db.Schema(
@@ -167,18 +168,55 @@ model.cancelEntryByOwner = async (user, id) => {
 };
 
 model.mvp = async (user, id) => {
+    let session = null;
     let time = moment().add(-1 * C.RESERVE_EDIT_MINUTE, "minutes").toDate();
-    return this.schema.findOneAndUpdate(
-        {
-            start_at: { $lt: time }
-            ,chara: {
-                $elemMatch: { _id: id }
-                , $not: { $elemMatch: { mvp: user._id } }
+
+    return db.startSession()
+    .then((_session) => {
+        session = _session;
+        session.startTransaction();
+
+        return this.schema.findOneAndUpdate(
+            {
+                start_at: { $lt: time }
+                ,chara: {
+                    $elemMatch: { _id: id }
+                    , $not: { $elemMatch: { mvp: user._id } }
+                }
+            }
+            ,{ $push: { "chara.$.mvp": user._id}}
+            ,{ strict: true, new: true, session: session}
+        ).lean();
+    })
+    .then(async (reserve) => {
+        if (!reserve) return reserve;
+
+        // mvp先がユーザー登録ありか確認
+        let mvpUserId = null;
+        for (let c of reserve.chara) {
+            if (!c.mvp || !c.mvp.includes(user._id)) continue;
+            if (c.user) {
+                mvpUserId = c.user;
+                break;
+            } else {
+                return reserve;
             }
         }
-        ,{ $push: { "chara.$.mvp": user._id}}
-        ,{ strict: true, new: true}
-    ).lean();
+
+        let ret = await User.model.incrementMvp(mvpUserId, session);
+        if (!ret) {
+            throw new Error();
+        }
+        return reserve;
+    })
+    .then(async (reserve) => {
+        await session.commitTransaction();
+        return reserve;
+    })
+    .finally(async () => {
+        await session.endSession();
+    })
+    ;
 };
 
 

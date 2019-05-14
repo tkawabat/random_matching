@@ -1,7 +1,5 @@
 <%- include("../module/reserve_detail_top", {reserve:reserve}) %>
 
-<h5 class="mt-4">役表</h5>
-
 <%
 let mask = !user || reserve.owner._id !== user._id;
 let postedMvp = false;
@@ -11,7 +9,21 @@ for (let c of reserve.chara) {
         break;
     }
 }
+let loginAlert = !user ?
+    " </a>" : "" ;
 
+if (!postedMvp) { %>
+<div class="mt-4 alert alert-info" role="alert">
+    MVP投票ができます。あなたの主観でMVPを決めてください！
+    <% if (!user) { %>
+    <br>投票するためには<a href="/twitter/login">ログイン</a>が必要です。
+    <% } %>
+</div>
+<% } %>
+
+<h5 class="mt-4">役表</h5>
+
+<%
 // 表示ループ
 for (let c of reserve.chara) {
     let sex = C.SEX_CLASS[c.sex];

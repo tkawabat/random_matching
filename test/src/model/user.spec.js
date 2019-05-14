@@ -55,3 +55,35 @@ describe("user model set", () => {
         });
     });
 });
+
+describe("user model incrementMvp", () => {
+    beforeEach((done) => {
+        User.schema.deleteOne({_id: id}, (err, user) => {
+            done();
+        });
+    });
+
+    it("ok 空", async () => {
+        let user = {
+            _id: id
+        }
+
+        await User.schema.insertMany([user]);
+
+        user = await User.model.incrementMvp(user._id);
+        expect(user.mvp).toBe(1);
+    });
+
+    it("ok 1->2", async () => {
+        let user = {
+            _id: id
+            ,mvp: 1
+        }
+
+        await User.schema.insertMany([user]);
+
+        user = await User.model.incrementMvp(user._id);
+        expect(user.mvp).toBe(2);
+    });
+
+});

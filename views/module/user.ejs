@@ -13,4 +13,10 @@
             <div class="skype">Skype: <a class="pointer" href="javascript:void(0);" onClick="RandomMatching.copyLink('<%=user.skype_id%>');RandomMatching.modal('Skype IDをコピーしました。');"><%= user.skype_id %></a></div>
         <% } %>
     </span>
+
+    <% if (user.mvp) { %>
+            <span class="badge badge-warning ml-2 float-right">
+                <i class="fas fa-medal mr-1"></i><%=user.mvp%>
+            </span>
+            <% } %>
 </div>

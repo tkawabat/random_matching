@@ -24,6 +24,7 @@ const schema = db.Schema({
     ,push: {
         match: {type: Boolean, default: true }
     }
+    ,mvp: { type: Number }
 },
     { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );
@@ -58,6 +59,14 @@ module.exports.model.set = (user, done) => {
 
         done(err, user);
     });
+}
+
+module.exports.model.incrementMvp = (id) => {
+    return this.schema.findOneAndUpdate(
+        { _id: id }
+        , { $inc: { mvp: 1 } }
+        , { new: true, upsert: false, strict: true }
+    ).lean();
 }
 
 module.exports.model.isSafeTwitter = (user) => {
