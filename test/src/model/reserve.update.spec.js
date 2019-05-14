@@ -92,5 +92,17 @@ describe("reserve update", () => {
         expect(ret).toBe(null);
     });
 
+    it("更新失敗 上演後", async () => {
+        let tmp = JSON.parse(JSON.stringify(reserve));
+        tmp.start_at = moment().add(-30, "minutes").toDate();
+        let ret = await Reserve.model.update(tmp, user);
+
+        tmp = JSON.parse(JSON.stringify(ret));
+        let tmpUser = JSON.parse(JSON.stringify(user));
+        tmp.scenario_title = "bbb";
+        ret = await Reserve.model.update(tmp, tmpUser);
+
+        expect(ret).toBe(null);
+    });
 
 });

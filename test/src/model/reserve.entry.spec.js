@@ -45,9 +45,18 @@ describe("reserve entry", () => {
         expect(ret).toBe(null);
     });
 
+    it("失敗　開始時間", async () => {
+        let tmp = JSON.parse(JSON.stringify(reserve));
+        tmp.start_at = moment().add(-30, "minutes").toDate();
+        await Reserve.schema.insertMany(tmp);
+
+        let ret = await Reserve.model.entry(user, reserve.chara[0]._id);
+        expect(ret).toBe(null);
+    });
+
     it("成功　男性", async () => {
         let tmp = JSON.parse(JSON.stringify(reserve));
-        tmp.chara[2].user = "200";
+        tmp.chara[2].user = "200"; // 他が埋まっていても関係ない
         await Reserve.schema.insertMany(tmp);
 
         let ret = await Reserve.model.entry(user, reserve.chara[0]._id);
@@ -118,6 +127,15 @@ describe("reserve entry guest", () => {
         expect(ret.chara[0].guest).toBe("guest001");
     });
 
+    it("失敗　開始時間", async () => {
+        let tmp = JSON.parse(JSON.stringify(reserve));
+        tmp.start_at = moment().add(-30, "minutes").toDate();
+        await Reserve.schema.insertMany(tmp);
+
+        let ret = await Reserve.model.entryGuest({_id: "200"}, reserve.chara[0]._id, "guest001");
+        expect(ret).toBe(null);
+    });
+
     it("失敗　オーナーじゃない", async () => {
         let tmp = JSON.parse(JSON.stringify(reserve));
         await Reserve.schema.insertMany(tmp);
@@ -177,6 +195,16 @@ describe("reserve cancel entry", () => {
         expect(ret).toBe(null);
     });
 
+    it("失敗　開始時間", async () => {
+        let tmp = JSON.parse(JSON.stringify(reserve));
+        tmp.start_at = moment().add(-30, "minutes").toDate();
+        tmp.chara[2].user = "100";
+        await Reserve.schema.insertMany(tmp);
+
+        let ret = await Reserve.model.cancelEntry(user, reserve.chara[2]._id);
+        expect(ret).toBe(null);
+    });
+
     it("成功", async () => {
         let tmp = JSON.parse(JSON.stringify(reserve));
         tmp.chara[2].user = "100";
@@ -210,6 +238,16 @@ describe("reserve cancel entry by owner", () => {
         expect(ret).toBe(null);
     });
 
+    it("失敗　開始時間", async () => {
+        let tmp = JSON.parse(JSON.stringify(reserve));
+        tmp.start_at = moment().add(-30, "minutes").toDate();
+        tmp.chara[0].user = "100";
+        await Reserve.schema.insertMany(tmp);
+
+        let ret = await Reserve.model.cancelEntryByOwner({_id: "200"}, reserve.chara[0]._id);
+        expect(ret).toBe(null);
+    });
+
     it("成功 ユーザー削除", async () => {
         let tmp = JSON.parse(JSON.stringify(reserve));
         tmp.chara[0].user = "100";
@@ -237,6 +275,4 @@ describe("reserve cancel entry by owner", () => {
         let ret = await Reserve.model.cancelEntryByOwner({_id: "200"}, reserve.chara[0]._id);
         expect(ret.chara[0].guest).toBe(null);
     });
-
-
 });

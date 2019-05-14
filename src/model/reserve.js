@@ -7,6 +7,7 @@ const logger = require(rootDir + "/src/log4js");
 const C = require(rootDir + "/src/const");
 const db = require(rootDir + "/src/mongodb");
 const schedule = require(rootDir + "/src/schedule");
+const reserveHelper = require(rootDir+"/src/reserveHelper");
 
 const schema = db.Schema(
     {
@@ -86,8 +87,9 @@ model.update = async (reserve, user) => {
         push = old && old.public !== "true";
     }
 
+    let time = moment().add(-C.RESERVE_EDIT_MINUTE, "minutes").toDate();
     return this.schema.findOneAndUpdate(
-        { _id: reserve._id, owner: user._id }
+        { _id: reserve._id, owner: user._id, start_at: { $gte: time }}
         , reserve
         , opt
     ).lean()
@@ -108,20 +110,26 @@ model.update = async (reserve, user) => {
 };
 
 model.entry = async (user, id) => {
+    let time = moment().add(-C.RESERVE_EDIT_MINUTE, "minutes").toDate();
     return this.schema.findOneAndUpdate(
-        { chara: {
-            $elemMatch: { _id: id, sex: { $in: ["o", user.sex]}, user: null, guest: null }
-            , $not: { $elemMatch: { user: user._id } }
-        } }
+        {
+            start_at: { $gte: time }
+            ,chara: {
+                $elemMatch: { _id: id, sex: { $in: ["o", user.sex]}, user: null, guest: null }
+                , $not: { $elemMatch: { user: user._id } }
+            }
+        }
         ,{ $set: { "chara.$.user": user._id}}
         ,{ strict: true, new: true}
     ).lean();
 };
 
 model.entryGuest = async (user, id, name) => {
+    let time = moment().add(-C.RESERVE_EDIT_MINUTE, "minutes").toDate();
     return this.schema.findOneAndUpdate(
         {
             owner: user._id
+            ,start_at: { $gte: time }
             ,chara: {
                 $elemMatch: { _id: id, user: null, guest: null }
             }
@@ -132,16 +140,21 @@ model.entryGuest = async (user, id, name) => {
 };
 
 model.cancelEntry = async (user, id) => {
+    let time = moment().add(-C.RESERVE_EDIT_MINUTE, "minutes").toDate();
     return this.schema.findOneAndUpdate(
-        { chara: { $elemMatch: { _id: id, user: user._id } } }
+        {
+            start_at: { $gte: time }
+            ,chara: { $elemMatch: { _id: id, user: user._id }}
+        }
         ,{ $set: { "chara.$.user": null }}
         ,{ strict: true, new: true}
     ).lean();
 };
 
 model.cancelEntryByOwner = async (user, id) => {
+    let time = moment().add(-C.RESERVE_EDIT_MINUTE, "minutes").toDate();
     return this.schema.findOneAndUpdate(
-        { owner: user._id, chara: { $elemMatch: { _id: id } } }
+        { owner: user._id, chara: { $elemMatch: { _id: id }}, start_at: { $gte: time } }
         ,{ $set: { "chara.$.user": null, "chara.$.guest": null }}
         ,{ strict: true, new: true}
     ).lean();
