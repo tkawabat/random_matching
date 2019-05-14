@@ -19,7 +19,21 @@ const Reserve = require(rootDir + "/src/model/reserve");
 router.get("/",
     routeHelper.check,
     (req, res, next) => ( async () => {
-        res.viewParam.reserveList = await Reserve.model.get();
+        let p = [];
+        p.push(Reserve.model.get({ public: true })
+            .then((ret) => {
+                res.viewParam.reserveList = ret;
+            })
+        );
+        if (req.user) {
+            p.push(Reserve.model.get({ owner: req.user._id })
+                .then((ret) => {
+                    res.viewParam.myReserveList = ret;
+                })
+            );
+        }
+
+        await Promise.all(p);
         res.render("reserve/index", res.viewParam);
     })().catch(next)
 );

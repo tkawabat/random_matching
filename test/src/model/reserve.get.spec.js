@@ -40,7 +40,29 @@ describe("reserve get", () => {
         });
     });
 
-    it("getNum", async () => {
+    it("{}", async () => {
+        let tmp = [
+            JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve))
+        ];
+
+        tmp[0].scenario_title = "000";
+        tmp[1].scenario_title = "001";
+        tmp[2].scenario_title = "002";
+        tmp[0].start_at = moment().add(-5, "minutes").toDate();
+        tmp[1].start_at = moment().add(+5, "minutes").toDate();
+
+        await Reserve.schema.insertMany(tmp);
+
+        let ret = await Reserve.model.get({});
+        expect(ret.length).toBe(3);
+        expect(ret[0].scenario_title).toBe("001");
+        expect(ret[1].scenario_title).toBe("002");
+        expect(ret[2].scenario_title).toBe("000");
+    });
+
+    it("public", async () => {
         let tmp = [
             JSON.parse(JSON.stringify(reserve))
             ,JSON.parse(JSON.stringify(reserve))
@@ -55,7 +77,7 @@ describe("reserve get", () => {
 
         await Reserve.schema.insertMany(tmp);
 
-        let ret = await Reserve.model.get();
+        let ret = await Reserve.model.get({public: true});
         expect(ret.length).toBe(2);
         expect(ret[0].scenario_title).toBe("002");
         expect(ret[1].scenario_title).toBe("000");

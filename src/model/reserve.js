@@ -42,9 +42,9 @@ module.exports.schema = db.model("reverse", schema);
 
 const model = {};
 
-model.get = async () => {
+model.get = async (filter) => {
     return this.schema.find(
-        { public: true }
+        filter
         ,null
         ,{ sort: { "start_at": -1}, limit: 30 }
     )
