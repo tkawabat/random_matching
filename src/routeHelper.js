@@ -6,15 +6,16 @@ const createError = require("http-errors");
 
 
 const warning = {
-    twitter_auth_failed: "Twitter認証で失敗しました"
-    ,validate: "入力値に問題があります"
-    ,entry_save: "マッチング開始に失敗しました"
-    ,entry_delete: "マッチングキャンセルに失敗しました"
+    twitter_auth_failed: "Twitter認証で失敗しました。"
+    ,validate: "入力値に問題があります。"
+    ,entry_save: "マッチング開始に失敗しました。"
+    ,entry_delete: "マッチングキャンセルに失敗しました。"
+    ,reserve_create: "募集劇の作成に失敗しました。"
     ,reserve_limit: "短期間に大量の募集登録があったため、一週間作成ができません。"
-    ,reserve_entry: "エントリーに失敗しました"
-    ,reserve_entry_cancel: "エントリーキャンセルに失敗しました"
-    ,invalid_user: "このユーザーはエントリーできません"
-    ,error500: "予期せぬエラーが発生しました。時間を置いてアクセスしてください"
+    ,reserve_entry: "エントリーに失敗しました。"
+    ,reserve_entry_cancel: "エントリーキャンセルに失敗しました。"
+    ,invalid_user: "このユーザーはエントリーできません。"
+    ,error500: "予期せぬエラーが発生しました。時間を置いてアクセスしてください。"
 }
 
 const check = ( req, res, next) => {

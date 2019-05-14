@@ -39,3 +39,11 @@ module.exports.get = async (req, res, next) => {
             next();
         });
 }
+
+module.exports.tweetCreated = (reserve) => {
+    let time = moment(reserve.start_at).format("M/d HH:mm");
+    let text = "新しい募集劇が公開されました。\n"
+        +time+"~『"+reserve.scenario_title+"』\n"
+        +C.BASE_URL+"/reserve/detail/"+reserve._id;
+    twitter.tweet(text);
+}

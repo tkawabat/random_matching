@@ -6,6 +6,7 @@ moment.tz.setDefault("Asia/Tokyo");
 const logger = require(rootDir + "/src/log4js");
 const C = require(rootDir + "/src/const");
 const db = require(rootDir + "/src/mongodb");
+const schedule = require(rootDir + "/src/schedule");
 
 const schema = db.Schema(
     {
@@ -63,8 +64,10 @@ model.isLimited = async (user) => {
 
 model.update = async (reserve, user) => {
     let opt;
+    let push = false;
     if (!reserve._id) {
         reserve._id = new db.Types.ObjectId;
+        push = true;
         opt = { "strict": true, "upsert": true, "new": true};
     } else {
         opt = { "strict": true, "new": true};
@@ -80,6 +83,7 @@ model.update = async (reserve, user) => {
                 reserve.chara[i].guest = old.chara[i].guest;
             }
         }
+        push = old && old.public !== "true";
     }
 
     return this.schema.findOneAndUpdate(
@@ -87,6 +91,15 @@ model.update = async (reserve, user) => {
         , reserve
         , opt
     ).lean()
+    .then((ret) => {
+        if (push && ret.public === true) {
+            let t = moment().add(5, "minutes").toDate();
+            schedule.push("reserve_create_"+reserve._id, true, t, () => {
+                reserveHelper.tweetCreated(reserve);
+            });
+        }
+        return ret;
+    })
     .catch ((err) => {
         logger.info("update reserve error. reserve: "+reserve._id+" user: "+user._id);
         return null;

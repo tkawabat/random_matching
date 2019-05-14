@@ -98,6 +98,7 @@ router.post("/create",
         }
 
         if (!req.body._id && await Reserve.model.isLimited(req.user)) {
+        console.log(req.body._id);
             res.redirect("/reserve/?warning=reserve_limit");
             return;
         }
@@ -117,7 +118,8 @@ router.post("/create",
         if (reserve) {
             res.redirect("/reserve/detail/"+reserve._id);
         } else {
-            res.redirect("/reserve/create/");
+            let redirect = "/reserve/create/"+(req.body._id ? req.body._id : "");
+            res.redirect(redirect+"?warning=reserve_create");
         }
     })().catch(next)
 );

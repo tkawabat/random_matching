@@ -12,12 +12,14 @@ const app = require(rootDir+"/app");
 const db = require(rootDir+"/src/mongodb");
 const account = require(rootDir+"/src/account");
 const Reserve = require(rootDir+"/src/model/reserve");
+const reserveHelper = require(rootDir+"/src/reserveHelper");
 
 
 let param = {
     start_at: moment().add(5, "minutes").format("YYYY-MM-DDTHH:mm")
     ,scenario_title: "aaa"
     ,place: "skype"
+    ,public: "on"
     ,minutes: "90"
     ,chara_list: ["aaa"]
     ,sex_list: ["m"]
@@ -63,10 +65,11 @@ describe("supertest reserve create", () => {
         stub.returns(Promise.resolve({
             _id: 999
         }));
- 
+
         request(app).post("/reserve/create").send(param).end((err, res) => {
             expect(res.status).toBe(302);
             expect(res.header["location"]).toBe("/reserve/detail/999");
+
             done();
         })
     });
