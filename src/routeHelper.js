@@ -10,6 +10,7 @@ const warning = {
     ,validate: "入力値に問題があります"
     ,entry_save: "マッチング開始に失敗しました"
     ,entry_delete: "マッチングキャンセルに失敗しました"
+    ,reserve_limit: "短期間に大量の募集登録があったため、一週間作成ができません。"
     ,reserve_entry: "エントリーに失敗しました"
     ,reserve_entry_cancel: "エントリーキャンセルに失敗しました"
     ,invalid_user: "このユーザーはエントリーできません"

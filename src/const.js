@@ -35,3 +35,4 @@ module.exports.TEXT_LENGTH_MAX = 64;
 module.exports.OBJECT_ID_LENGTH_MAX = 24;
 
 module.exports.RESERVE_ENTRY_MINUTE = 30
+module.exports.RESERVE_LIMIT_PER_WEEK = 10

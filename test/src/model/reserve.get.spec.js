@@ -84,7 +84,7 @@ describe("reserve get", () => {
     });
 });
 
-describe("reserve getNum", () => {
+describe("reserve isLimited", () => {
 
     beforeEach((done) => {
         Reserve.schema.deleteMany({}, (err, user) => {
@@ -92,21 +92,66 @@ describe("reserve getNum", () => {
         });
     });
 
-    it("getNum", async () => {
+    it("true", async () => {
         let tmp = [
             JSON.parse(JSON.stringify(reserve))
             ,JSON.parse(JSON.stringify(reserve))
             ,JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve)) // 11
         ];
-
-        tmp[0].start_at = moment().add(-5, "minutes").toDate();
-        tmp[1].start_at = moment().add(5, "minutes").toDate();
-        tmp[2].start_at = moment().add(5, "minutes").toDate();
-        tmp[2].owner = "200";
-
         await Reserve.schema.insertMany(tmp);
 
-        let ret = await Reserve.model.getNum(user);
-        expect(ret).toBe(1);
+        let ret = await Reserve.model.isLimited(user);
+        expect(ret).toBe(true);
     });
+
+    it("false user違い", async () => {
+        let tmp = [
+            JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve)) // 11
+        ];
+        tmp[0].owner = "999";
+        await Reserve.schema.insertMany(tmp);
+
+        let ret = await Reserve.model.isLimited(user);
+        expect(ret).toBe(false);
+    });
+
+    it("false 一週間以上前", async () => {
+        let tmp = [
+            JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve))
+            ,JSON.parse(JSON.stringify(reserve)) // 11
+        ];
+        tmp[0].start_at = moment().add(-8, "days").toDate();
+        await Reserve.schema.insertMany(tmp);
+
+        let ret = await Reserve.model.isLimited(user);
+        expect(ret).toBe(false);
+    });
+
 });

@@ -42,6 +42,11 @@ router.get("/create",
     account.isAuthenticated,
     routeHelper.check,
     (req, res, next) => ( async () => {
+        if (await Reserve.model.isLimited(req.user)) {
+            res.redirect("/reserve/?warning=reserve_limit");
+            return;
+        }
+
         let reserve = {
             _id: null
             ,scenario_title: null
@@ -60,8 +65,8 @@ router.get("/create",
         res.render("reserve/create", res.viewParam);
     })().catch(next)
 );
-router.get("/create/:reserve_id",
 
+router.get("/create/:reserve_id",
     account.isAuthenticated,
     routeHelper.check,
     (req, res, next) => ( async () => {
@@ -80,8 +85,6 @@ router.post("/create",
     account.isAuthenticated,
     validator.reserve.create,
     (req, res, next) => ( async () => {
-        // TODO 個数チェック
-
         if (validator.isError(req)) {
             res.viewParam.reserve = validator.sanitizeInvalid(req);
             if (!res.viewParam.reserve.chara) {
@@ -91,6 +94,11 @@ router.post("/create",
             }
             res.viewParam.alert_warning = res.viewParam.alert_warning.concat(validator.getErrorMessages(req));
             res.render("reserve/create", res.viewParam);
+            return;
+        }
+
+        if (!req.body._id && await Reserve.model.isLimited(req.user)) {
+            res.redirect("/reserve/?warning=reserve_limit");
             return;
         }
 

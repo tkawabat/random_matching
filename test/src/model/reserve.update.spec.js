@@ -42,7 +42,8 @@ describe("reserve update", () => {
     });
 
     it("新規", async () => {
-        let ret = await Reserve.model.update(reserve, user);
+        let tmp = JSON.parse(JSON.stringify(reserve));
+        let ret = await Reserve.model.update(tmp, user);
         expect(ret.scenario_title).toBe("aaa");
     });
 
@@ -66,10 +67,23 @@ describe("reserve update", () => {
         expect(ret.chara[3].guest).toBe(undefined);
     });
 
-    it("更新失敗 ユーザー違い", async () => {
-        let ret = await Reserve.model.update(reserve, user);
+    it("更新失敗 id違い", async () => {
+        let tmp = JSON.parse(JSON.stringify(reserve));
+        let ret = await Reserve.model.update(tmp, user);
 
-        let tmp = JSON.parse(JSON.stringify(ret));
+        tmp = JSON.parse(JSON.stringify(ret));
+        tmp._id = new db.Types.ObjectId;
+        tmp.scenario_title = "bbb";
+        ret = await Reserve.model.update(tmp, user);
+
+        expect(ret).toBe(null);
+    });
+
+    it("更新失敗 ユーザー違い", async () => {
+        let tmp = JSON.parse(JSON.stringify(reserve));
+        let ret = await Reserve.model.update(tmp, user);
+
+        tmp = JSON.parse(JSON.stringify(ret));
         let tmpUser = JSON.parse(JSON.stringify(user));
         tmp.scenario_title = "bbb";
         tmpUser._id = "200";
@@ -77,5 +91,6 @@ describe("reserve update", () => {
 
         expect(ret).toBe(null);
     });
+
 
 });

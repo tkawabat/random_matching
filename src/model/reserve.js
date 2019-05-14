@@ -4,6 +4,7 @@ const rootDir = require("app-root-path");
 const moment = require("moment-timezone");
 moment.tz.setDefault("Asia/Tokyo");
 const logger = require(rootDir + "/src/log4js");
+const C = require(rootDir + "/src/const");
 const db = require(rootDir + "/src/mongodb");
 
 const schema = db.Schema(
@@ -53,14 +54,20 @@ model.get = async (filter) => {
     ;
 }
 
-model.getNum = async (user) => {
-    return this.schema.count({owner: user._id, start_at: { $gte: moment().toDate()}}).lean();
+model.isLimited = async (user) => {
+    let time = moment().add("-1", "weeks").toDate();
+    return this.schema.count(
+        {owner: user._id, start_at: { $gte: time}}
+    ).lean().then((ret) => ret > C.RESERVE_LIMIT_PER_WEEK);
 }
 
 model.update = async (reserve, user) => {
+    let opt;
     if (!reserve._id) {
         reserve._id = new db.Types.ObjectId;
+        opt = { "strict": true, "upsert": true, "new": true};
     } else {
+        opt = { "strict": true, "new": true};
         let old = await this.schema.findOne({ _id: reserve._id }).exec();
         for (let i = 0; i < reserve.chara.length; i++) {
             if (old && old.chara[i] && old.chara[i].user
@@ -78,7 +85,7 @@ model.update = async (reserve, user) => {
     return this.schema.findOneAndUpdate(
         { _id: reserve._id, owner: user._id }
         , reserve
-        , { "strict": true, "upsert": true, "new": true}
+        , opt
     ).lean()
     .catch ((err) => {
         logger.info("update reserve error. reserve: "+reserve._id+" user: "+user._id);
