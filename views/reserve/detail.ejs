@@ -26,83 +26,39 @@
     </div>
 </div>
 
-<h4>『<%=reserve.scenario_title%>』</h4>
+<%- include("../module/reserve_detail_top", {reserve:reserve}) %>
+
+<h5 class="mt-4">役表</h5>
 
 <%
 let mask = !user || reserve.owner._id !== user._id;
 let start = moment(reserve.start_at).format("M/D (ddd) HH:mm~");
 let place = C.RESERVE_PLACE[reserve.place];
-let text = "『"+reserve.scenario_title+"』\n"
-    +"主催者: "+reserve.owner.twitter_name+"\n"
-    +start+"@"+place+"\n\n"
-;
 
 for (let c of reserve.chara) {
-    let sex = C.SEX_ICON[c.sex];
-    let name = c.user ? c.user.twitter_name : "未定";
-    text += c.name+sex+": "+name+"\n";
-}
-text += "\n";
+    let sex = C.SEX_CLASS[c.sex];
+    let disabled;
+    if (c.sex === "m") {
+        disabled = isReady && user && user.sex === "m" ? "" : "disabled";
+    } else if (c.sex === "f") {
+        disabled = isReady && user && user.sex === "f" ? "" : "disabled";
+    } else {
+        disabled = isReady && user ? "" : "disabled";
+    }
+
+    let dm = "こんにちは、xxxxさん。劇のお誘いです。<br>"
+        +"<br>"
+        +"台本: "+reserve.scenario_title+"<br>"
+        +"日時: "+start+"<br>"
+        +"場所: "+place+"<br>"
+        +"お願いしたい役: "+c.name+"役<br>"
+        +"<br>"
+        +"お時間のご都合がよろしければご参加して頂けないでしょうか。<br>"
+        +"参加して頂ける場合は、こちらからエントリーお願いします。<br>"
+        +url
+    ;
 %>
-<div class="mt-4 text-right">
-    <%- include("../module/tweet", {text:text, hash:title}) %>
-</div>
-
-
-<h5 class="mt-3">上演情報</h5>
-<div class="reserve_basic_info ml-2">
-    <div>
-        主催: <a href="https://twitter.com/<%= reserve.owner.twitter_id %>">
-            <i class="fab fa-twitter color_twitter"></i>
-            <%= reserve.owner.twitter_name %>
-        </a>
-    </div>
-    <div>時間：<%=start%>　約<%=reserve.minutes%>分</div>
-    <div>場所：<%=place%></div>
-    <div>
-        台本: 『<%=reserve.scenario_title%>』
-        <% if (reserve.author) { %>
-            作:<%=reserve.author%>
-        <% } %>
-        <% if (reserve.url) { %>
-            <a class="ml-2" href="<%=reserve.url%>"><i class="fas fa-external-link-alt"></i> 台本</a>
-        <% } %>
-        <% if (reserve.agree_url) { %>
-            <a class="ml-2" href="<%=reserve.agree_url%>"><i class="fas fa-external-link-alt"></i> 規約</a>
-        <% } %>
-    </div>
-
-</div>
-
-
-<h5 class="mt-4">役表</h5>
-
-<% for (let c of reserve.chara) { %>
 <div class="chara mt-1 clearfix">
-    <%
-        let sex = C.SEX_CLASS[c.sex];
-        let disabled;
-        if (c.sex === "m") {
-            disabled = isReady && user && user.sex === "m" ? "" : "disabled";
-        } else if (c.sex === "f") {
-            disabled = isReady && user && user.sex === "f" ? "" : "disabled";
-        } else {
-            disabled = isReady && user ? "" : "disabled";
-        }
-
-        let dm = "こんにちは、xxxxさん。劇のお誘いです。<br>"
-            +"<br>"
-            +"台本: "+reserve.scenario_title+"<br>"
-            +"日時: "+start+"<br>"
-            +"場所: "+place+"<br>"
-            +"お願いしたい役: "+c.name+"役<br>"
-            +"<br>"
-            +"お時間のご都合がよろしければご参加して頂けないでしょうか。<br>"
-            +"参加して頂ける場合は、こちらからエントリーお願いします。<br>"
-            +url
-        ;
-    %>
-
     <div>
         <i class="fas fa-<%=sex%>"></i>&nbsp;<%=c.name%>役
     </div>

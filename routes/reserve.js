@@ -137,7 +137,12 @@ router.get("/detail/:reserve_id",
         }
 
         res.viewParam.url = C.BASE_URL+"/reserve/"+req.params.reserve_id;
-        res.render("reserve/detail", res.viewParam);
+
+        if (reserveHelper.isAfter(res.viewParam.reserve)) {
+            res.render("reserve/detail_after", res.viewParam);
+        } else {
+            res.render("reserve/detail", res.viewParam);
+        }
     })().catch(next)
 );
 

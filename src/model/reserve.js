@@ -87,13 +87,14 @@ model.update = async (reserve, user) => {
         push = old && old.public !== "true";
     }
 
-    let time = moment().add(-C.RESERVE_EDIT_MINUTE, "minutes").toDate();
+    let time = moment().add(-1 * C.RESERVE_EDIT_MINUTE, "minutes").toDate();
     return this.schema.findOneAndUpdate(
         { _id: reserve._id, owner: user._id, start_at: { $gte: time }}
         , reserve
         , opt
     ).lean()
     .then((ret) => {
+        // tweet
         if (push && ret.public === true) {
             let t = moment().add(5, "minutes").toDate();
             schedule.push("reserve_create_"+reserve._id, true, t, () => {
@@ -110,7 +111,7 @@ model.update = async (reserve, user) => {
 };
 
 model.entry = async (user, id) => {
-    let time = moment().add(-C.RESERVE_EDIT_MINUTE, "minutes").toDate();
+    let time = moment().add(-1 * C.RESERVE_EDIT_MINUTE, "minutes").toDate();
     return this.schema.findOneAndUpdate(
         {
             start_at: { $gte: time }
@@ -125,7 +126,7 @@ model.entry = async (user, id) => {
 };
 
 model.entryGuest = async (user, id, name) => {
-    let time = moment().add(-C.RESERVE_EDIT_MINUTE, "minutes").toDate();
+    let time = moment().add(-1 * C.RESERVE_EDIT_MINUTE, "minutes").toDate();
     return this.schema.findOneAndUpdate(
         {
             owner: user._id
@@ -140,7 +141,7 @@ model.entryGuest = async (user, id, name) => {
 };
 
 model.cancelEntry = async (user, id) => {
-    let time = moment().add(-C.RESERVE_EDIT_MINUTE, "minutes").toDate();
+    let time = moment().add(-1 * C.RESERVE_EDIT_MINUTE, "minutes").toDate();
     return this.schema.findOneAndUpdate(
         {
             start_at: { $gte: time }
@@ -152,9 +153,13 @@ model.cancelEntry = async (user, id) => {
 };
 
 model.cancelEntryByOwner = async (user, id) => {
-    let time = moment().add(-C.RESERVE_EDIT_MINUTE, "minutes").toDate();
+    let time = moment().add(-1 * C.RESERVE_EDIT_MINUTE, "minutes").toDate();
     return this.schema.findOneAndUpdate(
-        { owner: user._id, chara: { $elemMatch: { _id: id }}, start_at: { $gte: time } }
+        {
+            owner: user._id
+            ,start_at: { $gte: time }
+            ,chara: { $elemMatch: { _id: id }}
+        }
         ,{ $set: { "chara.$.user": null, "chara.$.guest": null }}
         ,{ strict: true, new: true}
     ).lean();

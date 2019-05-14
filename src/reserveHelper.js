@@ -40,6 +40,12 @@ module.exports.get = async (req, res, next) => {
         });
 }
 
+module.exports.isAfter = (reserve) => {
+    let time = moment().add(-1 * C.RESERVE_EDIT_MINUTE, "minutes").unix();
+    let start = moment(reserve.start_at).unix();
+    return time > start;
+}
+
 module.exports.tweetCreated = (reserve) => {
     let time = moment(reserve.start_at).format("M/d HH:mm");
     let text = "新しい募集劇が公開されました。\n"

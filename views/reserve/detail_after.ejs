@@ -1,0 +1,32 @@
+<%- include("../module/reserve_detail_top", {reserve:reserve}) %>
+
+<h5 class="mt-4">役表</h5>
+
+<%
+let mask = !user || reserve.owner._id !== user._id;
+for (let c of reserve.chara) {
+    let sex = C.SEX_CLASS[c.sex];
+
+    if (!c.user) {
+        c.user = {
+            _id: "未登録"
+            ,twitter_name: "未登録"
+            ,skype_id: ""
+            ,image_url_https: C.IMAGE_TWITTER_DEFAULT
+        }
+    }
+%>
+<div class="chara mt-1 clearfix">
+    <div>
+        <i class="fas fa-<%=C.SEX_CLASS[c.sex]%>"></i>&nbsp;<%=c.name%>役
+    </div>
+    <%- include("../module/user", {user:c.user, mask:mask}) %>
+
+    <% if (user) { %>
+        <form class="text-right" method="POST" action="/reserve/mvp/<%=reserve._id%>">
+            <input type="hidden" name="chara" value="<%=c._id%>">
+            <button type="submit" class="btn btn-sm bg_red">MVP投票</button>
+        </form>
+    <% } %>
+</div>
+<% } %>
