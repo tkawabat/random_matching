@@ -163,3 +163,9 @@ module.exports.reserve.cancelEntry = [
         .isLength({max: C.OBJECT_ID_LENGTH_MAX})
         .isAlphanumeric()
 ];
+module.exports.reserve.mvp = [
+    check("chara")
+        .not().isEmpty()
+        .isLength({max: C.OBJECT_ID_LENGTH_MAX})
+        .isAlphanumeric()
+];

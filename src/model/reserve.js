@@ -27,6 +27,7 @@ const schema = db.Schema(
             ,sex: { type: String }
             ,user: {type: String, ref: "user"}
             ,guest: {type: String}
+            ,mvp: [{ type: String, ref: "user"}]
         }]
         ,deleted: { type: Boolean }
     },
@@ -164,5 +165,21 @@ model.cancelEntryByOwner = async (user, id) => {
         ,{ strict: true, new: true}
     ).lean();
 };
+
+model.mvp = async (user, id) => {
+    let time = moment().add(-1 * C.RESERVE_EDIT_MINUTE, "minutes").toDate();
+    return this.schema.findOneAndUpdate(
+        {
+            start_at: { $lt: time }
+            ,chara: {
+                $elemMatch: { _id: id }
+                , $not: { $elemMatch: { mvp: user._id } }
+            }
+        }
+        ,{ $push: { "chara.$.mvp": user._id}}
+        ,{ strict: true, new: true}
+    ).lean();
+};
+
 
 module.exports.model = model;

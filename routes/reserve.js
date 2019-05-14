@@ -245,5 +245,29 @@ router.post("/entry_cancel/:reserve_id", account.isAuthenticated, validator.rese
     }
 });
 
+router.post("/mvp/:reserve_id"
+    ,account.isAuthenticated
+    ,validator.reserve.mvp
+    ,(req, res, next) => ( async () => {
+        let redirect = "/reserve/detail/"+req.params.reserve_id;
+        if (validator.isError(req)) {
+            res.redirect(redirect+"?warning=validate");
+            return;
+        }
+
+        Reserve.model.mvp(req.user, req.body.chara).then((reserve) => {
+            let text = "reserve mvp: "
+                +req.user.twitter_id+" "+req.params.reserve_id;
+            if (!reserve) {
+                logger.error(text);
+                res.redirect(redirect+"?warning=reserve_mvp");
+            } else {
+                logger.info(text);
+                res.redirect(redirect);
+            }
+        });
+    })().catch(next)
+);
+
 
 module.exports = router;

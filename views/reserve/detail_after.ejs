@@ -4,9 +4,19 @@
 
 <%
 let mask = !user || reserve.owner._id !== user._id;
+let postedMvp = false;
+for (let c of reserve.chara) {
+    if (c.mvp && user && c.mvp.includes(user._id)) {
+        postedMvp = true;
+        break;
+    }
+}
+
+// 表示ループ
 for (let c of reserve.chara) {
     let sex = C.SEX_CLASS[c.sex];
 
+    // 未登録は仮ユーザーを表示
     if (!c.user) {
         c.user = {
             _id: "未登録"
@@ -15,18 +25,30 @@ for (let c of reserve.chara) {
             ,image_url_https: C.IMAGE_TWITTER_DEFAULT
         }
     }
+
+    let mvp = c.mvp ? c.mvp.length : 0;
+
+    let disabled = "";
+    if (!user || (c.mvp && c.mvp.includes(user._id))) {
+        disabled = " disabled";
+    }
 %>
 <div class="chara mt-1 clearfix">
-    <div>
+    <div class="mb-1 mt-2">
         <i class="fas fa-<%=C.SEX_CLASS[c.sex]%>"></i>&nbsp;<%=c.name%>役
+        <% if (mvp) { %>
+            <span class="badge badge-warning ml-2">
+                <i class="fas fa-medal mr-1"></i><%=mvp%>
+            </span>
+        <% } %>
     </div>
     <%- include("../module/user", {user:c.user, mask:mask}) %>
 
-    <% if (user) { %>
-        <form class="text-right" method="POST" action="/reserve/mvp/<%=reserve._id%>">
-            <input type="hidden" name="chara" value="<%=c._id%>">
-            <button type="submit" class="btn btn-sm bg_red">MVP投票</button>
-        </form>
+    <% if (!postedMvp || disabled) { %>
+    <form class="text-right" method="POST" action="/reserve/mvp/<%=reserve._id%>">
+        <input type="hidden" name="chara" value="<%=c._id%>">
+        <button type="submit" class="btn btn-sm bg_red" <%=disabled%>><i class="fas fa-medal mr-1"></i>MVP投票</button>
+    </form>
     <% } %>
 </div>
 <% } %>
