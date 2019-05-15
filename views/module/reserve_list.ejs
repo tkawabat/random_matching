@@ -1,0 +1,29 @@
+<%
+let start = moment(reserve.start_at).format("M/D (ddd) HH:mm~");
+
+let remains_view = false;
+let remains = {"m": 0, "f": 0, "o": 0}
+for (let c of reserve.chara) {
+    if (!c.user) {
+        remains[c.sex]++;
+        remains_view = true;
+    }
+}
+%>
+
+<div class="reserve_list mb-2 shadow-sm">
+    <div>
+        <span><%=start%></span>
+        <% if (remains_view) { %>
+        <span class="float-right">
+        空き:&nbsp;
+            <% for (let sex of Object.keys(remains)) {
+                if (remains[sex] === 0) continue;
+            %>
+                <i class="fas fa-<%=C.SEX_CLASS[sex]%>"></i>&nbsp;<%=remains[sex]%>
+            <% } %>
+        <% } %>
+    </div>
+    <div class="ml-3"><a href="/reserve/detail/<%=reserve._id%>">『<%=reserve.scenario_title%>』</a></div>
+    <div class="">主催: <%=reserve.owner.twitter_name%></div>
+</div>

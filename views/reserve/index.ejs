@@ -9,13 +9,13 @@
 <h5 class="mt-5 mb-3">最新一覧</h5>
 <div>
 <% for (let r of reserveList) { %>
-    <%- include("../module/reserve", {reserve:r}) %>
+    <%- include("../module/reserve_list", {reserve:r}) %>
 <% } %>
 </div>
 
 <h5 class="mt-5 mb-3">あなたの最新の募集劇</h5>
 <div>
 <% for (let r of myReserveList) { %>
-    <%- include("../module/reserve", {reserve:r}) %>
+    <%- include("../module/reserve_list", {reserve:r}) %>
 <% } %>
 </div>

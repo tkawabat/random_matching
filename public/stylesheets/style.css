@@ -241,6 +241,15 @@ footer {
 }
 
 /* reserve */
+.reserve_list {
+    font-size: 16px;
+    background: #FFFFCC;
+    padding: 6px;
+    word-wrap: break-word;
+}
+.reserve_list a {
+    text-decoration: none;
+}
 #reserve_create_chara_sample {
     display: none;
 }

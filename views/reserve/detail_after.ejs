@@ -26,8 +26,6 @@ if (!postedMvp) { %>
 <%
 // 表示ループ
 for (let c of reserve.chara) {
-    let sex = C.SEX_CLASS[c.sex];
-
     // 未登録は仮ユーザーを表示
     if (!c.user) {
         c.user = {
