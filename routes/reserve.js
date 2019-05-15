@@ -141,7 +141,7 @@ router.get("/detail/:reserve_id",
         if (reserveHelper.isAfter(res.viewParam.reserve)) {
             res.render("reserve/detail_after", res.viewParam);
         } else {
-            res.render("reserve/detail", res.viewParam);
+            res.render("reserve/detail_before", res.viewParam);
         }
     })().catch(next)
 );

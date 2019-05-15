@@ -37,6 +37,9 @@ body > .content {
 h6 {
     font-weight: bold;
 }
+h4 {
+    word-wrap: break-word;
+}
 p {
     line-height: 0.75em;
 }
@@ -267,6 +270,7 @@ footer {
 }
 .reserve_basic_info {
     font-size: 16px;
+    word-wrap: break-word;
 }
 .reserve_detail_owner_buttons {
     margin-top: 100px;
@@ -280,6 +284,23 @@ footer {
 .chara form {
     height: 62px;
 }
+.chara form.reserve_detail_cancel {
+    margin-top: 5px;
+    width: 30px;
+    float: right;
+}
+.reserve_detail_cancel button {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+}
+.reserve_detail_cancel i {
+    position: relative;
+    top: -2px;
+    left: -1px;
+
+}
+
 .chara button {
     margin-top: 8px;
 }

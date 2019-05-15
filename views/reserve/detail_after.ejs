@@ -21,7 +21,7 @@ if (!postedMvp) { %>
 </div>
 <% } %>
 
-<h5 class="mt-4">役表</h5>
+<h5 class="mt-5">役表</h5>
 
 <%
 // 表示ループ
@@ -43,7 +43,7 @@ for (let c of reserve.chara) {
         disabled = " disabled";
     }
 %>
-<div class="chara mt-1 clearfix">
+<div class="chara mt-3 clearfix">
     <div class="mb-1 mt-2">
         <i class="fas fa-<%=C.SEX_CLASS[c.sex]%>"></i>&nbsp;<%=c.name%>役
         <% if (mvp) { %>
