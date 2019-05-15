@@ -98,7 +98,8 @@ model.update = async (reserve, user) => {
     .then((ret) => {
         // tweet
         if (push && ret.public === true) {
-            let t = moment().add(5, "minutes").toDate();
+            //let t = moment().add(5, "minutes").toDate();
+            let t = moment().add(5, "seconds").toDate();
             schedule.push("reserve_create_"+reserve._id, true, t, () => {
                 reserveHelper.tweetCreated(reserve);
             });

@@ -62,18 +62,15 @@ for (let c of reserve.chara) {
     <div class="mb-1 mt-2">
         <i class="fas fa-<%=C.SEX_CLASS[c.sex]%>"></i>&nbsp;<%=c.name%>役
 
-        <% if (user && c.user && user._id === c.user._id) { // 登録者 %>
+        <% if (user && c.user && (user._id === c.user._id || user._id === reserve.owner._id)) { // 登録者 or owner %>
             <form class="reserve_detail_cancel" method="POST" action="/reserve/entry_cancel/<%=reserve._id%>">
                 <input type="hidden" name="chara" value="<%=c._id%>">
-                <button type="submit" class="btn btn-sm btn-danger">
+                <% if (user._id === reserve.owner._id) { %>
+                    <input type="hidden" name="owner" value="true">
+                <% } %>
+                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('演者をキャンセルします。よろしいですか？');">
                     <i class="fas fa-times"></i>
                 </button>
-            </form>
-        <% } else if (user && c.user && user._id === reserve.owner._id) { // owner %>
-            <form class="reserve_detail_cancel" method="POST" action="/reserve/entry_cancel/<%=reserve._id%>">
-                <input type="hidden" name="owner" value="true">
-                <input type="hidden" name="chara" value="<%=c._id%>">
-                <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-times"></i></button>
             </form>
         <% } %>
     </div>

@@ -47,9 +47,22 @@ module.exports.isAfter = (reserve) => {
 }
 
 module.exports.tweetCreated = (reserve) => {
-    let time = moment(reserve.start_at).format("M/d HH:mm");
+    let time = moment(reserve.start_at).format("M/D HH:mm");
+    let remains_text = [];
+    let remains = {"m": 0, "f": 0, "o": 0}
+    for (let c of reserve.chara) {
+        if (!c.user) remains[c.sex]++;
+    }
+    for (let sex of Object.keys(remains)) {
+        if (remains[sex] === 0) continue;
+        remains_text.push(C.SEX_ICON[sex]+remains[sex]);
+    }
+    remains_text = remains_text.length === 0 ? ""
+        : "空き："+remains_text.join(" ")+"\n";
+
     let text = "新しい募集劇が公開されました。\n"
-        +time+"~『"+reserve.scenario_title+"』\n"
+        +time+"~ 『"+reserve.scenario_title+"』\n"
+        +remains_text
         +C.BASE_URL+"/reserve/detail/"+reserve._id;
     twitter.tweet(text);
 }

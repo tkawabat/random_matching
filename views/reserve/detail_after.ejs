@@ -57,7 +57,9 @@ for (let c of reserve.chara) {
     <% if (!postedMvp || disabled) { %>
     <form class="text-right" method="POST" action="/reserve/mvp/<%=reserve._id%>">
         <input type="hidden" name="chara" value="<%=c._id%>">
-        <button type="submit" class="btn btn-sm bg_red" <%=disabled%>><i class="fas fa-medal mr-1"></i>MVP投票</button>
+        <button type="submit" class="btn btn-sm bg_red" onclick="return confirm('<%=c.user.twitter_name%>さんにMVP投票します。');" <%=disabled%>>
+            <i class="fas fa-medal mr-1"></i>MVP投票
+        </button>
     </form>
     <% } %>
 </div>
