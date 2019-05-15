@@ -7,7 +7,7 @@ let push_match = user.push.match && user.push.match=== true ? "checked" : "";
 
 <h4 class="mb-4">ユーザー設定</h4>
 
-<%- include("./module/user", {user:user, mask:false}) %>
+<%- include("./module/user", {user:user, mask:false, mvp:true}) %>
 
 <form class="mt-4 mb-5" method="POST" action="/user/">
     <label>性別<span class="ml-2 text-secondary">※決定すると変更できません。</span></label>

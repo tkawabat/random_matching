@@ -64,7 +64,7 @@ for (let c of reserve.chara) {
         <i class="fas fa-<%=sex%>"></i>&nbsp;<%=c.name%>役
     </div>
     <% if (c.user) { %>
-        <%- include("../module/user", {user:c.user, mask:mask}) %>
+        <%- include("../module/user", {user:c.user, mask:mask, mvp:false}) %>
 
         <% if (user && user._id === c.user._id) { // 登録者 %>
             <form class="text-right" method="POST" action="/reserve/entry_cancel/<%=reserve._id%>">

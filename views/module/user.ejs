@@ -6,6 +6,11 @@
             <% if (user.twitter_id) { // for guest %>
                 <span class="twitter_id"><a href="https://twitter.com/<%= user.twitter_id %>">@<%= user.twitter_id %></a></span>
             <% } %>
+            <% if (mvp && user.mvp) { %>
+                <span class="badge badge-warning ml-2">
+                    <i class="fas fa-medal mr-1"></i><%=user.mvp%>
+                </span>
+            <% } %>
         </div>
         <% if (mask) { %>
             <div class="skype">Skype: xxxx</div>
@@ -14,9 +19,5 @@
         <% } %>
     </span>
 
-    <% if (user.mvp) { %>
-            <span class="badge badge-warning ml-2 float-right">
-                <i class="fas fa-medal mr-1"></i><%=user.mvp%>
-            </span>
-            <% } %>
+
 </div>

@@ -54,7 +54,7 @@ for (let c of reserve.chara) {
             </span>
         <% } %>
     </div>
-    <%- include("../module/user", {user:c.user, mask:mask}) %>
+    <%- include("../module/user", {user:c.user, mask:mask, mvp:false}) %>
 
     <% if (!postedMvp || disabled) { %>
     <form class="text-right" method="POST" action="/reserve/mvp/<%=reserve._id%>">
