@@ -281,9 +281,6 @@ footer {
 .chara i.fa-question {
     font-size: 0.9em;
 }
-.chara form {
-    height: 62px;
-}
 .chara form.reserve_detail_cancel {
     margin-top: 5px;
     width: 30px;
