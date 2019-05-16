@@ -13,9 +13,11 @@
 <% } %>
 </div>
 
+<% if (myReserveList.length > 0) { %>
 <h5 class="mt-5 mb-3">あなたの最新の募集劇</h5>
 <div>
 <% for (let r of myReserveList) { %>
     <%- include("../module/reserve_list", {reserve:r}) %>
 <% } %>
 </div>
+<% } %>

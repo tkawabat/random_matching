@@ -25,6 +25,8 @@ router.get("/",
                 res.viewParam.reserveList = ret;
             })
         );
+
+        res.viewParam.myReserveList = [];
         if (req.user) {
             p.push(Reserve.model.get({ owner: req.user._id })
                 .then((ret) => {
