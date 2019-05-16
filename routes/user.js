@@ -22,7 +22,7 @@ router.post("/", account.isAuthenticated, validator.user, routeHelper.check, (re
     res.viewParam.user = user;
 
     if (validator.isError(req)) {
-        res.viewParam.alert_warning = "入力値に問題があります";
+        res.viewParam.alert_warning.push("入力値に問題があります");
         res.status(400).render("user", res.viewParam);
         return;
     }
@@ -42,11 +42,11 @@ router.post("/", account.isAuthenticated, validator.user, routeHelper.check, (re
 
     User.model.set(user, (err, user) => {
         if (err) {
-            res.viewParam.alert_warning = "ユーザー情報の更新に失敗しました";
+            res.viewParam.alert_warning.push("ユーザー情報の更新に失敗しました");
             res.status(500).render("user", res.viewParam);
             return;
         }
-        res.viewParam.alert_info = "ユーザー情報を更新しました";
+        res.viewParam.alert_info.push("ユーザー情報を更新しました");
         res.viewParam.user = user;
         res.render("user", res.viewParam);
     });

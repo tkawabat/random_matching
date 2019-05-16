@@ -1,0 +1,103 @@
+<div class="modal fade" id="reserve_offer_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">募集メッセージをコピーしました。</div>
+            <div class="modal-body" id="reserve_offer_modal_body"></div>
+            <div class="modal-footer">
+                <a class="ml-2 btn bg_twitter" href="https://twitter.com/messages/compose">DMを送る</a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="reserve_regist_guest_modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">ゲスト登録</div>
+            <div class="modal-body"><form method="POST" action="/reserve/entry_guest/<%=reserve._id%>">
+                <input id="reserve_guest_chara_id" type="hidden" name="chara">
+                <input id="reserve_guest_name" type="text" class="form-control" name="name" placeholder="演者名" pattern="<%=C.INPUT_STRING_PATTERN%>" maxlength=64" required>
+            <button type="submit" class="mt-2 btn btn-success">登録</button>
+            </form></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("../module/reserve_detail_top", {reserve:reserve}) %>
+
+<h5 class="mt-5">役表</h5>
+
+<%
+let mask = !user || reserve.owner._id !== user._id;
+let start = moment(reserve.start_at).format("M/D (ddd) HH:mm~");
+let place = C.RESERVE_PLACE[reserve.place];
+
+// 表示ループ
+for (let c of reserve.chara) {
+    let disabled;
+    if (c.sex === "m") {
+        disabled = isReady && user && user.sex === "m" ? "" : "disabled";
+    } else if (c.sex === "f") {
+        disabled = isReady && user && user.sex === "f" ? "" : "disabled";
+    } else {
+        disabled = isReady && user ? "" : "disabled";
+    }
+
+    let dm = "こんにちは、xxxxさん。劇のお誘いです。<br>"
+        +"<br>"
+        +"台本: "+reserve.scenario_title+"<br>"
+        +"日時: "+start+"<br>"
+        +"場所: "+place+"<br>"
+        +"お願いしたい役: "+c.name+"役<br>"
+        +"<br>"
+        +"お時間のご都合がよろしければご参加して頂けないでしょうか。<br>"
+        +"参加して頂ける場合は、こちらからエントリーお願いします。<br>"
+        +url
+    ;
+%>
+<div class="chara mt-3 clearfix">
+    <div class="mb-1 mt-2">
+        <i class="fas fa-<%=C.SEX_CLASS[c.sex]%>"></i>&nbsp;<%=c.name%>役
+
+        <% if (user && c.user && (user._id === c.user._id || user._id === reserve.owner._id)) { // 登録者 or owner %>
+            <form class="reserve_detail_cancel" method="POST" action="/reserve/entry_cancel/<%=reserve._id%>">
+                <input type="hidden" name="chara" value="<%=c._id%>">
+                <% if (user._id === reserve.owner._id) { %>
+                    <input type="hidden" name="owner" value="true">
+                <% } %>
+                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('演者をキャンセルします。よろしいですか？');">
+                    <i class="fas fa-times"></i>
+                </button>
+            </form>
+        <% } %>
+    </div>
+    <% if (c.user) { %>
+        <%- include("../module/user", {user:c.user, mask:mask, mvp:false}) %>
+    <% } else { %>
+        <form class="ml-2 d-inline" method="POST" action="/reserve/entry/<%=reserve._id%>">
+            <input type="hidden" name="chara" value="<%=c._id%>">
+            <button type="submit" class="btn bg_red" <%=disabled%>>エントリー</button>
+        </form>
+
+        <% if (user && user._id === reserve.owner._id) { %>
+            <a class="ml-2" href="javascript:void(0);" onClick="RandomMatching.reserve.registGuest('<%=c._id%>');"><button type="button" class="btn bg_orange">ゲスト登録</button></a>
+            <a class="ml-2" href="javascript:void(0);" onClick="RandomMatching.reserve.offer('<%=dm%>');"><button type="button" class="btn btn-success">依頼</button></a>
+        <% } %>
+    <% } %>
+</div>
+<% } %>
+
+<% if (user && reserve.owner._id === user._id) { %>
+<div class="reserve_detail_owner_buttons text-center">
+    <a href="/reserve/create/<%=reserve._id%>"><button type="button" class="btn bg_red">企画を編集する</button></a>
+</div>
+<% } %>
+
+<div class="mt-4 alert alert-secondary" role="alert">
+上演時間を30分を過ぎると、MVP投票ができるようになります。
+</div>
+
+

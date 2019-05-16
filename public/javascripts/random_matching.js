@@ -39,6 +39,18 @@ let RandomMatching = {};
         span.remove();
     };
 
+    RandomMatching.removeInput = (button) => {
+        let element = button;
+        while (element.tagName.toLowerCase() !== "body") {
+            if (element.classList.contains("input-group")) {
+                element.classList.add("fadeOut");
+                setTimeout(() => element.remove(), 400);
+                break;
+            }
+            element = element.parentNode;
+        }
+    }
+
     // user
     RandomMatching.user = {};
     {
@@ -55,20 +67,9 @@ let RandomMatching = {};
             add.querySelector("input").removeAttribute("disabled");
             sample.parentNode.insertBefore(add, sample);
         }
-        RandomMatching.user.removeNgListInput = (button) => {
-            let element = button;
-            while (element.tagName.toLowerCase() !== "body") {
-                if (element.classList.contains("input-group")) {
-                    element.classList.add("fadeOut");
-                    setTimeout(() => element.remove(), 400);
-                    break;
-                }
-                element = element.parentNode;
-            }
-        }
     }
 
-    // reserve
+    // reserve detail
     RandomMatching.reserve = {}
     {
         let offerModal = $("#reserve_offer_modal");
@@ -86,6 +87,36 @@ let RandomMatching = {};
             registGuestCharaId.value = id;
             registGuestName.value = "";
             registGuestModal.modal("show");
+        }
+    }
+
+    // reserve create
+    {
+        let root = document.getElementById("reserve_create_chara");
+        let sample = document.getElementById("reserve_create_chara_sample");
+        let plus = document.getElementById("reserve_create_chara_plus");
+
+        RandomMatching.reserve.fixCreateCharaInputNumber = () => {
+            let divList = root.querySelectorAll(".input-group");
+            for (let i = 0; i < divList.length; i++) {
+                for (let radio of divList[i].querySelectorAll("[type='radio']")) {
+                    radio.name = "sex_list["+i+"]";
+                }
+            }
+        }
+        RandomMatching.reserve.addCreateCharaInput = () => {
+            if (sample.parentNode.querySelectorAll("[name='chara_list[]']").length >= 51) {
+                // hiddenがあるので51個からエラー
+                RandomMatching.modal("役は50個までです。");
+                return;
+            }
+            let add = sample.cloneNode(true);
+            add.removeAttribute("id");
+            for (let input of add.querySelectorAll("input")) {
+                input.removeAttribute("disabled");
+            }
+            sample.parentNode.insertBefore(add, sample);
+            RandomMatching.reserve.fixCreateCharaInputNumber();
         }
     }
 })();

@@ -6,6 +6,11 @@
             <% if (user.twitter_id) { // for guest %>
                 <span class="twitter_id"><a href="https://twitter.com/<%= user.twitter_id %>">@<%= user.twitter_id %></a></span>
             <% } %>
+            <% if (mvp && user.mvp) { %>
+                <span class="badge badge-warning ml-2">
+                    <i class="fas fa-medal mr-1"></i><%=user.mvp%>
+                </span>
+            <% } %>
         </div>
         <% if (mask) { %>
             <div class="skype">Skype: xxxx</div>
@@ -13,4 +18,6 @@
             <div class="skype">Skype: <a class="pointer" href="javascript:void(0);" onClick="RandomMatching.copyLink('<%=user.skype_id%>');RandomMatching.modal('Skype IDをコピーしました。');"><%= user.skype_id %></a></div>
         <% } %>
     </span>
+
+
 </div>

@@ -1,5 +1,7 @@
 "use strict";
 
+const moment = require("moment-timezone");
+moment.tz.setDefault("Asia/Tokyo");
 const request = require("supertest");
 const rootDir = require("app-root-path");
 const expect = require("expect");

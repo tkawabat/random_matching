@@ -23,7 +23,7 @@ module.exports.get = (req, res, next) => {
         } else {
             if (match) {
                 res.viewParam.match = match;
-                res.viewParam.match_expiration = moment(match.created_at).add(C.MATCH_EXPIRE_SECONDS, "seconds").format("kk:mm");
+                res.viewParam.match_expiration = moment(match.created_at).add(C.MATCH_EXPIRE_SECONDS, "seconds").format("HH:mm");
             }
         }
 
@@ -40,7 +40,7 @@ module.exports.get = (req, res, next) => {
         } else {
             res.viewParam.entry = entry;
             if (entry) {
-                res.viewParam.entry_expiration = moment(entry.created_at).add(30, "minutes").format("kk:mm");
+                res.viewParam.entry_expiration = moment(entry.created_at).add(30, "minutes").format("HH:mm");
             }
         }
 
@@ -60,7 +60,7 @@ module.exports.tweet = async (type, event) => {
     } else {
         return;
     }
-    let time = moment().format("kk:mm");
+    let time = moment().format("HH:mm");
     text +=  "("+time+")\n"
         + C.BASE_URL;
 

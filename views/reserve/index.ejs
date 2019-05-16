@@ -1,0 +1,21 @@
+<h4 class="mb-4">募集劇</h4>
+
+<% let disabled = user ? "" : " disabled" %>
+<div class="mb-4 text-center">
+    <a href="/reserve/create"><button type="button" class="btn bg_red" <%=disabled%>>新規作成</button></a>
+</div>
+
+
+<h5 class="mt-5 mb-3">最新一覧</h5>
+<div>
+<% for (let r of reserveList) { %>
+    <%- include("../module/reserve_list", {reserve:r}) %>
+<% } %>
+</div>
+
+<h5 class="mt-5 mb-3">あなたの最新の募集劇</h5>
+<div>
+<% for (let r of myReserveList) { %>
+    <%- include("../module/reserve_list", {reserve:r}) %>
+<% } %>
+</div>

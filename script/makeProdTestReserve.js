@@ -21,6 +21,11 @@ db.connection.once("open", async () => {
         ,start_at: moment("2019-04-30 10:00:00").toDate()
         ,public: false
         ,place: "skype"
+        ,scenario_title: scenario.title
+        ,author: scenario.author
+        ,url: scenario.url
+        ,agree_url: scenario.agree_url
+        ,minutes: scenario.minutes
         ,chara: scenario.chara.slice()
     }
     reserve.chara[0].user = "1096744908948271104";

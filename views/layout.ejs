@@ -30,26 +30,45 @@
 
 <header class="header border-bottom w-100 mb-4">
     <nav class="navbar navbar-light">
-        <a class="site_title navbar-brand" href="/entry/"><%= title %></a>
-        <span class="text-right">
+        <div class="justify-content-start">
+        <a class="nav-item menu" href="#" role="button" data-toggle="dropdown" aria-haspopup="false" aria-expanded="false">
+            <span class="navbar-toggler-icon"></span>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="/entry/">マッチング劇</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="/reserve/">募集劇</a>
+        </div>
+        <a class="site_title navbar-brand ml-2" href="/entry/"><%= title %></a>
+        </div>
+
+        <div class="justify-content-end text-right">
             <a class="question text-secondary" href="/help/"><i class="fas fa-question"></i></a>
             <% if (typeof(user) != "undefined") { %>
                 <a href="/user/"><img class="user_img" src="<%=user.image_url_https%>"></a>
             <% } %>
-        </span>
+        </div>
     </nav>
 </header>
 
 <div class="main">
 
-    <% if (alert_warning !== "") { %>
-    <div class="alert alert-danger" role="alert"><%= alert_warning %></div>
+<% if (alert_warning.length > 0) { %>
+<div class="alert alert-danger" role="alert">
+    <% for (let m of alert_warning) { %>
+        <%=m%><br>
     <% } %>
-    <% if (alert_info !== "") { %>
-    <div class="alert alert-info" role="alert"><%= alert_info %></div>
+</div>
+<% } %>
+<% if (alert_info.length > 0) { %>
+<div class="alert alert-info" role="alert"><%= alert_info %>
+    <% for (let m of alert_info) { %>
+        <%=m%><br>
     <% } %>
-    
-    <%- body %>
+</div>
+<% } %>
+
+<%- body %>
 
 </div>
 
