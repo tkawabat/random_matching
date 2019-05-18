@@ -11,6 +11,7 @@ const User = require(rootDir + "/src/model/user");
 const Scenario = require(rootDir + "/src/model/scenario");
 const Reserve = require(rootDir + "/src/model/reserve");
 const reserveHelper = require(rootDir+"/src/reserveHelper");
+const twitter = require(rootDir+"/src/twitter");
 
 
 let id = new db.Types.ObjectId;
@@ -22,22 +23,22 @@ let chara = [
     ,{ _id: new db.Types.ObjectId, name: "nare", sex:"o"}
 ];
 
-let scenario = {
-    _id: scenario_id
-    ,author: "さくしゃ"
-    ,chara: chara
-};
-let reserve = {
-    _id: id
-    ,owner: "100"
-    ,scenario: scenario_id
-    ,start_at: moment().toDate()
-    ,public: false
-    ,place: "skype"
-    ,chara: chara
-};
-
 describe("reserve helper get", () => {
+    let scenario = {
+        _id: scenario_id
+        ,author: "さくしゃ"
+        ,chara: chara
+    };
+
+    let reserve = {
+        _id: id
+        ,owner: "100"
+        ,scenario: scenario_id
+        ,start_at: moment().toDate()
+        ,public: false
+        ,place: "skype"
+        ,chara: chara
+    };
 
     it("update get", async () => {
         await Promise.all([
@@ -70,3 +71,66 @@ describe("reserve helper get", () => {
     });
 });
  
+describe("reserve helper tweetCreated", () => {
+    let mock;
+    let reserve = {
+        _id: id
+        ,owner: "100"
+        ,scenario: scenario_id
+        ,start_at: moment().toDate()
+        ,public: true
+        ,place: "skype"
+        ,chara: chara
+    };
+
+    beforeEach(async () => {
+        await Promise.all([
+            Reserve.schema.deleteMany().exec()
+        ]);
+        mock = sinon.mock(twitter);
+    });
+
+    afterEach(() => {
+        mock.restore();
+    });
+
+    it("ok", async () => {
+        let tmp = JSON.parse(JSON.stringify(reserve));
+        await Promise.all([
+            Reserve.schema.insertMany([tmp])
+        ]);
+
+        mock.expects("tweet").once();
+
+        await reserveHelper.tweetCreated(id);
+
+        mock.verify();
+    });
+
+    it("ng id違い", async () => {
+        let tmp = JSON.parse(JSON.stringify(reserve));
+        await Promise.all([
+            Reserve.schema.insertMany([tmp])
+        ]);
+
+        mock.expects("tweet").never();
+
+        await reserveHelper.tweetCreated(new db.Types.ObjectId);
+
+        mock.verify();
+    });
+
+    it("ng public false", async () => {
+        let tmp = JSON.parse(JSON.stringify(reserve));
+        reserve.public = true;
+        await Promise.all([
+            Reserve.schema.insertMany([tmp])
+        ]);
+
+        mock.expects("tweet").never();
+
+        await reserveHelper.tweetCreated(new db.Types.ObjectId);
+
+        mock.verify();
+    });
+});

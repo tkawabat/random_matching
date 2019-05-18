@@ -46,7 +46,13 @@ module.exports.isAfter = (reserve) => {
     return time > start;
 }
 
-module.exports.tweetCreated = (reserve) => {
+module.exports.tweetCreated = async (id) => {
+    let reserve = await Reserve.schema.findOne({_id: id, public: true}).lean();
+    if (!reserve) {
+        logger.info("skip tweet reserve created "+id);
+        return;
+    }
+
     let time = moment(reserve.start_at).format("M/D HH:mm");
     let remains_text = [];
     let remains = {"m": 0, "f": 0, "o": 0}
