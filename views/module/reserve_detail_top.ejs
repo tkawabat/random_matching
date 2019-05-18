@@ -11,7 +11,7 @@ let text = "『"+reserve.scenario_title+"』\n"
 
 for (let c of reserve.chara) {
     let sex = C.SEX_ICON[c.sex];
-    let name = c.user ? c.user.twitter_name : "未定";
+    let name = c.user ? c.user.twitter_name : "募集中";
     text += c.name+sex+": "+name+"\n";
 }
 text += "\n";
