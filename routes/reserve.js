@@ -87,6 +87,8 @@ router.post("/create",
     account.isAuthenticated,
     validator.reserve.create,
     (req, res, next) => ( async () => {
+        logger.info("reserve create by "+req.user.twitter_id+"\n", req.body);
+
         if (validator.isError(req)) {
             res.viewParam.reserve = validator.sanitizeInvalid(req);
             if (!res.viewParam.reserve.chara) {
@@ -100,7 +102,6 @@ router.post("/create",
         }
 
         if (!req.body._id && await Reserve.model.isLimited(req.user)) {
-        console.log(req.body._id);
             res.redirect("/reserve/?warning=reserve_limit");
             return;
         }
@@ -117,6 +118,22 @@ router.post("/create",
         reserve.public = reserve.public && reserve.public === "on";
 
         reserve = await Reserve.model.update(reserve, req.user);
+        if (reserve) {
+            logger.info("reserve create success");
+            res.redirect("/reserve/detail/"+reserve._id);
+        } else {
+            let redirect = "/reserve/create/"+(req.body._id ? req.body._id : "");
+            res.redirect(redirect+"?warning=reserve_create");
+        }
+    })().catch(next)
+);
+
+router.post("/delete/:reserve_id",
+    account.isAuthenticated,
+    (req, res, next) => ( async () => {
+        let redirect = "/reserve/detail/"+req.params.reserve_id;
+
+        reserve = await Reserve.model.delete(id, req.user);
         if (reserve) {
             res.redirect("/reserve/detail/"+reserve._id);
         } else {
