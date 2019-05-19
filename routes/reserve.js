@@ -119,9 +119,10 @@ router.post("/create",
 
         reserve = await Reserve.model.update(reserve, req.user);
         if (reserve) {
-            logger.info("reserve create success");
+            logger.info("reserve create "+reserve._id);
             res.redirect("/reserve/detail/"+reserve._id);
         } else {
+            logger.error("reserve create fail");
             let redirect = "/reserve/create/"+(req.body._id ? req.body._id : "");
             res.redirect(redirect+"?warning=reserve_create");
         }
@@ -131,14 +132,15 @@ router.post("/create",
 router.post("/delete/:reserve_id",
     account.isAuthenticated,
     (req, res, next) => ( async () => {
-        let redirect = "/reserve/detail/"+req.params.reserve_id;
-
-        reserve = await Reserve.model.delete(id, req.user);
+        let redirect = "/reserve/";
+        let reserve = await Reserve.model.delete(req.user, req.params.reserve_id);
+        let message = "delete reserve "+req.params.reserve_id;
         if (reserve) {
-            res.redirect("/reserve/detail/"+reserve._id);
+            logger.info(message);
+            res.redirect(redirect);
         } else {
-            let redirect = "/reserve/create/"+(req.body._id ? req.body._id : "");
-            res.redirect(redirect+"?warning=reserve_create");
+            logger.error(message);
+            res.redirect(redirect+"?warning=reserve_delete");
         }
     })().catch(next)
 );

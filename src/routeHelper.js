@@ -12,10 +12,12 @@ const warning = {
     ,entry_delete: "マッチングキャンセルに失敗しました。"
     ,reserve_create: "募集劇の作成に失敗しました。"
     ,reserve_limit: "短期間に大量の募集登録があったため、一週間作成ができません。"
+    ,reserve_delete: "募集の削除に失敗しました。"
     ,reserve_entry: "エントリーに失敗しました。"
     ,reserve_entry_cancel: "エントリーキャンセルに失敗しました。"
     ,reserve_mvp: "MVP投票に失敗しました。"
     ,invalid_user: "このユーザーはエントリーできません。"
+    ,error404: "ページが見つかりません。"
     ,error500: "予期せぬエラーが発生しました。時間を置いてアクセスしてください。"
 }
 
@@ -28,7 +30,9 @@ const check = ( req, res, next) => {
 };
 
 const Error404 = (req, res, next) => {
-    next(createError(404));
+    res.status(404);
+    res.viewParam.alert_warning.push(warning.error404);
+    res.render("index", res.viewParam);
 }
 
 const Error500 = (err, req, res, next) => {
