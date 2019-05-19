@@ -9,8 +9,8 @@ module.exports.SEX = {
     ,"o": "不問"
 }
 module.exports.SEX_ICON = {
-    "m": "♀"
-    ,"f": "♂"
+    "m": "♂"
+    ,"f": "♀"
     ,"o": "❓"
 }
 module.exports.SEX_CLASS = {
