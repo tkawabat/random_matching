@@ -87,6 +87,8 @@ router.post("/create",
     account.isAuthenticated,
     validator.reserve.create,
     (req, res, next) => ( async () => {
+        logger.info("reserve create by "+req.user.twitter_id+"\n", req.body);
+
         if (validator.isError(req)) {
             res.viewParam.reserve = validator.sanitizeInvalid(req);
             if (!res.viewParam.reserve.chara) {
@@ -100,7 +102,6 @@ router.post("/create",
         }
 
         if (!req.body._id && await Reserve.model.isLimited(req.user)) {
-        console.log(req.body._id);
             res.redirect("/reserve/?warning=reserve_limit");
             return;
         }
@@ -118,10 +119,28 @@ router.post("/create",
 
         reserve = await Reserve.model.update(reserve, req.user);
         if (reserve) {
+            logger.info("reserve create "+reserve._id);
             res.redirect("/reserve/detail/"+reserve._id);
         } else {
+            logger.error("reserve create fail");
             let redirect = "/reserve/create/"+(req.body._id ? req.body._id : "");
             res.redirect(redirect+"?warning=reserve_create");
+        }
+    })().catch(next)
+);
+
+router.post("/delete/:reserve_id",
+    account.isAuthenticated,
+    (req, res, next) => ( async () => {
+        let redirect = "/reserve/";
+        let reserve = await Reserve.model.delete(req.user, req.params.reserve_id);
+        let message = "delete reserve "+req.params.reserve_id;
+        if (reserve) {
+            logger.info(message);
+            res.redirect(redirect);
+        } else {
+            logger.error(message);
+            res.redirect(redirect+"?warning=reserve_delete");
         }
     })().catch(next)
 );
@@ -141,8 +160,10 @@ router.get("/detail/:reserve_id",
         res.viewParam.url = C.BASE_URL+"/reserve/detail/"+req.params.reserve_id;
 
         if (reserveHelper.isAfter(res.viewParam.reserve)) {
+            res.viewParam.status = "after";
             res.render("reserve/detail_after", res.viewParam);
         } else {
+            res.viewParam.status = "before";
             res.render("reserve/detail_before", res.viewParam);
         }
     })().catch(next)

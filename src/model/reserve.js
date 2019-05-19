@@ -110,6 +110,19 @@ model.update = async (reserve, user) => {
     ;
 };
 
+model.delete = async (user, id) => {
+    let time = moment().add(-1 * C.RESERVE_EDIT_MINUTE, "minutes").toDate();
+    let filter = {
+        _id: id
+        , owner: user._id
+        , start_at: { $gte: time}
+    };
+    let opt = JSON.parse(JSON.stringify(C.MONGO_OPT));
+    opt.select = { _id: 1 };
+
+    return this.schema.findOneAndDelete(filter, opt).lean();
+};
+
 model.entry = async (user, id) => {
     let time = moment().add(-1 * C.RESERVE_EDIT_MINUTE, "minutes").toDate();
     return this.schema.findOneAndUpdate(

@@ -70,6 +70,7 @@ describe("supertest reserve create", () => {
             expect(res.status).toBe(302);
             expect(res.header["location"]).toBe("/reserve/detail/999");
 
+            stub.restore();
             done();
         })
     });

@@ -1,17 +1,23 @@
 <h4>『<%=reserve.scenario_title%>』</h4>
 
+<% if (reserve.public !== true) { %>
+<span class="badge badge-secondary ml-2">非公開</span>
+<% } %>
+<% if (status === "after") { %>
+<span class="badge badge-warning ml-2">上演終了</span>
+<% } %>
+
 <%
 let mask = !user || reserve.owner._id !== user._id;
 let start = moment(reserve.start_at).format("M/D (ddd) HH:mm~");
 let place = C.RESERVE_PLACE[reserve.place];
-let text = "『"+reserve.scenario_title+"』\n"
-    +"主催者: "+reserve.owner.twitter_name+"\n"
+let text = ""+reserve.scenario_title+"\n"
     +start+"@"+place+"\n\n"
 ;
 
 for (let c of reserve.chara) {
     let sex = C.SEX_ICON[c.sex];
-    let name = c.user ? c.user.twitter_name : "募集中";
+    let name = c.user ? c.user.twitter_name : "";
     text += c.name+sex+": "+name+"\n";
 }
 text += "\n";

@@ -10,25 +10,34 @@
 <h4 class="mb-4">マッチングしました！</h4>
 <% } %>
 
+<%
+let text;
+if (match.type === "act2") {
+    text = "サシ劇マッチング";
+} else if (match.type === "act3_7") {
+    text = "3~7人劇マッチング";
+} else if (match.type === "event" && event) {
+    text = event.title;
+}
+text += "\n";
+
+let sex = {m: 0, f: 0};
+for (let u of match.ids) {
+    text += " "+user.twitter_name+"@"+user.twitter_id+"\n";
+    sex[u.sex]++;
+}
+%>
+
 <div class="ml-3">
-    <span class="bolder"><%= match.ids[0].twitter_name %></span>さんがSkypeで会議を作ってください
+    <span class="bolder"><%= match.ids[0].twitter_name %></span>さんがSkypeで会議を作ってください。
 </div>
 
-<div class="matched_list mt-3">
-    <%
-    let text;
-    if (match.type === "act2") {
-        text = "サシ劇マッチング";
-    } else if (match.type === "act3_7") {
-        text = "3~7人劇マッチング";
-    } else if (match.type === "event" && event) {
-        text = event.title;
-    }
-    text += "\n";
-    for (let i = 0; i < match.ids.length; i++) {
-        text += " "+match.ids[i].twitter_name+"@"+match.ids[i].twitter_id+"\n";
-    %>
-    <%- include("./module/user", {user:match.ids[i], mask:false, mvp:true}) %>
+<div class="mt-3 ml-2">
+    <i class="fas fa-mars"></i>&nbsp;<%=sex.m%> : <i class="fas fa-venus"></i>&nbsp;<%=sex.f%>
+</div>
+<div class="matched_list mt-1">
+    <% for (u of match.ids) { %>
+        <%- include("./module/user", {user:u, mask:false, mvp:true}) %>
     <% } %>
 
     <div class="mt-3 text-right">

@@ -36,3 +36,9 @@ module.exports.OBJECT_ID_LENGTH_MAX = 24;
 
 module.exports.RESERVE_EDIT_MINUTE = 30
 module.exports.RESERVE_LIMIT_PER_WEEK = 10
+
+module.exports.MONGO_OPT = {
+    maxTimeMS: 2000
+    ,strict: true
+}
+
