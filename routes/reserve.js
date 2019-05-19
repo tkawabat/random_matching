@@ -160,8 +160,10 @@ router.get("/detail/:reserve_id",
         res.viewParam.url = C.BASE_URL+"/reserve/detail/"+req.params.reserve_id;
 
         if (reserveHelper.isAfter(res.viewParam.reserve)) {
+            res.viewParam.status = "after";
             res.render("reserve/detail_after", res.viewParam);
         } else {
+            res.viewParam.status = "before";
             res.render("reserve/detail_before", res.viewParam);
         }
     })().catch(next)
