@@ -9,7 +9,7 @@
 <h5 class="mt-5 mb-3">最新一覧</h5>
 <div>
 <% for (let r of reserveList) { %>
-    <%- include("../module/reserve_list", {reserve:r}) %>
+    <%- include("../module/reserve_list", {reserve:r, helper:helper}) %>
 <% } %>
 </div>
 

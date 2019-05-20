@@ -10,9 +10,10 @@ for (let c of reserve.chara) {
     }
 }
 
+let end = helper.isAfter(reserve) ? "end" : "";
 %>
 
-<div class="reserve_list mb-2 shadow-sm">
+<div class="reserve_list mb-2 shadow-sm <%=end%>">
     <div>
         <span><%=start%></span>
         <% if (reserve.public !== true) { %>

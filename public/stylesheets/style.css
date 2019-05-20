@@ -250,6 +250,9 @@ footer {
     padding: 6px;
     word-wrap: break-word;
 }
+.reserve_list.end {
+    background: #CCCCCC;
+}
 .reserve_list a {
     text-decoration: none;
 }
