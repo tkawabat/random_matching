@@ -9,12 +9,18 @@ for (let c of reserve.chara) {
         remains_view = true;
     }
 }
+
 %>
 
 <div class="reserve_list mb-2 shadow-sm">
     <div>
         <span><%=start%></span>
-        <% if (remains_view) { %>
+        <% if (reserve.public !== true) { %>
+        <span class="badge badge-warning ml-2">非公開</span>
+        <% } %>
+        <% if (helper.isAfter(reserve)) { %>
+            <span class="badge badge-secondary ml-2 float-right">終了</span>
+        <% } else if (remains_view) { %>
         <span class="float-right">
         空き:&nbsp;
             <% for (let sex of Object.keys(remains)) {

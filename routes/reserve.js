@@ -36,6 +36,7 @@ router.get("/",
         }
 
         await Promise.all(p);
+        res.viewParam.helper = reserveHelper;
         res.render("reserve/index", res.viewParam);
     })().catch(next)
 );

@@ -24,12 +24,12 @@ module.exports.get = async (req, res, next) => {
             next(err);
         })
         .then((reserve) => {
-            // guest対応
             if (!reserve) {
                 routeHelper.Error404(req, res, next);
                 return;
             }
 
+            // guest対応
             for (let i = 0; i < reserve.chara.length; i++) {
                 let c = reserve.chara[i];
                 if (!c.guest) continue;
