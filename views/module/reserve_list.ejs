@@ -4,7 +4,7 @@ let start = moment(reserve.start_at).format("M/D (ddd) HH:mm~");
 let remains_view = false;
 let remains = {"m": 0, "f": 0, "o": 0}
 for (let c of reserve.chara) {
-    if (!c.user) {
+    if (!c.user && !c.guest) {
         remains[c.sex]++;
         remains_view = true;
     }
