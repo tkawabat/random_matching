@@ -21,7 +21,6 @@ router.get("/",
     routeHelper.check,
     entryHelper.get,
     (req, res) => {
-        res.viewParam.user = req.user;
         res.viewParam.registered = req.user.sex && req.user.skype_id;
         res.viewParam.twitter_safe = User.model.isSafeTwitter(req.user);
         let ready = User.model.isReady(req.user);
@@ -32,13 +31,13 @@ router.get("/",
         };
 
         if (res.viewParam.match && res.viewParam.match.ids.length === 1) {
-            res.render("entry_fail", res.viewParam);
+            res.render("entry/fail", res.viewParam);
         } else if (res.viewParam.match) {
-            res.render("entry_success", res.viewParam);
+            res.render("entry/success", res.viewParam);
         } else if (res.viewParam.entry) {
-            res.render("entry_now", res.viewParam);
+            res.render("entry/now", res.viewParam);
         } else {
-            res.render("entry_ready", res.viewParam);
+            res.render("entry/index", res.viewParam);
         }
     });
 

@@ -37,11 +37,11 @@ for (let u of match.ids) {
 </div>
 <div class="matched_list mt-1">
     <% for (u of match.ids) { %>
-        <%- include("./module/user", {user:u, mask:false, mvp:true}) %>
+        <%- include("../module/user", {user:u, mask:false, mvp:true}) %>
     <% } %>
 
     <div class="mt-3 text-right">
-        <%- include("./module/tweet", {text:text+"\n", hash:title}) %>
+        <%- include("../module/tweet", {text:text+"\n", hash:title}) %>
     </div>
     <div class="mt-3">
         <p class="text-right text-secondary">※このページは<%=match_expiration%>まで有効です。</p>
