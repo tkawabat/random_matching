@@ -63,7 +63,7 @@ module.exports.tweetCreated = async (id) => {
     let remains_text = [];
     let remains = {"m": 0, "f": 0, "o": 0}
     for (let c of reserve.chara) {
-        if (!c.user) remains[c.sex]++;
+        if (!c.user && !c.guest) remains[c.sex]++;
     }
     for (let sex of Object.keys(remains)) {
         if (remains[sex] === 0) continue;

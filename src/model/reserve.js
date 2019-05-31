@@ -84,7 +84,7 @@ model.update = async (reserve, user) => {
                 reserve.chara[i].guest = old.chara[i].guest;
             }
         }
-        push = old && old.public !== "true";
+        push = old && old.public !== true;
     }
 
     let time = moment().add(-1 * C.RESERVE_EDIT_MINUTE, "minutes").toDate();
