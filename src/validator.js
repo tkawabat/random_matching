@@ -8,6 +8,7 @@ const C = require(rootDir + "/src/const");
 const { check, validationResult } = require("express-validator/check")
 const validator = require("validator")
 const logger = require(rootDir+"/src/log4js");
+const tags = require(rootDir+"/src/tags");
 
 
 module.exports.isError = (req) => {
@@ -54,9 +55,27 @@ module.exports.user = [
         })
 ];
 
-module.exports.entry = [
+module.exports.entry = {};
+module.exports.entry.post = [
     check("entry_type")
         .custom((v, {req}) => !v || v === "act2" || v === "act3_7" || v === "event")
+        .withMessage("不適切な入力です。")
+    ,check("tags")
+        .custom((v, {req}) => {
+            let tagList = tags.parse(v);
+            if (tagList.length > C.TAGS_MAX_NUMBER) return false;
+            for (let tag of tagList) {
+                if (tag.length > C.TAG_MAX_LENGTH) return false;
+                if (tag.match(C.REGEX_INVALID_STRINGS) !== null) return false;
+            }
+            return true;
+        })
+        .withMessage("タグが不適切です。")
+];
+module.exports.entry.cancel = [
+    check("entry_type")
+        .custom((v, {req}) => !v || v === "act2" || v === "act3_7" || v === "event")
+        .withMessage("不適切な入力です。")
 ];
 
 module.exports.reserve = {};

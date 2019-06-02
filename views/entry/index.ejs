@@ -6,7 +6,7 @@
     </div>
 <% } %>
 
-<div class="ml-3">
+<div class="ml-3 mr-3">
 
 <h6>参加条件</h6>
 <div class="ml-4">
@@ -28,37 +28,37 @@ for (let k of Object.keys(isReady)) {
 }
 %>
 
-<div class="mt-5"><form class="d-inline" method="POST" action="/entry/">
+<form class="d-inline" method="POST" action="/entry/">
 
-    <h6>
-        タグ
-        <span class="btn_help"><a tabindex="0" role="button" data-container="body" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="タグを設定すると、Twitter募集とマッチング成功画面に表示されます">
-            <i class="fas fa-question"></i>
-        </a></span>
-    </h6>
-
-    <div class="mt-2 text-sm">
-        <input class="tags mx-auto" name="tags" placeholder="タグ追加" pattern="<%=C.INPUT_STRING_PATTERN%>" value="">
-    </div>
-    <div class="mt-1">
-        <% for (let tag of C.TAGS_MATCHING) { %>
-            <span class="badge badge-pill badge-warning ml-2 add_tag" onClick="RandomMatching.addTag('<%=tag%>');"><%=tag%></span>
-        <% } %>
-    </div>
-
-
-    <h6 class="mt-4">開始ボタン</h6>
-    <div class="mt-3 text-center">
-        <button type="submit" name="entry_type" value="act2" class="btn bg_red" <%= disabled.act2 %>>サシ劇</button>
-        <button type="submit" name="entry_type" value="act3_7" class="btn bg_red" <%= disabled.act3_7 %>>3~7人劇</button>
-    <%
-    let shiny = disabled.event ? "" : "shiny";
-    if (event) { %>
-        <button type="submit" name="entry_type" value="event" class="btn bg_red <%=shiny%>" <%=disabled.event%>>イベント劇</button>
+<h6 class="mt-5">
+    タグ
+    <span class="btn_help"><a tabindex="0" role="button" data-container="body" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="Twitter募集とマッチング成功時に表示されます">
+        <i class="fas fa-question"></i>
+    </a></span>
+</h6>
+<div class="mt-2 text-sm">
+    <textarea class="tags mx-auto" name="tags" placeholder="タグ追加" pattern="<%=C.INPUT_STRING_PATTERN%>">台本~60分</textarea>
+</div>
+<div class="mt-1 text-right text-secondary">※10文字以下, 10個まで</div>
+<div class="mt-1">
+    <% for (let tag of C.TAGS_MATCHING) { %>
+        <span class="badge badge-pill badge-warning ml-1 add_tag" onClick="RandomMatching.addTag('<%=tag%>');"><%=tag%></span>
     <% } %>
+</div>
 
-    </div>
-</form></div>
+
+<h6 class="mt-5">開始ボタン</h6>
+<div class="mt-3 text-center">
+    <button type="submit" name="entry_type" value="act2" class="btn bg_red" <%= disabled.act2 %>>サシ劇</button>
+    <button type="submit" name="entry_type" value="act3_7" class="btn bg_red" <%= disabled.act3_7 %>>3~7人劇</button>
+<%
+let shiny = disabled.event ? "" : "shiny";
+if (event) { %>
+    <button type="submit" name="entry_type" value="event" class="btn bg_red <%=shiny%>" <%=disabled.event%>>イベント劇</button>
+<% } %>
+
+</div>
+</form>
 
 <p class="mt-4 text-center text-secondary">※マッチングは30分間有効です。</p>
 <p class="mt-1 text-center text-secondary">※3-7人劇は21:00, 22:00の毎日2回行います。</p>

@@ -10,6 +10,7 @@ const C = require(rootDir + "/src/const");
 const logger = require(rootDir + "/src/log4js");
 const account = require(rootDir + "/src/account");
 const validator = require(rootDir + "/src/validator");
+const tags = require(rootDir + "/src/tags");
 const routeHelper = require(rootDir + "/src/routeHelper");
 const entryHelper = require(rootDir + "/src/entryHelper");
 const Entry = require(rootDir + "/src/model/entry");
@@ -43,9 +44,10 @@ router.get("/",
 
 router.post("/"
     ,account.isAuthenticated
-    ,validator.entry
+    ,validator.entry.post
     ,(req, res, next) => ( async () => {
         console.log(req.body);
+        console.log(tags.parse(req.body.tags));
         if (validator.isError(req)) {
             res.redirect("/entry/?warning=validate");
             return;
@@ -74,7 +76,7 @@ router.post("/"
 );
 
 
-router.post("/cancel", account.isAuthenticated, validator.entry, (req, res) => {
+router.post("/cancel", account.isAuthenticated, validator.entry.cancel, (req, res) => {
     if (validator.isError(req)) {
         res.redirect("/entry/?warning=validate");
         return;

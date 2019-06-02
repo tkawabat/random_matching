@@ -9,9 +9,11 @@ const sinon = require("sinon");
 
 const expressValidator = require("express-validator")
 const validator = require(rootDir+"/src/validator");
+const tags = require(rootDir+"/src/tags");
 
 
 let req;
+let stubs = [];
 
 describe("sanitizeInvalid", () => {
     it("user ng skype_id undefined", async () => {
@@ -177,6 +179,72 @@ describe("reserve helper get", () => {
         }
         expect(validator.isError(req)).toBe(true);
     });
+});
+
+describe("validator entry post", () => {
+    beforeEach(() => {
+        req = {
+            body: {
+                entry_type: "act2"
+                , tags: "stub"
+            }
+        }
+    });
+    afterEach(() => {
+        for (let s of stubs) s.restore();
+    })
+    it("ok no stub", async () => {
+        req.body.tags = "[{\"value\":\"1\"},{\"value\":\"2\"},{\"value\":\"3\"},{\"value\":\"4\"},{\"value\":\"5\"},{\"value\":\"6\"},{\"value\":\"7\"},{\"value\":\"8\"},{\"value\":\"9\"},{\"value\":\"10\"}]";
+        for (let check of validator.entry.post) {
+            await check(req, {}, () => {});
+        }
+        expect(validator.isError(req)).toBe(false);
+    });
+    it("ok", async () => {
+        stubs.push(sinon.stub(tags, "parse").returns(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]));
+        for (let check of validator.entry.post) {
+            await check(req, {}, () => {});
+        }
+        expect(validator.isError(req)).toBe(false);
+    });
+    it("ok blank tags", async () => {
+        stubs.push(sinon.stub(tags, "parse").returns([]));
+        for (let check of validator.entry.post) {
+            await check(req, {}, () => {});
+        }
+        expect(validator.isError(req)).toBe(false);
+    });
+    it("ng entry_type", async () => {
+        stubs.push(sinon.stub(tags, "parse").returns([]));
+        req.body.entry_type = "hoge";
+        for (let check of validator.entry.post) {
+            await check(req, {}, () => {});
+        }
+        expect(validator.isError(req)).toBe(true);
+    });
+    it("ng tags number", async () => {
+        stubs.push(sinon.stub(tags, "parse").returns(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"]));
+        for (let check of validator.entry.post) {
+            await check(req, {}, () => {});
+        }
+        expect(validator.isError(req)).toBe(true);
+    });
+    it("ng tag length", async () => {
+        stubs.push(sinon.stub(tags, "parse").returns(["12345678901"]));
+        for (let check of validator.entry.post) {
+            await check(req, {}, () => {});
+        }
+        expect(validator.isError(req)).toBe(true);
+    });
+    it("ng tag invalid word", async () => {
+        stubs.push(sinon.stub(tags, "parse").returns(["%"]));
+        for (let check of validator.entry.post) {
+            await check(req, {}, () => {});
+        }
+        expect(validator.isError(req)).toBe(true);
+    });
+
+
 });
 
 describe("validator reserve create", () => {

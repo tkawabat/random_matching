@@ -9,8 +9,9 @@ const db = require(rootDir+"/src/mongodb");
 
 const schema = db.Schema({
     _id: { type: String, ref: "user"}
-    ,type: {type: String }
     ,ids: [{type: String, ref: "user"}]
+    ,type: {type: String }
+    ,tags: [{ type: String }]
 },
     { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
 );
