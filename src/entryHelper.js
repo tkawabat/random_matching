@@ -56,14 +56,13 @@ module.exports.tweet = (entry, event) => {
     let type = entry.type[0];
 
     let text;
-    //let time = moment().add(3, "minutes").toDate();
-    let time = moment().add(3, "seconds").toDate();
+    let time = moment().add(3, "minutes").toDate();
 
     if (type === "act2") {
         text = "サシ劇マッチングで待っている方がいます。すぐに劇をしたい方は是非マッチングを！";
     } else if (type === "act3_7") {
         text = "3~7劇マッチングで待っている方がいます。すぐに劇をしたい方は是非マッチングを！";
-    } else if (type === "event") {
+    } else if (type === "event" && event !== null) {
         text = event.title+"で待っている方がいます。ご興味ある方は是非マッチングを！";
     } else {
         return;
