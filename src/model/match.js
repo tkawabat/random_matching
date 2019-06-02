@@ -24,10 +24,11 @@ module.exports.schema = db.model("match", schema);
 module.exports.model = {}
 module.exports.model.get = async (user) => {
     return this.schema.findOne(
-        { matched: { $elemMatch: { user: user._id }} }
+        { matched: { $elemMatch: { user: user }} }
+        , {}
         , C.MONGO_OPT
     )
     .populate("matched.user")
-    .exec()
+    .lean()
     ;
 }

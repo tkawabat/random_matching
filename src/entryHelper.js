@@ -14,42 +14,35 @@ const Entry = require(rootDir + "/src/model/entry");
 const Match = require(rootDir + "/src/model/match");
 
 
-module.exports.get = (req, res, next) => {
-    let n = 2;
-
-    Match.schema.findOne({ _id: req.user.id }).populate("ids").exec((err, match) => {
-        if (err) {
+module.exports.get = async (req, res, next) => {
+    let p = [];
+    p.push(Match.model.get(req.user)
+        .catch((err) => {
             logger.error(err);
-            throw err;
-        } else {
+            next(err);
+        })
+        .then((match) => {
+            res.viewParam.match = match;
             if (match) {
-                res.viewParam.match = match;
                 res.viewParam.match_expiration = moment(match.created_at).add(C.MATCH_EXPIRE_SECONDS, "seconds").format("HH:mm");
             }
-        }
+        })
+    );
 
-        n--;
-        if (n === 0) {
-            next();
-        }
-    });
-
-    Entry.schema.findOne({ _id: req.user.id }).populate("_id").exec((err, entry) => {
-        if (err) {
+    p.push(Entry.schema.findOne({ _id: req.user._id }).populate("_id").exec()
+        .catch((err) => {
             logger.error(err);
-            throw err;
-        } else {
+            next(err);
+        })
+        .then((entry) => {
             res.viewParam.entry = entry;
             if (entry) {
                 res.viewParam.entry_expiration = moment(entry.created_at).add(30, "minutes").format("HH:mm");
             }
-        }
+        })
+    );
 
-        n--;
-        if (n === 0) {
-            next();
-        }
-    });
+    return Promise.all(p).then(() => next());
 }
 
 module.exports.tweet = (entry, event) => {

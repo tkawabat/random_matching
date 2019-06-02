@@ -14,11 +14,15 @@ const matcher = require(rootDir+"/src/matcher");
 
 let stubs = [];
 
-let assertMatch = async (user, type, entries) => {
+let assertMatch = async (user, type, matched) => {
     return Promise.all([
         Match.model.get(user).then((ret) => {
-            expect(type).toEqual(type);
-            expect(entries).toEqual(entries);
+            expect(ret.type).toEqual(type);
+            expect(ret.matched.length).toEqual(matched.length);
+            for (let i = 0; i < matched.length; i++) {
+                expect(ret.matched[i].user._id).toEqual(matched[i]._id);
+                expect(ret.matched[i].tags).toEqual(matched[i].tags);
+            }
         })
         ,Entry.schema.findOne({_id: user._id}).exec().then((entry) => {
             expect(entry).toBe(null);
@@ -55,20 +59,22 @@ describe("machter dbあり", () => {
     it("2マッチ成功", async () => {
         let entries = [
             {_id: 100, type: ["act2"], tags: ["aaa", "bbb"]}
-            , {_id: 101, type: ["act2"]}
+            , {_id: 101, type: ["act2"], tags: []}
         ]
         await Entry.schema.insertMany(entries);
 
         await matcher.match("act2");
 
-        assertMatch("100", "act2", entries)
-        assertMatch("101", "act2", entries)
+        await Promise.all([
+            assertMatch("100", "act2", entries)
+            , assertMatch("101", "act2", entries)
+        ]);
     });
 
     it("2マッチ失敗 type違い", async () => {
         let entries = [
-            {_id: 100, type: ["act2"]}
-            ,{_id: 101, type: ["act3_7"]}
+            {_id: 100, type: ["act2"], tags: []}
+            ,{_id: 101, type: ["act3_7"], tags: []}
         ];
         await Entry.schema.insertMany(entries);
 
@@ -82,15 +88,17 @@ describe("machter dbあり", () => {
 
     it("3:1マッチ成功1人あまり", async () => {
         let entries = [
-            {_id: 100, type: ["act3_7"]}
-            ,{_id: 101, type: ["act3_7"]}
-            ,{_id: 102, type: ["act3_7"]}
-            ,{_id: 103, type: ["act3_7"]}
-            ,{_id: 200, type: ["act3_7"]}
+            {_id: 100, type: ["act3_7"], tags: []}
+            ,{_id: 101, type: ["act3_7"], tags: []}
+            ,{_id: 102, type: ["act3_7"], tags: []}
+            ,{_id: 103, type: ["act3_7"], tags: []}
+            ,{_id: 200, type: ["act3_7"], tags: []}
         ];
         await Entry.schema.insertMany(entries);
 
         await matcher.match("act3_7");
+
+        entries.splice(3, 1);
 
         await Promise.all([
             assertNotMatch("103")
@@ -103,9 +111,9 @@ describe("machter dbあり", () => {
 
     it("3マッチ失敗 type違い", async () => {
         let entries = [
-            {_id: 100, type: ["act3_7"]}
-            ,{_id: 101, type: ["act3_7"]}
-            ,{_id: 102, type: ["act2"]}
+            {_id: 100, type: ["act3_7"], tags: []}
+            ,{_id: 101, type: ["act3_7"], tags: []}
+            ,{_id: 102, type: ["act2"], tags: []}
         ];
         await Entry.schema.insertMany(entries);
 
@@ -136,12 +144,11 @@ describe("machter dbあり matchEvent", () => {
 
 
     it("2:2エントリー　1:1台本", async () => {
-        let entries = [
-            {_id: 100, type: ["event"]}
-            ,{_id: 101, type: ["event"]}
-            ,{_id: 200, type: ["event"]}
-            ,{_id: 201, type: ["event"]}
-        ];
+        let entry0 = {_id: 100, type: ["event"], tags: []};
+        let entry1 = {_id: 101, type: ["event"], tags: []};
+        let entry2 = {_id: 200, type: ["event"], tags: []};
+        let entry3 = {_id: 201, type: ["event"], tags: []};
+        let entries = [entry0, entry1, entry2, entry3];
         await Entry.schema.insertMany(entries);
 
         let scenario = {
@@ -157,23 +164,20 @@ describe("machter dbあり matchEvent", () => {
         }
         await matcher.matchEvent(event);
 
-        let match;
-        let entry;
-
         await Promise.all([
-            ,assertMatch("100", "event", entries)
-            ,assertMatch("101", "event", entries)
-            ,assertMatch("200", "event", entries)
-            ,assertMatch("201", "event", entries)
+            ,assertMatch("100", "event", [entry0, entry2])
+            ,assertMatch("101", "event", [entry1, entry3])
+            ,assertMatch("200", "event", [entry0, entry2])
+            ,assertMatch("201", "event", [entry1, entry3])
         ]);
     });
 
     it("3:1エントリー　1:1台本", async () => {
         let entries = [
-            {_id: 100, type: ["event"]}
-            ,{_id: 101, type: ["event"]}
-            ,{_id: 200, type: ["event"]}
-            ,{_id: 102, type: ["event"]}
+            {_id: 100, type: ["event"], tags: []}
+            ,{_id: 101, type: ["event"], tags: []}
+            ,{_id: 200, type: ["event"], tags: []}
+            ,{_id: 102, type: ["event"], tags: []}
         ];
         await Entry.schema.insertMany(entries);
 
@@ -190,8 +194,8 @@ describe("machter dbあり matchEvent", () => {
         }
         await matcher.matchEvent(event);
 
-        let match;
-        let entry;
+        entries.splice(3, 1);
+        entries.splice(1, 1);
 
         await Promise.all([
             assertNotMatch("101")
@@ -203,8 +207,8 @@ describe("machter dbあり matchEvent", () => {
 
     it("2マッチ失敗 type違い", async () => {
         let entries = [
-            {_id: 100, type: ["event"]}
-            ,{_id: 200, type: ["act2"]}
+            {_id: 100, type: ["event"], tags: []}
+            ,{_id: 200, type: ["act2"], tags: []}
         ];
         await Entry.schema.insertMany(entries);
         let scenario = {
@@ -228,13 +232,13 @@ describe("machter dbあり matchEvent", () => {
 
     it("4:2エントリー　3:1台本", async () => {
         let entries = [
-             {_id: 100, type: ["event"]}
-            ,{_id: 101, type: ["event"]}
-            ,{_id: 102, type: ["event"]}
-            ,{_id: 103, type: ["event"]}
-            ,{_id: 200, type: ["event"]}
-            ,{_id: 201, type: ["event"]}
-            ,{_id: 202, type: ["event"]}
+             {_id: 100, type: ["event"], tags: []}
+            ,{_id: 101, type: ["event"], tags: []}
+            ,{_id: 102, type: ["event"], tags: []}
+            ,{_id: 103, type: ["event"], tags: []}
+            ,{_id: 200, type: ["event"], tags: []}
+            ,{_id: 201, type: ["event"], tags: []}
+            ,{_id: 202, type: ["event"], tags: []}
         ];
         await Entry.schema.insertMany(entries);
 
@@ -252,6 +256,10 @@ describe("machter dbあり matchEvent", () => {
             ,scenario: scenario
         }
         await matcher.matchEvent(event);
+
+        entries.splice(6, 1);
+        entries.splice(5, 1);
+        entries.splice(3, 1);
 
         await Promise.all([
             assertNotMatch("103")
