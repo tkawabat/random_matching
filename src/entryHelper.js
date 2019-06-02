@@ -56,7 +56,8 @@ module.exports.tweet = (entry, event) => {
     let type = entry.type[0];
 
     let text;
-    let time = moment().add(3, "minutes").toDate();
+    //let time = moment().add(3, "minutes").toDate();
+    let time = moment().add(3, "seconds").toDate();
 
     if (type === "act2") {
         text = "サシ劇マッチングで待っている方がいます。すぐに劇をしたい方は是非マッチングを！";
@@ -71,8 +72,11 @@ module.exports.tweet = (entry, event) => {
     schedule.push("entry_tweet_"+type, true, time, async () => {
         let isExist = await Entry.model.isEntryExist(type);
         if (!isExist) return;
-        text +=  "("+moment().format("HH:mm")+")\n"
-            + C.BASE_URL;
+        text +=  "("+moment().format("HH:mm")+")\n";
+        if (entry.tags && entry.tags.length > 0) {
+            text += "タグ: "+entry.tags.join(", ")+"\n";
+        }
+        text += C.BASE_URL;
         twitter.tweet(text);
     });
 }

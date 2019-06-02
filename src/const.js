@@ -26,8 +26,8 @@ module.exports.RESERVE_PLACE = {
     ,"twitcasting_discord": "ツイキャス(Discord)"
     ,"other": "その他"
 }
-module.exports.TAGS_MAX_NUMBER = 10; // javascriptに直書き
-module.exports.TAG_MAX_LENGTH = 10; // javascriptに直書き
+module.exports.TAGS_MAX_NUMBER = 5; // javascriptに直書き
+module.exports.TAG_MAX_LENGTH = 8; // javascriptに直書き
 module.exports.TAGS_MATCHING = [
     "雑談少なめ"
     , "雑談多め"

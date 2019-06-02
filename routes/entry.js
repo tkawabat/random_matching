@@ -46,8 +46,6 @@ router.post("/"
     ,account.isAuthenticated
     ,validator.entry.post
     ,(req, res, next) => ( async () => {
-        console.log(req.body);
-        console.log(tags.parse(req.body.tags));
         if (validator.isError(req)) {
             res.redirect("/entry/?warning=validate");
             return;
@@ -60,13 +58,13 @@ router.post("/"
 
         let entry = {
             _id: req.user._id
-            ,type: [req.body.entry_type]
+            , type: [req.body.entry_type]
+            , tags: tags.parse(req.body.tags)
         };
         let opt = C.MONGO_OPT;
         opt.new = true;
         opt.upsert = true;
         entry = await Entry.schema.findOneAndUpdate({"_id": entry._id}, entry, opt).exec();
-        console.log(entry);
 
         entryHelper.tweet(entry, res.viewParam.event);
 

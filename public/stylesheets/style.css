@@ -131,6 +131,9 @@ input[type="checkbox"] {
     font-color: #696969;
     text-shadow: 1px 1px 1px silver;
 }
+.bottom_blank {
+    height: 80px;
+}
 
 .header .menu:hover {
     text-decoration: none;

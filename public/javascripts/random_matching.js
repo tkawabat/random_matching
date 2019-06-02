@@ -20,11 +20,11 @@ let RandomMatching = {};
     { // tags
         let tagify = new Tagify(document.querySelector("textarea.tags"), {
             whitelist: []
-            , maxTags: 10
+            , maxTags: 5
             , callbacks: {
                 add: (v) => {
                     let text = v.detail.data.value;
-                    if (text && text.length > 10) setTimeout(() => { tagify.removeTag(text)}, 400);
+                    if (text && text.length > 8) setTimeout(() => { tagify.removeTag(text)}, 400);
                 }
             }
         });
