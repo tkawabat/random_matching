@@ -6,9 +6,9 @@ const express = require("express");
 const router = express.Router();
 const moment = require("moment-timezone");
 moment.tz.setDefault("Asia/Tokyo");
+const C = require(rootDir + "/src/const");
 const logger = require(rootDir + "/src/log4js");
 const account = require(rootDir + "/src/account");
-const schedule = require(rootDir + "/src/schedule");
 const validator = require(rootDir + "/src/validator");
 const routeHelper = require(rootDir + "/src/routeHelper");
 const entryHelper = require(rootDir + "/src/entryHelper");
@@ -41,38 +41,37 @@ router.get("/",
         }
     });
 
-router.post("/", account.isAuthenticated, validator.entry, (req, res) => {
-    if (validator.isError(req)) {
-        res.redirect("/entry/?warning=validate");
-        return;
-    }
-
-    if (!User.model.isReady(req.user)) {
-        res.redirect("/entry/?warning=invalid_user");
-        return;
-    }
-
-    const entry = {
-        _id: req.user._id
-        ,type: [req.body.entry_type]
-    };
-    Entry.schema.findOneAndUpdate({"_id": entry._id}, entry, {upsert: true}, (err, entry) => {
-        if (err) {
-            logger.error(err);
-            res.redirect("/entry/?warning=entry_save");
+router.post("/"
+    ,account.isAuthenticated
+    ,validator.entry
+    ,(req, res, next) => ( async () => {
+        console.log(req.body);
+        if (validator.isError(req)) {
+            res.redirect("/entry/?warning=validate");
             return;
         }
-        if (req.body.entry_type === "act2" || req.body.entry_type === "event") {
-            let t = moment().add(3, "minutes").toDate();
-            schedule.push("entry_tweet", true, t, () => {
-                entryHelper.tweet(req.body.entry_type, res.viewParam.event);
-            });
+
+        if (!User.model.isReady(req.user)) {
+            res.redirect("/entry/?warning=invalid_user");
+            return;
         }
+
+        let entry = {
+            _id: req.user._id
+            ,type: [req.body.entry_type]
+        };
+        let opt = C.MONGO_OPT;
+        opt.new = true;
+        opt.upsert = true;
+        entry = await Entry.schema.findOneAndUpdate({"_id": entry._id}, entry, opt).exec();
+        console.log(entry);
+
+        entryHelper.tweet(entry, res.viewParam.event);
+
         logger.info("entry "+req.body.entry_type+" "+req.user.twitter_id);
         res.redirect("/entry/");
-    });
-
-});
+    })().catch(next)
+);
 
 
 router.post("/cancel", account.isAuthenticated, validator.entry, (req, res) => {

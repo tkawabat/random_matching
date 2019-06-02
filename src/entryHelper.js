@@ -8,6 +8,7 @@ const C = require(rootDir + "/src/const");
 const logger = require(rootDir + "/src/log4js");
 const cache = require(rootDir + "/src/cache");
 const twitter = require(rootDir + "/src/twitter");
+const schedule = require(rootDir + "/src/schedule");
 const User = require(rootDir + "/src/model/user");
 const Entry = require(rootDir + "/src/model/entry");
 const Match = require(rootDir + "/src/model/match");
@@ -51,23 +52,30 @@ module.exports.get = (req, res, next) => {
     });
 }
 
-module.exports.tweet = async (type, event) => {
+module.exports.tweet = (entry, event) => {
+    let type = entry.type[0];
+
     let text;
+    //let time = moment().add(3, "minutes").toDate();
+    let time = moment().add(3, "seconds").toDate();
+
     if (type === "act2") {
         text = "サシ劇マッチングで待っている方がいます。すぐに劇をしたい方は是非マッチングを！";
+    } else if (type === "act3_7") {
+        text = "3~7劇マッチングで待っている方がいます。すぐに劇をしたい方は是非マッチングを！";
     } else if (type === "event") {
         text = event.title+"で待っている方がいます。ご興味ある方は是非マッチングを！";
     } else {
         return;
     }
-    let time = moment().format("HH:mm");
-    text +=  "("+time+")\n"
-        + C.BASE_URL;
 
-    let isExist = await Entry.model.isEntryExist(type);
-    if (!isExist) return;
-
-    twitter.tweet(text);
+    schedule.push("entry_tweet_"+type, true, time, async () => {
+        let isExist = await Entry.model.isEntryExist(type);
+        if (!isExist) return;
+        text +=  "("+moment().format("HH:mm")+")\n"
+            + C.BASE_URL;
+        twitter.tweet(text);
+    });
 }
 
 module.exports.isSafeTwitter = (user) => {
@@ -83,6 +91,7 @@ module.exports.isSafeTwitter = (user) => {
 }
 
 module.exports.isAct3_7EntryTime = () => {
+    return true;
     let hour = moment().hour();
     let minutes = moment().minutes();
     if (hour === 20 && minutes > 30) {

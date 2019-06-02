@@ -19,6 +19,13 @@ body {
     }
 }
 
+tag > div {
+    background: #E5E5E5;
+}
+tag > div:hover {
+    background: #D3E2E2;
+}
+
 .content {
     height: 100%;
     min-height: 100%;
@@ -45,6 +52,9 @@ p {
 }
 .bolder {
     font-weight: bolder;
+}
+.w_80 {
+    width: 80%;
 }
 
 .bg_orange {
@@ -77,6 +87,22 @@ p {
 }
 .btn:disabled {
     background: #ccc;
+}
+span.btn_help {
+    display: inline-block;
+    width:  20px;
+    height: 20px;
+    border-radius: 50%;
+    border: solid thin;
+    color: #868e96;
+}
+span.btn_help a {
+    position: relative;
+    top: -2.5px;
+    right: -4.5px;
+    font-size: 12px;
+    color: #868e96;
+    cursor: pointer;
 }
 
 .fa-mars {

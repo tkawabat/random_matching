@@ -9,6 +9,44 @@ let RandomMatching = {};
         gtag("js", new Date());
         gtag("config", "UA-136115470-1");
     }
+    { // help
+        $(() => {
+            $(".btn_help a").popover({
+                container: "body"
+                , trigger: "focus"
+            })
+        });
+    }
+    {
+        var input = document.querySelector("input.tags"),
+            tagify = new Tagify(input, {
+                whitelist: ["雑談少なめ", "雑談多め", "台本30分以内", "台本30~60分", "台本1時間以上"]
+                , dropdown: {
+                                classname : "color-blue",
+                                enabled   : 0,
+                                maxItems  : 5
+                            }
+                , callbacks        : {
+                    add    : console.log,  // callback when adding a tag
+                    remove : console.log   // callback when removing a tag
+                }
+            });
+    }
+    {
+        var input = document.querySelector("textarea.tags"),
+            tagify = new Tagify(input, {
+                whitelist: ["雑談少なめ", "雑談多め", "台本30分以内", "台本30~60分", "台本1時間以上"]
+                , dropdown: {
+                                classname : "color-blue",
+                                enabled   : 0,
+                                maxItems  : 5
+                            }
+                , callbacks        : {
+                    add    : console.log,  // callback when adding a tag
+                    remove : console.log   // callback when removing a tag
+                }
+            });
+    }
     {
         let modal = $("#modal");
         let modalBody = document.getElementById("modal_body");
