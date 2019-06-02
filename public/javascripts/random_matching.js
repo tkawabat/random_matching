@@ -17,35 +17,13 @@ let RandomMatching = {};
             })
         });
     }
-    {
-        var input = document.querySelector("input.tags"),
-            tagify = new Tagify(input, {
-                whitelist: ["雑談少なめ", "雑談多め", "台本30分以内", "台本30~60分", "台本1時間以上"]
-                , dropdown: {
-                                classname : "color-blue",
-                                enabled   : 0,
-                                maxItems  : 5
-                            }
-                , callbacks        : {
-                    add    : console.log,  // callback when adding a tag
-                    remove : console.log   // callback when removing a tag
-                }
-            });
-    }
-    {
-        var input = document.querySelector("textarea.tags"),
-            tagify = new Tagify(input, {
-                whitelist: ["雑談少なめ", "雑談多め", "台本30分以内", "台本30~60分", "台本1時間以上"]
-                , dropdown: {
-                                classname : "color-blue",
-                                enabled   : 0,
-                                maxItems  : 5
-                            }
-                , callbacks        : {
-                    add    : console.log,  // callback when adding a tag
-                    remove : console.log   // callback when removing a tag
-                }
-            });
+    { // tags
+        let tagify = new Tagify(document.querySelector("input.tags"), {
+            whitelist: []
+        });
+        RandomMatching.addTag = (text) => {
+            tagify.addTags([text]);
+        }
     }
     {
         let modal = $("#modal");

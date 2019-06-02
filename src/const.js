@@ -26,6 +26,16 @@ module.exports.RESERVE_PLACE = {
     ,"twitcasting_discord": "ツイキャス(Discord)"
     ,"other": "その他"
 }
+module.exports.TAGS_MATCHING = [
+    "雑談少なめ"
+    , "雑談多め"
+    , "台本~30分"
+    , "台本~60分"
+    , "台本60分以上"
+    , "一劇のみ"
+    , "まったり"
+    , "サクサク"
+]
 module.exports.MATCH_EXPIRE_SECONDS = 60 * 30;
 
 module.exports.REGEX_INVALID_STRINGS = /[,;'"%&#><\\\n\r\0]/;
