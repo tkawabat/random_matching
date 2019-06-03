@@ -62,7 +62,7 @@ router.post("/"
             , type: [req.body.entry_type]
             , tags: tags.parse(req.body.tags)
         };
-        let opt = C.MONGO_OPT;
+        let opt = JSON.parse(JSON.stringify(C.MONGO_OPT));
         opt.new = true;
         opt.upsert = true;
         entry = await Entry.schema.findOneAndUpdate({"_id": entry._id}, entry, opt).exec();

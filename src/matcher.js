@@ -48,7 +48,7 @@ module.exports.matched = async (matched, type) => {
     let p = [];
     let log = [];
     let list = [];
-    let opt = C.MONGO_OPT;
+    let opt = JSON.parse(JSON.stringify(C.MONGO_OPT));
     opt.new = true;
     opt.upsert = true;
 

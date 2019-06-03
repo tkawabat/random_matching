@@ -194,14 +194,14 @@ describe("validator entry post", () => {
         for (let s of stubs) s.restore();
     })
     it("ok no stub", async () => {
-        req.body.tags = "[{\"value\":\"1\"},{\"value\":\"2\"},{\"value\":\"3\"},{\"value\":\"4\"},{\"value\":\"5\"},{\"value\":\"6\"},{\"value\":\"7\"},{\"value\":\"8\"},{\"value\":\"9\"},{\"value\":\"10\"}]";
+        req.body.tags = "[{\"value\":\"1\"},{\"value\":\"2\"},{\"value\":\"3\"},{\"value\":\"4\"},{\"value\":\"5\"}]";
         for (let check of validator.entry.post) {
             await check(req, {}, () => {});
         }
         expect(validator.isError(req)).toBe(false);
     });
     it("ok", async () => {
-        stubs.push(sinon.stub(tags, "parse").returns(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]));
+        stubs.push(sinon.stub(tags, "parse").returns(["1", "2", "3", "4", "5"]));
         for (let check of validator.entry.post) {
             await check(req, {}, () => {});
         }
@@ -223,14 +223,14 @@ describe("validator entry post", () => {
         expect(validator.isError(req)).toBe(true);
     });
     it("ng tags number", async () => {
-        stubs.push(sinon.stub(tags, "parse").returns(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"]));
+        stubs.push(sinon.stub(tags, "parse").returns(["1", "2", "3", "4", "5", "6"]));
         for (let check of validator.entry.post) {
             await check(req, {}, () => {});
         }
         expect(validator.isError(req)).toBe(true);
     });
     it("ng tag length", async () => {
-        stubs.push(sinon.stub(tags, "parse").returns(["12345678901"]));
+        stubs.push(sinon.stub(tags, "parse").returns(["123456789"]));
         for (let check of validator.entry.post) {
             await check(req, {}, () => {});
         }

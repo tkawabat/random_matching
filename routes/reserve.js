@@ -150,7 +150,6 @@ router.get("/detail/:reserve_id",
     reserveHelper.get,
     routeHelper.check,
     (req, res, next) => ( async () => {
-        console.log("ro");
         res.viewParam.isReady = req.user && User.model.isReady(req.user);
         for (let c of res.viewParam.reserve.chara) { // エントリー済み
             if (c.user && req.user && c.user._id === req.user._id) {
