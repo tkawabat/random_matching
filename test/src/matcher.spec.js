@@ -15,10 +15,10 @@ let stubs = [];
 describe("machter dbなし", () => {
 
     beforeEach(() => {
+        stubs.push(sinon.stub(twitter, "sendDm"));
         stubs.push(sinon.stub(Entry.schema, "findOneAndUpdate"));
         stubs.push(sinon.stub(Match.schema, "insertMany"));
     });
-
     afterEach(() => {
         for (let s of stubs) s.restore();
     });
