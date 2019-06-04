@@ -9,6 +9,7 @@ const logger = require(rootDir + "/src/log4js");
 const cache = require(rootDir + "/src/cache");
 const twitter = require(rootDir + "/src/twitter");
 const schedule = require(rootDir + "/src/schedule");
+const matcher = require(rootDir + "/src/matcher");
 const User = require(rootDir + "/src/model/user");
 const Entry = require(rootDir + "/src/model/entry");
 const Match = require(rootDir + "/src/model/match");
@@ -45,17 +46,37 @@ module.exports.get = async (req, res, next) => {
     return Promise.all(p).then(() => next());
 }
 
-module.exports.tweet = (entry, event) => {
+module.exports.pushScheduleMatch = (entry) => {
+    let type = entry.type[0];
+    if (type !== "act3_7") return;
+    if (schedule.jobs["match_2_act3_7"]) return;
+
+    let time1 = moment().add(15, "minutes");
+    let time2 = moment().add(30, "minutes");
+
+    schedule.push("match_1_act3_7", true, time1.toDate(), async () => {
+        matcher.match("act3_7");
+    });
+    schedule.push("match_2_act3_7", true, time2.toDate(), async () => {
+        matcher.match("act3_7");
+    });
+
+    let text = "3~7人劇マッチングが開始しました。\n"
+        +time1.format("HH:mm")+", "+time2.format("HH:mm")+"にマッチングします。\n";
+    if (entry.tags && entry.tags.length > 0) {
+        text += "タグ: "+entry.tags.join(", ")+"\n";
+    }
+    twitter.tweet(text);
+}
+
+module.exports.pushScheduleTweet = (entry, event) => {
     let type = entry.type[0];
 
     let text;
-    //let time = moment().add(3, "minutes").toDate();
-    let time = moment().add(3, "seconds").toDate();
+    let time = moment().add(3, "minutes").toDate();
 
     if (type === "act2") {
         text = "サシ劇マッチングで待っている方がいます。すぐに劇をしたい方は是非マッチングを！";
-    } else if (type === "act3_7") {
-        text = "3~7劇マッチングで待っている方がいます。すぐに劇をしたい方は是非マッチングを！";
     } else if (type === "event" && event !== null) {
         text = event.title+"で待っている方がいます。ご興味ある方は是非マッチングを！";
     } else {

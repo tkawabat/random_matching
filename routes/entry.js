@@ -67,7 +67,8 @@ router.post("/"
         opt.upsert = true;
         entry = await Entry.schema.findOneAndUpdate({"_id": entry._id}, entry, opt).exec();
 
-        entryHelper.tweet(entry, res.viewParam.event);
+        entryHelper.pushScheduleMatch(entry);
+        entryHelper.pushScheduleTweet(entry, res.viewParam.event);
 
         logger.info("entry "+req.body.entry_type+" "+req.user.twitter_id);
         res.redirect("/entry/");
