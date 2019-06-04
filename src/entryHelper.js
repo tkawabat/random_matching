@@ -43,6 +43,12 @@ module.exports.get = async (req, res, next) => {
         })
     );
 
+    p.push(Entry.model.countByType()
+        .then((count) => {
+            res.viewParam.entryCount = count;
+        })
+    );
+
     return Promise.all(p).then(() => next());
 }
 

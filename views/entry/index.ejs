@@ -47,17 +47,16 @@ for (let k of Object.keys(isReady)) {
 <div class="mt-1 text-right text-secondary">※<%=C.TAGS_MAX_NUMBER%>文字以下, <%=C.TAG_MAX_LENGTH%>個まで</div>
 
 
-<h6 class="mt-5">開始ボタン</h6>
-<div class="mt-3 text-center">
-    <button type="submit" name="entry_type" value="act2" class="btn bg_red" <%= disabled.act2 %>>サシ劇</button>
-    <button type="submit" name="entry_type" value="act3_7" class="btn bg_red" <%= disabled.act3_7 %>>3~7人劇</button>
+<h6 class="mt-4">開始ボタン</h6>
+<%- include("../module/entry_start", {type: "act2", disabled: disabled, shiny: ""}) %>
+<%- include("../module/entry_start", {type: "act3_7", disabled: disabled, shiny: ""}) %>
+
 <%
 let shiny = disabled.event ? "" : "shiny";
 if (event) { %>
-    <button type="submit" name="entry_type" value="event" class="btn bg_red <%=shiny%>" <%=disabled.event%>>イベント劇</button>
+<%- include("../module/entry_start", {type: "act3_7", disabled: disabled, shiny: shiny}) %>
 <% } %>
 
-</div>
 </form>
 
 <p class="mt-4 text-center text-secondary">※マッチングは30分間有効です。</p>

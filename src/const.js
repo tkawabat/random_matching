@@ -18,6 +18,11 @@ module.exports.SEX_CLASS = {
     ,"f": "venus"
     ,"o": "question"
 }
+module.exports.ENTRY_TYPE_TEXT = {
+    "act2": "サシ劇"
+    , "act3_7": "3~7人劇"
+    , "event": "イベント劇"
+}
 module.exports.RESERVE_PLACE = {
     "skype": "Skype"
     ,"discord": "Discord"
