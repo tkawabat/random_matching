@@ -38,7 +38,7 @@ module.exports.get = async (req, res, next) => {
         .then((entry) => {
             res.viewParam.entry = entry;
             if (entry) {
-                res.viewParam.entry_expiration = moment(entry.created_at).add(30, "minutes").format("HH:mm");
+                res.viewParam.entry_expiration = moment(entry.created_at).add(C.ENTRY_EXPIRE_SECONDS, "seconds").format("HH:mm");
             }
         })
     );
@@ -68,7 +68,7 @@ module.exports.pushScheduleMatch = (entry) => {
     });
 
     let text = "3~7人劇マッチングが開始しました。\n"
-        +time1.format("HH:mm")+", "+time2.format("HH:mm")+"にマッチングします。\n";
+        +time1.format("HH:mm")+", "+time2.format("HH:mm")+"にマッチングします。是非エントリーを！\n";
     if (entry.tags && entry.tags.length > 0) {
         text += "タグ: "+entry.tags.join(", ")+"\n";
     }
@@ -82,9 +82,9 @@ module.exports.pushScheduleTweet = (entry, event) => {
     let time = moment().add(3, "minutes").toDate();
 
     if (type === "act2") {
-        text = "サシ劇マッチングで待っている方がいます。すぐに劇をしたい方は是非マッチングを！";
+        text = "サシ劇マッチングで待っている方がいます。すぐに劇をしたい方は是非エントリーを！";
     } else if (type === "event" && event !== null) {
-        text = event.title+"で待っている方がいます。ご興味ある方は是非マッチングを！";
+        text = event.title+"で待っている方がいます。是非エントリーを！";
     } else {
         return;
     }

@@ -43,7 +43,8 @@ module.exports.TAGS_MATCHING = [
     , "まったり"
     , "サクサク"
 ]
-module.exports.MATCH_EXPIRE_SECONDS = 60 * 30;
+module.exports.ENTRY_EXPIRE_SECONDS = 60 * 32; // 32min
+module.exports.MATCH_EXPIRE_SECONDS = 60 * 30; // 30min
 
 module.exports.REGEX_INVALID_STRINGS = /[,;'"%&#><\\\n\r\0]/;
 module.exports.INPUT_STRING_PATTERN = "^[^,;'\"%&#><\\\\\n\r]+$";
