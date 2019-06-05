@@ -1,9 +1,10 @@
 <%
 let match_text;
+// TODO
 if (entry.type.includes("act2")) {
-    match_text = "サシ劇マッチング";
+    match_text = C.ENTRY_TYPE_TEXT["act2"]+"マッチング";
 } else if (entry.type.includes("act3_7")) {
-    match_text = "3~7人劇マッチング";
+    match_text = C.ENTRY_TYPE_TEXT["act3_7"]+"マッチング";
 } else if (entry.type.includes("event")) {
     match_text = event.title;
 }
@@ -11,9 +12,25 @@ if (entry.type.includes("act2")) {
 
 <h4 class="mb-4"><%=match_text%></h4>
 
+<% if (entry.tags && entry.tags.length > 0) { %>
 <div class="ml-3">
+    タグ:
+    <% for (let tag of entry.tags) { %>
+        <span class="badge badge-pill badge-warning ml-1 add_tag"><%=tag%></span>
+    <% } %>
+</div>
+<% } %>
+
+<div class="mt-5 ml-3">
     <p>ただいま、マッチング中です。</p>
     <p>しばらくお待ち下さい。</p>
+</div>
+
+<%# TODO %>
+<div class="mt-5 ml-3">
+    <% for (let type of entry.type) { %>
+    <p>現在の待ち: <%=entryCount[type]%>人</p>
+    <% } %>
 </div>
 
 <%# <div class="mt-5 loading"></div> %>
@@ -24,13 +41,15 @@ if (entry.type.includes("act2")) {
 </form>
 </div>
 
-<div class="mt-3">
+<div class="mt-5">
     <p class="text-center text-secondary">※画面を離れてもマッチングは継続されます。</p>
     <p class="text-center text-secondary">※このマッチングは<%=entry_expiration%>まで有効です。</p>
 </div>
 
+<%- include("../module/entry_explain", {}) %>
+
 <% if (event) { %>
-    <%- include("./module/event_explain", {}) %>
+    <%- include("../module/event_explain", {}) %>
 <% } %>
 
 <script>

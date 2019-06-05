@@ -8,6 +8,7 @@
     "lint": "eslint *.js"
   },
   "dependencies": {
+    "@yaireo/tagify": "^2.20.1",
     "app-root-path": "^2.1.0",
     "body-parser": "^1.18.3",
     "cacheman": "^2.2.1",

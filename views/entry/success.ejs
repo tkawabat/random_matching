@@ -19,31 +19,38 @@ if (match.type === "act2") {
 } else if (match.type === "event" && event) {
     text = event.title;
 }
-text += "\n";
+text += "成功！\n\n";
 
 let sex = {m: 0, f: 0};
-for (let u of match.ids) {
-    text += " "+user.twitter_name+"@"+user.twitter_id+"\n";
-    sex[u.sex]++;
+for (let m of match.matched) {
+    text += " "+m.user.twitter_name+"@"+m.user.twitter_id+"\n";
+    sex[m.user.sex]++;
 }
 %>
 
 <div class="ml-3">
-    <span class="bolder"><%= match.ids[0].twitter_name %></span>さんがSkypeで会議を作ってください。
+    <span class="bolder"><%= match.matched[0].user.twitter_name %></span>さんがSkypeで会議を作ってください。
 </div>
 
 <div class="mt-3 ml-2">
     <i class="fas fa-mars"></i>&nbsp;<%=sex.m%> : <i class="fas fa-venus"></i>&nbsp;<%=sex.f%>
 </div>
 <div class="matched_list mt-1">
-    <% for (u of match.ids) { %>
-        <%- include("./module/user", {user:u, mask:false, mvp:true}) %>
+    <% for (m of match.matched) { %>
+    <div class="mb-3">
+        <%- include("../module/user", {user:m.user, mask:false, mvp:true}) %>
+        <% for (let tag of m.tags) { %>
+            <span class="badge badge-pill badge-warning mt-1 ml-1 add_tag"><%=tag%></span>
+        <% } %>
+    </div>
     <% } %>
-
-    <div class="mt-3 text-right">
-        <%- include("./module/tweet", {text:text+"\n", hash:title}) %>
-    </div>
-    <div class="mt-3">
-        <p class="text-right text-secondary">※このページは<%=match_expiration%>まで有効です。</p>
-    </div>
 </div>
+
+<div class="mt-4 text-right">
+    <%- include("../module/tweet", {text:text+"\n", hash:title}) %>
+</div>
+<div class="mt-3">
+    <p class="text-right text-secondary">※このページは<%=match_expiration%>まで有効です。</p>
+</div>
+
+<div class="bottom_blank"></div>

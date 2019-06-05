@@ -73,6 +73,8 @@ model.update = async (reserve, user) => {
     } else {
         opt = { "strict": true, "new": true};
         let old = await this.schema.findOne({ _id: reserve._id }).exec();
+
+        // 変更ないキャラはエントリーを引き継ぎ
         for (let i = 0; i < reserve.chara.length; i++) {
             if (old && old.chara[i] && old.chara[i].user
                 && reserve.chara[i].name === old.chara[i].name

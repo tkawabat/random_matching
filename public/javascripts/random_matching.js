@@ -9,7 +9,42 @@ let RandomMatching = {};
         gtag("js", new Date());
         gtag("config", "UA-136115470-1");
     }
-    {
+    { // help
+        $(() => {
+            $(".btn_help a").popover({
+                container: "body"
+                , trigger: "focus"
+            })
+        });
+    }
+    { // tags
+        let tagify = new Tagify(document.querySelector("textarea.tags"), {
+            whitelist: []
+            , maxTags: 5
+            , callbacks: {
+                add: (v) => {
+                    let text = v.detail.data.value;
+                    if (text && text.length > 8) setTimeout(() => { tagify.removeTag(text)}, 400);
+                }
+            }
+        });
+        RandomMatching.addTag = (text) => {
+            tagify.addTags([text]);
+        }
+        RandomMatching.saveTags = (key) => {
+            let arr = [];
+            for (let tag of tagify.value) arr.push(tag.value);
+            localStorage.setItem(key, arr.join(","));
+        };
+        RandomMatching.loadTags = (key) => {
+            tagify.removeAllTags();
+            let text = localStorage.getItem(key);
+            if (!text) return;
+            let tags = text.split(",");
+            tagify.addTags(tags);
+        }
+    }
+    { // modal
         let modal = $("#modal");
         let modalBody = document.getElementById("modal_body");
         RandomMatching.modal = (text) => {

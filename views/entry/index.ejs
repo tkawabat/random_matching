@@ -1,0 +1,77 @@
+<h4 class="mb-4">マッチング</h4>
+
+<% if (!registered) { %>
+    <div class="alert alert-danger" role="alert">
+        右上のアイコンから性別、Skype IDを登録してください
+    </div>
+<% } %>
+
+<div class="ml-3 mr-3">
+
+<h6>参加条件</h6>
+<div class="ml-4">
+    <p>
+    <%- include("../module/ok_ng", {"bool":registered}) %>
+    性別、Skype IDが登録済み
+    </p>
+
+    <p>
+    <%- include("../module/ok_ng", {"bool":twitter_safe}) %>
+    Twitterの登録日が半年以上前
+    </p>
+</div>
+
+<%
+disabled = {};
+for (let k of Object.keys(isReady)) {
+    disabled[k] = isReady[k] ? "" : "disabled";
+}
+%>
+
+<form class="d-inline" method="POST" action="/entry/">
+
+<h6 class="mt-5">
+    タグ
+    <span class="btn_help"><a tabindex="0" role="button" data-container="body" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="Twitter募集とマッチング成功時に表示されます">
+        <i class="fas fa-question"></i>
+    </a></span>
+</h6>
+<div class="mt-2 text-sm">
+    <textarea class="tags mx-auto" name="tags" placeholder="自由入力" pattern="<%=C.INPUT_STRING_PATTERN%>"></textarea>
+</div>
+<div class="mt-1">
+    おすすめタグ:
+    <% for (let tag of C.TAGS_MATCHING) { %>
+        <span class="badge badge-pill badge-warning ml-1 add_tag" onClick="RandomMatching.addTag('<%=tag%>');"><%=tag%></span>
+    <% } %>
+</div>
+<div class="mt-1 text-right text-secondary">※<%=C.TAGS_MAX_NUMBER%>文字以下, <%=C.TAG_MAX_LENGTH%>個まで</div>
+
+
+<h6 class="mt-4">エントリーボタン</h6>
+<%- include("../module/entry_start", {type: "act2", disabled: disabled, shiny: ""}) %>
+<%- include("../module/entry_start", {type: "act3_7", disabled: disabled, shiny: ""}) %>
+
+<%
+let shiny = disabled.event ? "" : "shiny";
+if (event) { %>
+<%- include("../module/entry_start", {type: "act3_7", disabled: disabled, shiny: shiny}) %>
+<% } %>
+
+</form>
+
+<p class="mt-4 text-center text-secondary">※マッチングは30分間有効です。</p>
+
+<%- include("../module/entry_explain", {}) %>
+
+<% if (event) { %>
+    <%- include("../module/event_explain", {}) %>
+<% } %>
+
+<div class="bottom_blank"></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    RandomMatching.loadTags('entry');
+});
+</script>

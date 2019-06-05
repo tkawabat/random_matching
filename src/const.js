@@ -18,6 +18,11 @@ module.exports.SEX_CLASS = {
     ,"f": "venus"
     ,"o": "question"
 }
+module.exports.ENTRY_TYPE_TEXT = {
+    "act2": "サシ劇"
+    , "act3_7": "3~7人劇"
+    , "event": "イベント劇"
+}
 module.exports.RESERVE_PLACE = {
     "skype": "Skype"
     ,"discord": "Discord"
@@ -26,7 +31,21 @@ module.exports.RESERVE_PLACE = {
     ,"twitcasting_discord": "ツイキャス(Discord)"
     ,"other": "その他"
 }
-module.exports.MATCH_EXPIRE_SECONDS = 60 * 30;
+module.exports.TAGS_MAX_NUMBER = 5; // javascriptに直書き
+module.exports.TAG_MAX_LENGTH = 8; // javascriptに直書き
+module.exports.TAGS_MATCHING = [
+    "初心者歓迎"
+    , "雑談少なめ"
+    , "雑談多め"
+    , "台本~30分"
+    , "台本~60分"
+    , "台本60分以上"
+    , "一劇のみ"
+    , "学生"
+    , "社会人"
+]
+module.exports.ENTRY_EXPIRE_SECONDS = 60 * 32; // 32min
+module.exports.MATCH_EXPIRE_SECONDS = 60 * 30; // 30min
 
 module.exports.REGEX_INVALID_STRINGS = /[,;'"%&#><\\\n\r\0]/;
 module.exports.INPUT_STRING_PATTERN = "^[^,;'\"%&#><\\\\\n\r]+$";

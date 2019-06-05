@@ -4,7 +4,8 @@ const rootDir = require("app-root-path");
 const C = require(rootDir+"/src/const");
 const logger = require(rootDir + "/src/log4js");
 const twitter = require(rootDir + "/src/twitter");
-const User = require("../src/model/user");
+const db= require(rootDir + "/src/mongodb");
+const User = require(rootDir + "/src/model/user");
 const Entry = require(rootDir + "/src/model/entry");
 const Match = require(rootDir + "/src/model/match");
 
@@ -36,44 +37,48 @@ module.exports.shuffle = (list) => {
 
 module.exports.checkNg = (list, ngList, user) => {
     if (ngList.includes(user.twitter_id)) return false;
-    for (let i = 0; i < list.length; i++) {
-        if (user.ng_list.includes(list[i].twitter_id)) return false;
+    for (let entry of list) {
+        if (user.ng_list.includes(entry._id.twitter_id)) return false;
     }
     return true;
 }
 
-module.exports.matched = async (list, type) => {
+module.exports.matched = async (matched, type) => {
+    let entry;
     let p = [];
-    let ids = [];
     let log = [];
-    for (let i = 0; i < list.length; i++) {
-        ids.push(list[i]._id);
-        log.push(list[i].sex + ":" + list[i].twitter_id);
-    }
+    let list = [];
+    let opt = JSON.parse(JSON.stringify(C.MONGO_OPT));
+    opt.new = true;
+    opt.upsert = true;
 
-    logger.info("match "+type+" "+log.join(", "));
+    for (entry of matched) {
+        log.push(entry._id.sex + ":" + entry._id.twitter_id);
+        list.push({
+            user: entry._id._id
+            , tags: entry.tags
+        });
 
-    for (let i = 0; i < list.length; i++) {
-        let user = list[i];
-        p.push(Entry.schema.deleteOne({_id: user._id}).exec()
+        p.push(Entry.schema.deleteOne({_id: entry._id._id}).exec()
             .catch((err) => { logger.error(err); })
         );
 
-        let match = {
-            _id: user._id
-            ,type: type
-            ,ids: ids
-        };
-        p.push(Match.schema.findOneAndUpdate({ "_id" : match._id}, match, { upsert: true, setDefaultsOnInsert: true })
-            .catch((err) => { logger.error(err); })
-        );
-
-        if (user.push.match === true) {
+        if (entry._id.push.match === true) {
             let text = "マッチングしました。結果を確認してください。\n"
                 +C.BASE_URL;
-            twitter.sendDm(user, text);
+            twitter.sendDm(entry._id, text);
         }
     }
+
+    let match = new Match.schema({
+        _id: new db.Types.ObjectId
+        , type: type
+        , matched: list
+    });
+    opt.setDefaultsOnInsert = true;
+    p.push(Match.schema.insertMany([match], opt).catch((err) => { logger.error(err)}));
+
+    logger.info("match "+type+" "+log.join(", "));
 
     return Promise.all(p);
 }
@@ -85,8 +90,8 @@ module.exports.findMatch = (entries, n, sexConstraint) => {
 
     logger.debug("find "+n);
 
-    for (let i = 0; i < entries.length; i++) {
-        let user = entries[i]._id;
+    for (let entry of entries) {
+        let user = entry._id;
 
         if (!this.checkNg(list, ngList, user)) continue;
 
@@ -94,7 +99,7 @@ module.exports.findMatch = (entries, n, sexConstraint) => {
         if (sex[user.sex] === 0) continue;
         sex[user.sex]--;
 
-        list.push(user);
+        list.push(entry);
         ngList = ngList.concat(user.ng_list);
         if (list.length === n) {
             return list;
@@ -130,12 +135,19 @@ module.exports.match = async (type) => {
         
         while (shuffleNumbers.length > 0) {
             let number = shuffleNumbers.pop();
-            let list = this.findMatch(entries, number, actSexConstraint[number]);
-            if (list.length === 0) { // マッチング失敗
+            let matched = this.findMatch(entries, number, actSexConstraint[number]);
+            if (matched.length === 0) { // マッチング失敗
                 failCount--;
             } else {
-                entries = entries.filter((n) => list.indexOf(n._id) === -1);
-                await this.matched(list, type);
+                entries = entries.filter((n) => {
+                    for (let entry of matched) {
+                        if (entry._id === n._id) {
+                            return false;
+                        }
+                    }
+                    return true;
+                });
+                await this.matched(matched, type);
             }
         }
         if (failCount === 0) break;
@@ -173,12 +185,19 @@ module.exports.matchEvent = async (event) => {
     }
 
     while (1) {
-        let list = this.findMatch(entries, number, sexConstraint);
-        if (list.length === 0) { // マッチング失敗
+        let matched = this.findMatch(entries, number, sexConstraint);
+        if (matched.length === 0) { // マッチング失敗
             break;
         } else {
-            entries = entries.filter((n) => list.indexOf(n._id) === -1);
-            await this.matched(list, type);
+            entries = entries.filter((n) => {
+                for (let entry of matched) {
+                    if (entry._id === n._id) {
+                        return false;
+                    }
+                }
+                return true;
+            });
+            await this.matched(matched, type);
         }
     }
 
