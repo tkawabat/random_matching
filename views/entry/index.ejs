@@ -37,9 +37,10 @@ for (let k of Object.keys(isReady)) {
     </a></span>
 </h6>
 <div class="mt-2 text-sm">
-    <textarea class="tags mx-auto" name="tags" placeholder="タグ追加" pattern="<%=C.INPUT_STRING_PATTERN%>">台本~60分</textarea>
+    <textarea class="tags mx-auto" name="tags" placeholder="自由入力" pattern="<%=C.INPUT_STRING_PATTERN%>"></textarea>
 </div>
 <div class="mt-1">
+    おすすめタグ:
     <% for (let tag of C.TAGS_MATCHING) { %>
         <span class="badge badge-pill badge-warning ml-1 add_tag" onClick="RandomMatching.addTag('<%=tag%>');"><%=tag%></span>
     <% } %>
@@ -66,3 +67,9 @@ if (event) { %>
 <% } %>
 
 <div class="bottom_blank"></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    RandomMatching.loadTags('entry');
+});
+</script>

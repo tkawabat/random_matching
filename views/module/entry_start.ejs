@@ -1,5 +1,5 @@
 <div class="mt-2 w_80 mx-auto">
-    <button type="submit" name="entry_type" value="<%=type%>" class="btn bg_red <%=shiny%>" <%=disabled[type]%>><%=C.ENTRY_TYPE_TEXT[type]%></button>
+    <button onClick="RandomMatching.saveTags('entry');return true;" type="submit" name="entry_type" value="<%=type%>" class="btn bg_red <%=shiny%>" <%=disabled[type]%>><%=C.ENTRY_TYPE_TEXT[type]%></button>
     <% if (entryCount[type]) { %>
     <span class="mt-1 float-right">現在の待ち: <%=entryCount[type]%>人</span>
     <% } %>

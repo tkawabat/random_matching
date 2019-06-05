@@ -34,14 +34,15 @@ module.exports.RESERVE_PLACE = {
 module.exports.TAGS_MAX_NUMBER = 5; // javascriptに直書き
 module.exports.TAG_MAX_LENGTH = 8; // javascriptに直書き
 module.exports.TAGS_MATCHING = [
-    "雑談少なめ"
+    "初心者歓迎"
+    , "雑談少なめ"
     , "雑談多め"
     , "台本~30分"
     , "台本~60分"
     , "台本60分以上"
     , "一劇のみ"
-    , "まったり"
-    , "サクサク"
+    , "学生"
+    , "社会人"
 ]
 module.exports.ENTRY_EXPIRE_SECONDS = 60 * 32; // 32min
 module.exports.MATCH_EXPIRE_SECONDS = 60 * 30; // 30min
