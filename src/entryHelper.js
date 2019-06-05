@@ -72,6 +72,7 @@ module.exports.pushScheduleMatch = (entry) => {
     if (entry.tags && entry.tags.length > 0) {
         text += "タグ: "+entry.tags.join(", ")+"\n";
     }
+    text += C.BASE_URL;
     twitter.tweet(text);
 }
 
