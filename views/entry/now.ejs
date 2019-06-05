@@ -46,6 +46,8 @@ if (entry.type.includes("act2")) {
     <p class="text-center text-secondary">※このマッチングは<%=entry_expiration%>まで有効です。</p>
 </div>
 
+<%- include("../module/entry_explain", {}) %>
+
 <% if (event) { %>
     <%- include("../module/event_explain", {}) %>
 <% } %>
