@@ -65,6 +65,7 @@ router.post("/"
         let opt = JSON.parse(JSON.stringify(C.MONGO_OPT));
         opt.new = true;
         opt.upsert = true;
+        opt.setDefaultsOnInsert = true;
         entry = await Entry.schema.findOneAndUpdate({"_id": entry._id}, entry, opt).exec();
 
         entryHelper.pushScheduleMatch(entry);
