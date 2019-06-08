@@ -67,25 +67,27 @@ module.exports.pushScheduleMatch = (entry) => {
         matcher.match("act3_7");
     });
 
-    let text = "3~7人劇マッチングが開始しました。\n"
-        +time1.format("HH:mm")+", "+time2.format("HH:mm")+"にマッチングします。是非エントリーを！\n";
-    if (entry.tags && entry.tags.length > 0) {
-        text += "タグ: "+entry.tags.join(", ")+"\n";
-    }
-    text += C.BASE_URL;
-    twitter.tweet(text);
+    this.pushScheduleMatch(entry, null);
 }
 
 module.exports.pushScheduleTweet = (entry, event) => {
     let type = entry.type[0];
 
     let text;
-    let time = moment().add(3, "minutes").toDate();
+    //let time = moment().add(3, "minutes").toDate();
+    let time = moment().add(3, "seconds").toDate();
 
     if (type === "act2") {
         text = "サシ劇マッチングで待っている方がいます。すぐに劇をしたい方は是非エントリーを！";
+        text +=  "("+moment().format("HH:mm")+")\n";
+    } else if (type === "act3_7") {
+        let time1 = moment().add(15, "minutes");
+        let time2 = moment().add(30, "minutes");
+        text = "3~7人劇マッチングが開始しました。\n"
+            +time1.format("HH:mm")+", "+time2.format("HH:mm")+"にマッチングします。是非エントリーを！\n";
     } else if (type === "event" && event !== null) {
         text = event.title+"で待っている方がいます。是非エントリーを！";
+        text +=  "("+moment().format("HH:mm")+")\n";
     } else {
         return;
     }
@@ -93,7 +95,6 @@ module.exports.pushScheduleTweet = (entry, event) => {
     schedule.push("entry_tweet_"+type, true, time, async () => {
         let isExist = await Entry.model.isEntryExist(type);
         if (!isExist) return;
-        text +=  "("+moment().format("HH:mm")+")\n";
         if (entry.tags && entry.tags.length > 0) {
             text += "タグ: "+entry.tags.join(", ")+"\n";
         }
