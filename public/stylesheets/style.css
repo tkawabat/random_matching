@@ -53,6 +53,9 @@ p {
 .bolder {
     font-weight: bolder;
 }
+.w_95 {
+    width: 95%;
+}
 .w_90 {
     width: 90%;
 }
@@ -266,7 +269,7 @@ footer {
 
 /* help */
 .help_main {
-    width: 80%;
+    width: 95%;
 }
 .help_img_sp {
     width: 180px;

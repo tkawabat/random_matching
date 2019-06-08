@@ -13,6 +13,21 @@ router.get("/", routeHelper.check, (req, res) => {
     res.render("help/index", res.viewParam);
 });
 
+router.get("/scene_reserve", routeHelper.check, (req, res) => {
+    res.viewParam.user = req.user;
+    res.render("help/scene_reserve", res.viewParam);
+});
+
+router.get("/scene_wild", routeHelper.check, (req, res) => {
+    res.viewParam.user = req.user;
+    res.render("help/scene_wild", res.viewParam);
+});
+
+router.get("/scene_instant", routeHelper.check, (req, res) => {
+    res.viewParam.user = req.user;
+    res.render("help/scene_instant", res.viewParam);
+});
+
 router.get("/init", routeHelper.check, (req, res) => {
     res.viewParam.user = req.user;
     res.render("help/init", res.viewParam);
