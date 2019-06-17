@@ -67,7 +67,8 @@ module.exports.pushScheduleMatch = (entry) => {
         matcher.match("act3_7");
     });
 
-    let text = "3~7人劇マッチングが開始しました。\n"
+    let text = "『演者募集』\n"
+        +"3~7人劇マッチングを開始しました。\n"
         +time1.format("HH:mm")+", "+time2.format("HH:mm")+"にマッチングします。是非エントリーを！\n";
 
     let time = moment().add(3, "minutes").toDate();
@@ -85,13 +86,13 @@ module.exports.pushScheduleMatch = (entry) => {
 module.exports.pushScheduleTweet = (entry, event) => {
     let type = entry.type[0];
 
-    let text;
+    let text = "『演者募集』\n";
 
     if (type === "act2") {
-        text = "サシ劇マッチングで待っている方がいます。すぐに劇をしたい方は是非エントリーを！";
+        text += "サシ劇マッチングで待っている方がいます。すぐに劇をしたい方は是非エントリーを！";
         text +=  "("+moment().format("HH:mm")+")\n";
     } else if (type === "event" && event !== null) {
-        text = event.title+"で待っている方がいます。是非エントリーを！";
+        text += event.title+"で待っている方がいます。是非エントリーを！";
         text +=  "("+moment().format("HH:mm")+")\n";
     } else {
         return;
