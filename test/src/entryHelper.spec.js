@@ -122,7 +122,7 @@ describe("entryHelper pushScheduleMatch", () => {
 
     it("ok", async () => {
         let entry = { type: ["act3_7"] };
-        mock.expects("push").twice();
+        mock.expects("push").exactly(3);
         entryHelper.pushScheduleMatch(entry);
         mock.verify();
     });
