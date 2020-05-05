@@ -32,9 +32,7 @@ for (let k of Object.keys(isReady)) {
 
 <h6 class="mt-5">
     タグ
-    <span class="btn_help"><a tabindex="0" role="button" data-container="body" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="Twitter募集とマッチング成功時に表示されます">
-        <i class="fas fa-question"></i>
-    </a></span>
+    <%- include("../module/question", {explain: "Twitter募集とマッチング成功時に表示されます。" }) %>
 </h6>
 <div class="mt-2 text-sm">
     <textarea class="tags mx-auto" name="tags" placeholder="自由入力" pattern="<%=C.INPUT_STRING_PATTERN%>"></textarea>
@@ -48,7 +46,10 @@ for (let k of Object.keys(isReady)) {
 <div class="mt-1 text-right text-secondary">※<%=C.TAGS_MAX_NUMBER%>文字以下, <%=C.TAG_MAX_LENGTH%>個まで</div>
 
 
-<h6 class="mt-4">エントリーボタン</h6>
+<h6 class="mt-4">
+    エントリーボタン
+    <%- include("../module/question", {explain: "マッチングは30分間有効です。" }) %>
+</h6>
 <%- include("../module/entry_start", {type: "act2", disabled: disabled, shiny: ""}) %>
 <%- include("../module/entry_start", {type: "act3_7", disabled: disabled, shiny: ""}) %>
 
@@ -60,9 +61,7 @@ if (event) { %>
 
 </form>
 
-<p class="mt-4 text-center text-secondary">※マッチングは30分間有効です。</p>
-
-<%- include("../module/entry_explain", {}) %>
+<%- include("../module/promotion", {}) %>
 
 <% if (event) { %>
     <%- include("../module/event_explain", {}) %>
