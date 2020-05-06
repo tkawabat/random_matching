@@ -25,8 +25,7 @@ app.set("port", port);
 
 let sslOption = {
     key : fs.readFileSync(SSL_DIR + "/privkey.pem").toString(),
-    cert: fs.readFileSync(SSL_DIR + "/cert.pem").toString(),
-    ca  : fs.readFileSync(SSL_DIR + "/cert.pem").toString(),
+    cert: fs.readFileSync(SSL_DIR + "/fullchain.pem").toString(),
     "log level":1
 }
 let server = https.createServer(sslOption, app);
